@@ -1,0 +1,201 @@
+{
+  "nav": {
+    "home": "Home",
+    "fleet": "Our Fleet",
+    "tours": "Tours",
+    "exotic": "Exotic Cars",
+    "quote": "Get a Quote",
+    "pov": "Experience",
+    "contact": "Contact",
+    "booking": "Book Now"
+  },
+  "hero": {
+    "tagline": "Where Luxury Meets the Road",
+    "subtitle": "Miami's premier luxury transportation — limousines, black SUVs, exotic cars & exclusive tours",
+    "cta_quote": "Get Instant Quote",
+    "cta_fleet": "View Our Fleet",
+    "scroll": "Scroll to explore"
+  },
+  "stats": {
+    "clients": "Happy Clients",
+    "vehicles": "Luxury Vehicles",
+    "years": "Years of Excellence",
+    "service": "24/7 Service"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "World-class luxury transportation tailored to your every need",
+    "limo": {
+      "title": "Limousines",
+      "desc": "Stretch limos & party buses for any occasion"
+    },
+    "suv": {
+      "title": "Black SUVs",
+      "desc": "Premium black trucks & SUVs with professional chauffeurs"
+    },
+    "exotic": {
+      "title": "Exotic Cars",
+      "desc": "Ferrari, Lamborghini, Rolls-Royce & more"
+    },
+    "tours": {
+      "title": "City Tours",
+      "desc": "Guided Miami tours in ultimate comfort"
+    }
+  },
+  "fleet": {
+    "title": "Our Luxury Fleet",
+    "subtitle": "Every vehicle meticulously maintained to the highest standards",
+    "view_all": "View Full Fleet",
+    "passengers": "Passengers",
+    "luggage": "Luggage",
+    "features": "Features",
+    "book_now": "Book This Vehicle",
+    "get_quote": "Get Quote",
+    "per_hour": "per hour",
+    "per_mile": "per mile",
+    "categories": {
+      "all": "All Vehicles",
+      "limousines": "Limousines",
+      "suvs": "Black SUVs",
+      "exotic": "Exotic Cars"
+    }
+  },
+  "quote": {
+    "title": "Get Your Instant Quote",
+    "subtitle": "Enter your details for a real-time price estimate",
+    "service_type": "Service Type",
+    "pickup": "Pickup Address",
+    "dropoff": "Dropoff Address",
+    "date": "Date & Time",
+    "hours": "Duration (Hours)",
+    "passengers": "Passengers",
+    "vehicle": "Select Vehicle",
+    "airport_transfer": "Airport Transfer",
+    "calculate": "Calculate Quote",
+    "calculating": "Calculating...",
+    "your_quote": "Your Quote",
+    "base_rate": "Base Rate",
+    "distance_charge": "Distance Charge",
+    "airport_fee": "Airport Fee",
+    "peak_surcharge": "Peak Hours Surcharge",
+    "subtotal": "Subtotal",
+    "tax": "Tax (7%)",
+    "total": "Total",
+    "valid_until": "Quote valid until",
+    "quote_id": "Quote ID",
+    "email_quote": "Email This Quote",
+    "download_pdf": "Download PDF",
+    "book_now": "Book Now",
+    "distance": "Distance",
+    "duration": "Duration",
+    "enter_email": "Enter your email",
+    "send_quote": "Send Quote",
+    "quote_sent": "Quote sent successfully!",
+    "services": {
+      "transfer": "Point-to-Point Transfer",
+      "hourly": "Hourly Charter",
+      "airport": "Airport Transfer",
+      "tour": "City Tour",
+      "event": "Special Event"
+    }
+  },
+  "tours": {
+    "title": "Discover Miami in Style",
+    "subtitle": "Exclusive guided tours in our luxury vehicles",
+    "per_person": "per person",
+    "duration": "Duration",
+    "highlights": "Highlights",
+    "includes": "Includes",
+    "book_tour": "Book This Tour",
+    "get_quote": "Get Tour Quote",
+    "city": {
+      "title": "Miami City Tour",
+      "desc": "Explore the Magic City's iconic landmarks, art deco architecture, and vibrant neighborhoods",
+      "duration": "4 hours"
+    },
+    "adventure": {
+      "title": "Adventure Tour",
+      "desc": "Thrilling outdoor experiences through the Everglades and Florida Keys",
+      "duration": "8 hours"
+    },
+    "nature": {
+      "title": "Nature & Wildlife Tour",
+      "desc": "Discover Florida's breathtaking natural wonders and diverse ecosystems",
+      "duration": "6 hours"
+    },
+    "culture": {
+      "title": "Culture & Art Tour",
+      "desc": "Immerse yourself in Miami's world-renowned art scene, museums & galleries",
+      "duration": "5 hours"
+    },
+    "food": {
+      "title": "Food & Gastronomy Tour",
+      "desc": "Savor Miami's diverse culinary scene — from Cuban to haute cuisine",
+      "duration": "4 hours"
+    }
+  },
+  "reviews": {
+    "title": "What Our Clients Say",
+    "subtitle": "Thousands of satisfied customers across Miami and beyond"
+  },
+  "pov": {
+    "title": "Experience the Ride",
+    "subtitle": "Step inside our vehicles before you book — immersive 360° POV simulation",
+    "choose": "Choose Your Experience",
+    "limo": "Limousine Interior",
+    "exotic": "Exotic Car Cockpit",
+    "tour": "Tour Vehicle",
+    "drag": "Drag to explore · Scroll to move forward",
+    "mobile_hint": "Tilt your device to look around"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Available 24/7 for all your luxury transportation needs",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "message": "Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent! We'll respond within 1 hour.",
+    "phone_label": "Call Us",
+    "email_label": "Email Us",
+    "address_label": "Office",
+    "hours_label": "Hours"
+  },
+  "booking": {
+    "title": "Reserve Your Vehicle",
+    "subtitle": "Complete your booking in minutes",
+    "step1": "Service",
+    "step2": "Location & Time",
+    "step3": "Contact Info",
+    "step4": "Requests",
+    "step5": "Confirm",
+    "next": "Next Step",
+    "back": "Back",
+    "confirm": "Confirm Booking",
+    "confirmed": "Booking Confirmed!",
+    "confirmation_msg": "We'll contact you within 30 minutes to confirm your reservation."
+  },
+  "footer": {
+    "tagline": "Miami's premier luxury transportation service",
+    "services": "Services",
+    "company": "Company",
+    "legal": "Legal",
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "try_again": "Try Again",
+    "close": "Close",
+    "view_more": "View More",
+    "from": "From",
+    "per_hour": "/hr",
+    "learn_more": "Learn More",
+    "available": "Available",
+    "not_available": "Not Available"
+  }
+}

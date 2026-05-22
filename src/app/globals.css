@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --gold: 201 167 101;
+    --gold-warm: 212 175 55;
+    --black: 10 10 10;
+    --black-charcoal: 26 26 26;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #0A0A0A;
+    color: #F5F0E8;
+    font-family: var(--font-inter), system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: rgba(201, 167, 101, 0.3);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0A0A0A;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #C9A765;
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D4AF37;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-black-charcoal/70 backdrop-blur-md border border-gold/20 rounded-2xl;
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300 hover:border-gold/50 hover:shadow-gold;
+  }
+
+  .gold-text {
+    background: linear-gradient(135deg, #C9A765 0%, #D4AF37 50%, #C9A765 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gold-btn {
+    @apply bg-gold-gradient text-black font-semibold px-8 py-4 rounded-full
+           transition-all duration-300 hover:shadow-gold hover:scale-105
+           active:scale-95 relative overflow-hidden;
+  }
+
+  .outline-btn {
+    @apply border border-gold/60 text-cream px-8 py-4 rounded-full
+           transition-all duration-300 hover:border-gold hover:bg-gold/10
+           hover:shadow-gold-sm;
+  }
+
+  .section-padding {
+    @apply py-20 md:py-32;
+  }
+
+  .container-luxe {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .heading-display {
+    @apply font-display font-bold text-display text-white;
+  }
+
+  .heading-hero {
+    @apply font-display font-black text-hero text-white leading-tight;
+  }
+
+  .gold-line {
+    @apply w-16 h-0.5 bg-gold-gradient mx-auto my-4;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-in-view {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .animate-in-view.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+}
+
+/* RTL support for Arabic */
+[dir="rtl"] .ltr-only {
+  direction: ltr;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
