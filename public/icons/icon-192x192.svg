@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D4AF37;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#C9A765;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#B8952A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0A0A0A;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1A1A1A;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="192" height="192" rx="35" fill="url(#bgGrad)"/>
+
+  <!-- Gold border -->
+  <rect x="8" y="8"
+        width="177" height="177"
+        rx="29"
+        fill="none" stroke="url(#goldGrad)" stroke-width="5"/>
+
+  <!-- Car silhouette icon -->
+  <g transform="translate(19, 54)">
+    <!-- Car body -->
+    <rect x="5" y="32"
+          width="95" height="37"
+          rx="6" fill="url(#goldGrad)"/>
+    <!-- Car roof -->
+    <path d="M21 32
+             L32 11
+             L74 11
+             L85 32 Z"
+          fill="url(#goldGrad)"/>
+    <!-- Wheels -->
+    <circle cx="27" cy="72"
+            r="11" fill="#0A0A0A" stroke="url(#goldGrad)"
+            stroke-width="3"/>
+    <circle cx="80" cy="72"
+            r="11" fill="#0A0A0A" stroke="url(#goldGrad)"
+            stroke-width="3"/>
+  </g>
+
+  <!-- LR text -->
+  <text x="96" y="177"
+        font-family="Georgia, serif" font-size="17"
+        font-weight="700" fill="url(#goldGrad)"
+        text-anchor="middle" letter-spacing="4">LUXRIDE</text>
+</svg>
