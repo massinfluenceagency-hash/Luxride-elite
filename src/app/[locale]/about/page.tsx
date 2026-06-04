@@ -15,9 +15,8 @@ const STATS = [
 ];
 
 const TEAM = [
-  { name: "Marcus Rivera", role: "Founder & CEO", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" },
-  { name: "Diana Chen", role: "Head of Operations", image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&q=80" },
-  { name: "James Wellington", role: "Fleet Director", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" },
+  { name: "Brian Badgley", role: "Co-Founder" },
+  { name: "Franklin Drouin", role: "Co-Founder" },
 ];
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -114,12 +113,14 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         {/* Team */}
         <section className="section-padding">
           <div className="container-luxe">
-            <SectionHeading label="The Team" title="Meet Our Leadership" subtitle="The people behind Miami's premier luxury transportation service" />
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
-              {TEAM.map(({ name, role, image }) => (
-                <div key={name} className="text-center">
-                  <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-gold/30 mx-auto mb-4">
-                    <Image src={image} alt={name} fill className="object-cover" sizes="128px" />
+            <SectionHeading label="The Team" title="Meet Our Founders" subtitle="The people behind Miami's premier luxury transportation service" />
+            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center max-w-xl mx-auto">
+              {TEAM.map(({ name, role }) => (
+                <div key={name} className="text-center flex-1">
+                  <div className="w-24 h-24 rounded-full border-2 border-gold/30 bg-gold/5 flex items-center justify-center mx-auto mb-4">
+                    <span className="font-display font-black text-2xl text-gold">
+                      {name.split(" ").map((n) => n[0]).join("")}
+                    </span>
                   </div>
                   <h4 className="font-display font-bold text-white text-lg">{name}</h4>
                   <p className="text-gold text-sm">{role}</p>
