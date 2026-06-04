@@ -75,7 +75,7 @@ function buildEmailHtml(quote: QuoteResult): string {
       <div style="margin-top:32px;text-align:center">
         <a href="https://luxrideelite.com/en/booking" style="background:linear-gradient(135deg,#C9A765,#D4AF37);color:#000;font-weight:bold;padding:16px 40px;border-radius:50px;text-decoration:none;font-size:16px;display:inline-block">Book Now</a>
       </div>
-      <p style="color:#555;font-size:11px;text-align:center;margin-top:24px">Quote valid until ${quote.validUntil.toLocaleDateString()} · (305) 555-1234</p>
+      <p style="color:#555;font-size:11px;text-align:center;margin-top:24px">Quote valid until ${quote.validUntil.toLocaleDateString()} · (786) 948-2298</p>
     </div>
   </div>
 </body>

@@ -63,9 +63,9 @@ export default function Navbar({ locale }: { locale: string }) {
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
-            <a href="tel:+13055551234" className="flex items-center gap-2 text-cream/70 hover:text-gold transition-colors text-sm">
+            <a href="tel:+17869482298" className="flex items-center gap-2 text-cream/70 hover:text-gold transition-colors text-sm">
               <Phone size={14} />
-              <span>(305) 555-1234</span>
+              <span>(786) 948-2298</span>
             </a>
             <Link
               href={`/${locale}/quote`}

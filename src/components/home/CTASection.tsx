@@ -22,11 +22,11 @@ export default function CTASection({ locale }: { locale: string }) {
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           <a
-            href="tel:+13055551234"
+            href="tel:+17869482298"
             className="inline-flex items-center gap-2 border-2 border-black text-black font-semibold px-10 py-4 rounded-full hover:bg-black hover:text-white transition-all duration-300 text-lg"
           >
             <Phone size={18} />
-            (305) 555-1234
+            (786) 948-2298
           </a>
         </div>
       </div>

@@ -21,7 +21,7 @@ export async function generateQuotePDF(result: QuoteResult): Promise<void> {
   doc.setFontSize(10);
   doc.setTextColor(180, 160, 120);
   doc.text("WHERE LUXURY MEETS THE ROAD", 20, 33);
-  doc.text("Miami, FL | (305) 555-1234 | info@luxrideelite.com", 20, 40);
+  doc.text("Miami, FL | (786) 948-2298 | info@luxrideelite.com", 20, 40);
 
   // Quote ID and date
   doc.setTextColor(201, 167, 101);

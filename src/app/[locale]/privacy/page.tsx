@@ -26,7 +26,7 @@ const SECTIONS = [
   },
   {
     title: "Contact Us",
-    content: "If you have any questions about this Privacy Policy, please contact us at privacy@luxrideelite.com or call (305) 555-1234.",
+    content: "If you have any questions about this Privacy Policy, please contact us at privacy@luxrideelite.com or call (786) 948-2298.",
   },
 ];
 

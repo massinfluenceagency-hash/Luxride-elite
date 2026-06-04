@@ -22,7 +22,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   };
 
   const CONTACT_INFO = [
-    { Icon: Phone, label: "Call Us", value: "(305) 555-1234", sub: "Available 24/7" },
+    { Icon: Phone, label: "Call Us", value: "(786) 948-2298", sub: "Available 24/7" },
     { Icon: Mail, label: "Email Us", value: "info@luxrideelite.com", sub: "Reply within 1 hour" },
     { Icon: MapPin, label: "Location", value: "Miami Beach, FL 33139", sub: "Serving all South Florida" },
     { Icon: Clock, label: "Hours", value: "24 Hours / 7 Days", sub: "Never closed" },
@@ -82,7 +82,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                         <CheckCircle size={32} className="text-green-400" />
                       </div>
                       <h3 className="font-display font-bold text-2xl text-white mb-3">Message Sent!</h3>
-                      <p className="text-cream/50">We&apos;ll get back to you within 1 hour. For urgent requests, call us directly at (305) 555-1234.</p>
+                      <p className="text-cream/50">We&apos;ll get back to you within 1 hour. For urgent requests, call us directly at (786) 948-2298.</p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
