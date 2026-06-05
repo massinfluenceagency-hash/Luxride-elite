@@ -15,8 +15,8 @@ const STATS = [
 ];
 
 const TEAM = [
-  { name: "Brian Badgley", role: "Co-Founder" },
-  { name: "Franklin Drouin", role: "Co-Founder" },
+  { name: "Brian", role: "Co-Founder" },
+  { name: "Franklin", role: "Co-Founder" },
 ];
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
