@@ -66,7 +66,6 @@ export default function Footer({ locale }: { locale: string }) {
             <ul className="space-y-3">
               {[
                 { label: "About Us", href: "/about" },
-                { label: nav("pov"), href: "/pov" },
                 { label: nav("contact"), href: "/contact" },
                 { label: "Careers", href: "/careers" },
               ].map(({ label, href }) => (
