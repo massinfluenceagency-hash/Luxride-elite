@@ -63,7 +63,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 <p className="text-gold text-sm font-semibold tracking-widest uppercase mb-4">Our History</p>
                 <h2 className="font-display font-black text-4xl text-white mb-6">Born from a Passion for Perfection</h2>
                 <div className="space-y-4 text-cream/60 leading-relaxed">
-                  <p>LuxRide Elite was founded in 2014 with a singular vision: to redefine what luxury transportation means in Miami. We believed that getting from point A to point B should be an experience in itself — not just a means to an end.</p>
+                  <p>LuxRide Elite was founded with a singular vision: to redefine what luxury transportation means in Miami. We believed that getting from point A to point B should be an experience in itself — not just a means to an end.</p>
                   <p>Starting with a single stretch limousine and an unwavering commitment to excellence, we have grown into Miami's most trusted luxury transportation company, with a fleet of over 15 world-class vehicles and a team of highly trained professional chauffeurs.</p>
                   <p>Today, we serve discerning clients who expect nothing less than the absolute best — from Fortune 500 executives and celebrities to couples celebrating their most special moments. Every ride is approached with the same meticulous attention to detail that has defined our reputation.</p>
                 </div>
