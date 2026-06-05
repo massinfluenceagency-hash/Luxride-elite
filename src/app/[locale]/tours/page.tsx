@@ -21,6 +21,18 @@ function ToursContent({ locale }: { locale: string }) {
               title={t("title")}
               subtitle={t("subtitle")}
             />
+            <div className="mt-8 max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-3 bg-gold/10 border border-gold/30 rounded-2xl px-8 py-5">
+                <div className="w-1.5 h-10 bg-gold-gradient rounded-full flex-shrink-0" />
+                <p className="text-cream/90 text-base md:text-lg leading-relaxed text-left">
+                  All of our tour experiences are{" "}
+                  <span className="text-gold font-semibold">fully customizable</span> and designed
+                  to be mixed and matched — curate your perfect Miami itinerary by combining any
+                  destinations, attractions, or activities across our catalog. Every detail is
+                  tailored exclusively to you.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
