@@ -293,6 +293,22 @@ export const vehicles: Vehicle[] = [
     specs: { make: "McLaren", model: "720S Spider", year: 2022, color: "Papaya Orange", mpg: "15/22" },
     available: true,
   },
+  {
+    id: "corvette-c8",
+    category: "exotic",
+    name: "Chevrolet Corvette C8",
+    tagline: "American supercar perfection, mid-engine mastery",
+    image: P(12226220),
+    gallery: [P(12226220), PL(27015313), PL(19067359)],
+    passengers: 2,
+    luggage: 1,
+    hourlyRate: 380,
+    perMileRate: 8.0,
+    freeMiles: 20,
+    features: ["495HP LT2 V8", "Mid-engine layout", "8-speed dual-clutch", "Magnetic Ride Control", "Bose performance audio", "GT2 bucket seats", "Carbon fiber accents"],
+    specs: { make: "Chevrolet", model: "Corvette Stingray C8", year: 2024, color: "Torch Red", mpg: "15/27" },
+    available: true,
+  },
 ];
 
 export const featuredVehicles = vehicles.filter((v) => v.popular);

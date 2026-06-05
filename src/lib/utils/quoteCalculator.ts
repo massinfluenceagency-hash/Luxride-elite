@@ -18,6 +18,7 @@ const PRICING: Record<string, { hourly: number; perMile: number; freeMiles: numb
   "infiniti-qx80": { hourly: 115, perMile: 2.0, freeMiles: 30 },
   "mercedes-s580": { hourly: 320, perMile: 7.0, freeMiles: 25 },
   "bmw-760": { hourly: 280, perMile: 6.0, freeMiles: 25 },
+  "corvette-c8": { hourly: 380, perMile: 8.0, freeMiles: 20 },
 };
 
 const DEFAULT_PRICING = { hourly: 120, perMile: 2.5, freeMiles: 30 };
