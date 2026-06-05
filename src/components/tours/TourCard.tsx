@@ -50,7 +50,7 @@ export default function TourCard({ tour, locale }: TourCardProps) {
           <div className="pt-4 border-t border-white/10 flex items-center justify-between">
             <div>
               <span className="text-gold font-display font-bold text-2xl">{formatCurrency(tour.pricePerPerson)}</span>
-              <span className="text-cream/40 text-sm ml-1">/person</span>
+              <span className="text-cream/40 text-sm ml-1">/group</span>
             </div>
             <div className="flex items-center gap-1.5 text-gold text-sm font-semibold group-hover:gap-2.5 transition-all">
               Book Tour <ArrowRight size={14} />
