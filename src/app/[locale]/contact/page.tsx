@@ -24,7 +24,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   const CONTACT_INFO = [
     { Icon: Phone, label: "Call Us", value: "(786) 948-2298", sub: "Available 24/7" },
     { Icon: Mail, label: "Email Us", value: "info@luxrideelite.com", sub: "Reply within 1 hour" },
-    { Icon: MapPin, label: "Location", value: "Miami Beach, FL 33139", sub: "Serving all South Florida" },
+    { Icon: MapPin, label: "Location", value: "Miami, FL", sub: "Serving all South Florida" },
     { Icon: Clock, label: "Hours", value: "24 Hours / 7 Days", sub: "Never closed" },
   ];
 

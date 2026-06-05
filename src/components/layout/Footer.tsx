@@ -99,7 +99,7 @@ export default function Footer({ locale }: { locale: string }) {
               <li className="flex items-start gap-3 text-cream/50 text-sm">
                 <MapPin size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-cream/80 font-medium">Miami Beach, FL</div>
+                  <div className="text-cream/80 font-medium">Miami, FL</div>
                   <div className="text-xs">Serving all of South Florida</div>
                 </div>
               </li>
