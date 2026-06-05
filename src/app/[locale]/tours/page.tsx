@@ -43,6 +43,10 @@ function ToursContent({ locale }: { locale: string }) {
                 <TourCard key={tour.id} tour={tour} locale={locale} />
               ))}
             </div>
+            <p className="text-cream/30 text-xs text-center mt-8">
+              * Quoted rates cover luxury transportation and professional guide services only.
+              Admission fees, activity costs, meals, and gratuities are not included and are the responsibility of the guest.
+            </p>
           </div>
         </section>
       </main>
