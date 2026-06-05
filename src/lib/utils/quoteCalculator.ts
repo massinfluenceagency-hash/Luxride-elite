@@ -11,6 +11,13 @@ const PRICING: Record<string, { hourly: number; perMile: number; freeMiles: numb
   "lamborghini-huracan": { hourly: 550, perMile: 11.0, freeMiles: 20 },
   "bentley-flying-spur": { hourly: 450, perMile: 9.0, freeMiles: 20 },
   "mclaren-720s": { hourly: 480, perMile: 10.0, freeMiles: 20 },
+  "lamborghini-urus": { hourly: 420, perMile: 9.0, freeMiles: 20 },
+  "ferrari-f8": { hourly: 520, perMile: 11.0, freeMiles: 20 },
+  "maybach-gls": { hourly: 750, perMile: 14.0, freeMiles: 20 },
+  "mercedes-g-wagon": { hourly: 380, perMile: 8.0, freeMiles: 25 },
+  "infiniti-qx80": { hourly: 115, perMile: 2.0, freeMiles: 30 },
+  "mercedes-s580": { hourly: 320, perMile: 7.0, freeMiles: 25 },
+  "bmw-760": { hourly: 280, perMile: 6.0, freeMiles: 25 },
 };
 
 const DEFAULT_PRICING = { hourly: 120, perMile: 2.5, freeMiles: 30 };
