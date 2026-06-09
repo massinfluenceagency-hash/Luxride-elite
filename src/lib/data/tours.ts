@@ -132,6 +132,36 @@ export const tours: Tour[] = [
       { time: "3:00 PM", location: "Hotel Return", description: "Return satisfied and inspired" },
     ],
   },
+  {
+    id: "miami-watersports",
+    slug: "watersports",
+    title: "Watersports & Yacht Tour",
+    description: "Luxury yacht cruise through Biscayne Bay combined with thrilling jet ski adventures on Miami's turquoise waters",
+    longDescription: "Experience Miami from the water on this ultimate luxury watersports day. Begin with a private yacht cruise through the iconic Millionaire's Row on Biscayne Bay, passing celebrity mansions and the stunning Miami skyline. Then unleash your inner thrill-seeker with guided jet ski rides through the open Atlantic waters. A full catered lunch and open bar are included aboard the yacht.",
+    image: "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=800&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1200&q=80",
+      "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1200&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+    ],
+    duration: "Full Day",
+    pricePerPerson: 899,
+    minPersons: 2,
+    maxPersons: 12,
+    highlights: ["Private luxury yacht cruise", "Jet ski adventure on the Atlantic", "Millionaire's Row & celebrity mansions", "South Beach coastline views", "Biscayne Bay sunset cruise", "Star Island flyby"],
+    includes: ["Private luxury yacht", "Jet ski rentals (1 hour)", "Captain & crew", "Gourmet catered lunch", "Open bar (beer, wine & cocktails)", "Snorkeling gear", "Luxury vehicle transfer", "Life jackets & safety equipment"],
+    itinerary: [
+      { time: "9:00 AM", location: "Hotel Pickup", description: "Luxury vehicle transfer to the private marina" },
+      { time: "9:30 AM", location: "Private Marina", description: "Board your yacht, meet the captain & crew, safety briefing" },
+      { time: "10:00 AM", location: "Biscayne Bay", description: "Cruise through Millionaire's Row past celebrity mansions and Star Island" },
+      { time: "11:00 AM", location: "Atlantic Ocean", description: "Jet ski adventure — race across the open water at full speed" },
+      { time: "12:30 PM", location: "Aboard Yacht", description: "Gourmet catered lunch with open bar as you cruise the coastline" },
+      { time: "2:00 PM", location: "South Beach Coastline", description: "Snorkeling stop in crystal-clear waters off the coast" },
+      { time: "3:30 PM", location: "Biscayne Bay", description: "Scenic sunset return cruise through the bay" },
+      { time: "4:30 PM", location: "Hotel Drop-off", description: "Luxury transfer back to your hotel" },
+    ],
+    popular: true,
+  },
 ];
 
 export function getTourBySlug(slug: string): Tour | undefined {
