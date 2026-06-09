@@ -138,9 +138,9 @@ export const tours: Tour[] = [
     title: "Watersports & Yacht Tour",
     description: "Luxury yacht cruise through Biscayne Bay combined with thrilling jet ski adventures on Miami's turquoise waters",
     longDescription: "Experience Miami from the water on this ultimate luxury watersports day. Begin with a private yacht cruise through iconic Millionaire's Row on Biscayne Bay, then unleash your inner thrill-seeker with jet skis, a blazing jet car speedboat race, surfing lessons with a pro instructor, and water ski runs across the open Atlantic. A full catered lunch and open bar are included aboard the yacht — the ultimate Miami water adventure.",
-    image: "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=800&q=80",
+    image: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1544551763-77ef2d0cfc6c?w=1200&q=80",
+      "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80",
       "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1200&q=80",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
     ],
