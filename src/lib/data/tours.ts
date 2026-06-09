@@ -141,6 +141,7 @@ export const tours: Tour[] = [
     image: "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80",
     gallery: [
       "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80",
+      "https://images.unsplash.com/photo-1530053969600-caed2596d242?w=1200&q=80",
       "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1200&q=80",
       "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
     ],
