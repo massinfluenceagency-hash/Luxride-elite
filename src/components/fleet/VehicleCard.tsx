@@ -65,8 +65,16 @@ export default function VehicleCard({ vehicle, locale }: VehicleCardProps) {
           {/* Price */}
           <div className="mt-auto pt-4 border-t border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-gold font-display font-bold text-2xl">{formatCurrency(vehicle.hourlyRate)}</span>
-              <span className="text-cream/40 text-sm ml-1">/hr</span>
+              <div>
+                <span className="text-gold font-display font-bold text-2xl">{formatCurrency(vehicle.hourlyRate)}</span>
+                <span className="text-cream/40 text-sm ml-1">/hr</span>
+              </div>
+              {vehicle.dailyRate && (
+                <div className="mt-0.5">
+                  <span className="text-cream/70 font-semibold text-sm">{formatCurrency(vehicle.dailyRate)}</span>
+                  <span className="text-cream/40 text-xs ml-1">/day</span>
+                </div>
+              )}
             </div>
             <div className="bg-gold/10 border border-gold/30 text-gold text-sm font-semibold px-4 py-2 rounded-full group-hover:bg-gold group-hover:text-black transition-all duration-300">
               View Details

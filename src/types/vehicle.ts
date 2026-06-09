@@ -10,6 +10,7 @@ export interface Vehicle {
   passengers: number;
   luggage: number;
   hourlyRate: number;
+  dailyRate?: number;
   perMileRate: number;
   freeMiles: number;
   features: string[];
