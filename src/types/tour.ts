@@ -1,4 +1,4 @@
-export type TourCategory = "city" | "adventure" | "nature" | "culture" | "food";
+export type TourCategory = "city" | "adventure" | "nature" | "culture" | "food" | "watersports";
 
 export interface TourStop {
   time: string;
