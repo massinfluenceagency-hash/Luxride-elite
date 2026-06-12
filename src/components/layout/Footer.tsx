@@ -85,7 +85,7 @@ export default function Footer({ locale }: { locale: string }) {
               <li className="flex items-start gap-3 text-cream/50 text-sm">
                 <Phone size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-cream/80 font-medium">(786) 948-2298</div>
+                  <div className="text-cream/80 font-medium">1 (800) 240-4727</div>
                   <div className="text-xs">Available 24/7</div>
                 </div>
               </li>
