@@ -57,14 +57,16 @@ export default async function ExoticPage({ params }: { params: Promise<{ locale:
                   <div className="p-6 flex flex-col flex-1">
                     <p className="text-cream/50 text-sm mb-5">{vehicle.tagline}</p>
 
-                    <div className="grid grid-cols-2 gap-3 mb-5">
-                      <div className="bg-white/5 rounded-xl p-3">
-                        <div className="text-cream/40 text-xs mb-1">Daily Rate</div>
-                        <div className="text-gold font-bold">{formatCurrency(vehicle.hourlyRate * 8)}</div>
+                    <div className="flex items-center justify-between mb-5 pt-2 border-t border-white/10">
+                      <div>
+                        <span className="text-gold font-display font-bold text-2xl">
+                          {vehicle.dailyRate ? formatCurrency(vehicle.dailyRate) : "—"}
+                        </span>
+                        <span className="text-cream/40 text-sm ml-1">/day</span>
                       </div>
-                      <div className="bg-white/5 rounded-xl p-3">
-                        <div className="text-cream/40 text-xs mb-1">Hourly</div>
-                        <div className="text-gold font-bold">{formatCurrency(vehicle.hourlyRate)}/hr</div>
+                      <div className="flex items-center gap-1 text-cream/50 text-sm">
+                        <Users size={14} className="text-gold" />
+                        <span>{vehicle.passengers} pax</span>
                       </div>
                     </div>
 
