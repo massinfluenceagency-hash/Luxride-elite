@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Phone, Mail, MapPin } from "lucide-react";
+import LuxRideLogo from "./LuxRideLogo";
 
 export default function Footer({ locale }: { locale: string }) {
   const t = useTranslations("footer");
@@ -13,14 +14,8 @@ export default function Footer({ locale }: { locale: string }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gold-gradient flex items-center justify-center">
-                <span className="text-black font-display font-black text-lg">L</span>
-              </div>
-              <div>
-                <div className="font-display font-bold text-white text-lg leading-none">LuxRide</div>
-                <div className="text-gold text-xs tracking-widest font-semibold">ELITE</div>
-              </div>
+            <div className="mb-4">
+              <LuxRideLogo size="sm" />
             </div>
             <p className="text-cream/50 text-sm leading-relaxed mb-6">{t("tagline")}</p>
             <div className="flex gap-4">

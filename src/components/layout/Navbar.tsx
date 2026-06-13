@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Phone, Menu, X, ChevronDown } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
+import LuxRideLogo from "./LuxRideLogo";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_LINKS = [
@@ -36,14 +37,8 @@ export default function Navbar({ locale }: { locale: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-gold-gradient flex items-center justify-center">
-              <span className="text-black font-display font-black text-lg">L</span>
-            </div>
-            <div>
-              <div className="font-display font-bold text-white text-lg leading-none">LuxRide</div>
-              <div className="text-gold text-xs tracking-widest font-semibold">ELITE</div>
-            </div>
+          <Link href={`/${locale}`} className="group">
+            <LuxRideLogo size="sm" />
           </Link>
 
           {/* Desktop Navigation */}
