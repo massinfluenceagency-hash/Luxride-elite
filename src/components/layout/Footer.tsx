@@ -18,21 +18,7 @@ export default function Footer({ locale }: { locale: string }) {
               <LuxRideLogo size="sm" />
             </div>
             <p className="text-cream/50 text-sm leading-relaxed mb-6">{t("tagline")}</p>
-            <div className="flex gap-4">
-              {[
-                { label: "IG", href: "#" },
-                { label: "FB", href: "#" },
-                { label: "X", href: "#" },
-              ].map(({ label, href }, i) => (
-                <a
-                  key={i}
-                  href={href}
-                  className="w-9 h-9 rounded-full border border-gold/30 flex items-center justify-center text-cream/50 hover:text-gold hover:border-gold transition-colors text-xs font-bold"
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
+
           </div>
 
           {/* Services */}
@@ -62,7 +48,6 @@ export default function Footer({ locale }: { locale: string }) {
               {[
                 { label: "About Us", href: "/about" },
                 { label: nav("contact"), href: "/contact" },
-                { label: "Careers", href: "/careers" },
               ].map(({ label, href }) => (
                 <li key={href}>
                   <Link href={`/${locale}${href}`} className="text-cream/50 hover:text-gold text-sm transition-colors">
@@ -80,14 +65,14 @@ export default function Footer({ locale }: { locale: string }) {
               <li className="flex items-start gap-3 text-cream/50 text-sm">
                 <Phone size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-cream/80 font-medium">1 (800) 240-4727</div>
+                  <a href="tel:+18002404727" className="text-cream/80 font-medium hover:text-gold">1 (800) 240-4727</a>
                   <div className="text-xs">Available 24/7</div>
                 </div>
               </li>
               <li className="flex items-start gap-3 text-cream/50 text-sm">
                 <Mail size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
-                  <div className="text-cream/80 font-medium">info@luxrideelite.com</div>
+                  <a href="mailto:info@luxrideelite.com" className="text-cream/80 font-medium hover:text-gold">info@luxrideelite.com</a>
                   <div className="text-xs">Reply within 1 hour</div>
                 </div>
               </li>

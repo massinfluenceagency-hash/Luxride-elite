@@ -4,7 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import TourCard from "@/components/tours/TourCard";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { tours } from "@/lib/data/tours";
+import { tours, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 
 function ToursContent({ locale }: { locale: string }) {
   const t = useTranslations("tours");
@@ -44,8 +44,7 @@ function ToursContent({ locale }: { locale: string }) {
               ))}
             </div>
             <p className="text-cream/30 text-xs text-center mt-8">
-              * Quoted rates cover luxury transportation and professional guide services only.
-              Admission fees, activity costs, meals, and gratuities are not included and are the responsibility of the guest.
+              {TOUR_PACKAGE_NOTICE}
             </p>
           </div>
         </section>

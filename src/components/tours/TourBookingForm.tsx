@@ -1,6 +1,7 @@
 "use client";
 import { submitRequest } from "@/lib/utils/submitRequest";
 import { useState } from "react";
+import { TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 import { Tour } from "@/types/tour";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
@@ -13,7 +14,7 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
-  const total = persons * tour.pricePerPerson;
+  const total = tour.packagePrice;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,9 +89,10 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
           className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none text-sm"
         />
       </div>
+      <p className="text-cream/70 text-sm leading-relaxed">{TOUR_PACKAGE_NOTICE}</p>
       <div className="py-3 border-t border-white/10">
         <div className="flex justify-between text-sm mb-1">
-          <span className="text-cream/50">{formatCurrency(tour.pricePerPerson)} × {persons} persons</span>
+          <span className="text-cream/50">{tour.duration} vehicle package · {persons} persons</span>
           <span className="text-white font-bold">{formatCurrency(total)}</span>
         </div>
       </div>
@@ -100,7 +102,7 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
         disabled={sending}
         className="w-full bg-gold-gradient text-black font-bold py-4 rounded-xl hover:shadow-gold transition-all duration-300"
       >
-        {sending ? "Sending..." : `Request This Tour — ${formatCurrency(total)}`}
+        {sending ? "Sending..." : `Request Vehicle Package — ${formatCurrency(total)}`}
       </button>
     </form>
   );

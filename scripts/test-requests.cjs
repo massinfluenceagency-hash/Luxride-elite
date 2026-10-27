@@ -17,6 +17,9 @@ function load(file) {
   return mod.exports;
 }
 async function main() {
+  const { calculateQuote } = load(path.join(root, 'src/lib/utils/quoteCalculator.ts'));
+  const { tours } = load(path.join(root, 'src/lib/data/tours.ts'));
+  const { vehicles } = load(path.join(root, 'src/lib/data/fleet.ts'));
   const requestRoute = load(path.join(root, 'src/app/api/requests/route.ts'));
   const emailRoute = load(path.join(root, 'src/app/api/email/route.ts'));
   const mapsRoute = load(path.join(root, 'src/app/api/maps/route.ts'));
@@ -29,6 +32,19 @@ async function main() {
   const booking = { type: 'booking', name: 'Test Customer', email: 'customer@example.com', phone: '3055550100', vehicleId: 'escalade-suv', serviceType: 'transfer', pickup: 'Miami Airport', dropoff: 'Miami Beach', date: '2099-12-01', time: '14:00', requests: '' };
   const quote = { quoteId: 'LRE-TEST', vehicleName: 'Escalade', origin: '<b>Airport</b>', destination: 'Miami Beach', distanceMiles: 15, durationHours: 3, validUntil: '2099-12-01T00:00:00.000Z', breakdown: [{ label: '<b>Total</b>', amount: 385.2, type: 'total' }] };
   try {
+    await check('all vehicle quotes match published fleet rates', async()=>{
+      for (const vehicle of vehicles) {
+        const quote=calculateQuote({vehicleId:vehicle.id,serviceType:'hourly',origin:'Miami',destination:'Miami Beach',distanceMiles:vehicle.freeMiles+10,durationHours:3,date:new Date('2099-12-01T12:00:00Z'),passengerCount:1,isAirportTransfer:false},vehicle.name);
+        assert.equal(quote.baseRate,vehicle.hourlyRate*3,vehicle.id);
+        assert.equal(quote.distanceSurcharge,vehicle.perMileRate*10,vehicle.id);
+      }
+    });
+    await check('all packages exclude separately paid activities',async()=>{
+      for(const tour of tours) {
+        assert.ok(tour.longDescription.includes('paid separately'),tour.id);
+        assert.deepEqual(tour.includes,['Luxury vehicle for the reserved time package','Professional chauffeur','Pickup and drop-off within the agreed itinerary']);
+      }
+    });
     keys.forEach(key => delete process.env[key]);
     await check('malformed request rejected', async()=>assert.equal((await post(requestRoute, '{')).status,400));
     await check('empty request rejected', async()=>assert.equal((await post(requestRoute, {})).status,400));
@@ -43,6 +59,11 @@ async function main() {
     await check('invalid email rejected',async()=>assert.equal((await post(requestRoute,{...contact,email:'invalid'})).status,400));
     const tour={type:'tour',tourId:'miami-city',persons:2,date:'2099-12-01',name:'Test',email:'customer@example.com'};
     await check('valid tour accepted',async()=>assert.equal((await post(requestRoute,tour)).status,200));
+    await check('tour price is flat for every valid group size',async()=>{
+      await post(requestRoute,{...tour,persons:2});const small=outbound.content[0].value;
+      await post(requestRoute,{...tour,persons:10});const large=outbound.content[0].value;
+      assert.ok(small.includes('$399.00'));assert.ok(large.includes('$399.00'));assert.ok(large.includes('paid separately'));
+    });
     await check('invalid tour group size rejected',async()=>assert.equal((await post(requestRoute,{...tour,persons:999})).status,400));
     await check('JSON quote dates reconstructed and HTML escaped',async()=>{assert.equal((await post(emailRoute,{to:'customer@example.com',quote})).status,200);assert.ok(outbound.content[0].value.includes('&lt;b&gt;Airport'));});
     global.fetch=async()=>new Response(null,{status:403});

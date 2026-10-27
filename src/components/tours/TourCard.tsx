@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, Users, ArrowRight } from "lucide-react";
+import { TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 import { Tour } from "@/types/tour";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import GlassCard from "@/components/ui/GlassCard";
@@ -47,10 +48,11 @@ export default function TourCard({ tour, locale }: TourCardProps) {
               <span key={h} className="text-xs text-cream/40 bg-white/5 px-2.5 py-1 rounded-full">{h}</span>
             ))}
           </div>
+          <p className="text-cream/60 text-xs leading-relaxed mb-4">{TOUR_PACKAGE_NOTICE}</p>
           <div className="pt-4 border-t border-white/10 flex items-center justify-between">
             <div>
-              <span className="text-gold font-display font-bold text-2xl">{formatCurrency(tour.pricePerPerson)}</span>
-              <span className="text-cream/40 text-sm ml-1">/group</span>
+              <span className="text-gold font-display font-bold text-2xl">{formatCurrency(tour.packagePrice)}</span>
+              <span className="text-cream/40 text-sm ml-1">/package</span>
             </div>
             <div className="flex items-center gap-1.5 text-gold text-sm font-semibold group-hover:gap-2.5 transition-all">
               Book Tour <ArrowRight size={14} />

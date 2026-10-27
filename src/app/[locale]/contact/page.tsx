@@ -28,8 +28,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   };
 
   const CONTACT_INFO = [
-    { Icon: Phone, label: "Call Us", value: "1 (800) 240-4727", sub: "Available 24/7" },
-    { Icon: Mail, label: "Email Us", value: "info@luxrideelite.com", sub: "Reply within 1 hour" },
+    { Icon: Phone, label: "Call Us", href: "tel:+18002404727", value: "1 (800) 240-4727", sub: "Available 24/7" },
+    { Icon: Mail, label: "Email Us", href: "mailto:info@luxrideelite.com", value: "info@luxrideelite.com", sub: "Reply within 1 hour" },
     { Icon: MapPin, label: "Location", value: "Miami, FL", sub: "Serving all South Florida" },
     { Icon: Clock, label: "Hours", value: "24 Hours / 7 Days", sub: "Never closed" },
   ];
@@ -53,14 +53,14 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
               {/* Contact info */}
               <div className="lg:col-span-2 space-y-4">
-                {CONTACT_INFO.map(({ Icon, label, value, sub }) => (
+                {CONTACT_INFO.map(({ Icon, label, value, sub, href }) => (
                   <GlassCard key={label} className="p-5 flex items-start gap-4">
                     <div className="w-10 h-10 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0">
                       <Icon size={18} className="text-gold" />
                     </div>
                     <div>
                       <div className="text-gold text-xs font-semibold tracking-widest uppercase mb-0.5">{label}</div>
-                      <div className="text-white font-semibold text-sm">{value}</div>
+                      {href ? <a href={href} className="text-white font-semibold text-sm hover:text-gold">{value}</a> : <div className="text-white font-semibold text-sm">{value}</div>}
                       <div className="text-cream/40 text-xs">{sub}</div>
                     </div>
                   </GlassCard>

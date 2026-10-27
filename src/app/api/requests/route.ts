@@ -1,7 +1,8 @@
+import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { vehicles } from "@/lib/data/fleet";
-import { tours } from "@/lib/data/tours";
+import { tours, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 import { escapeHtml, MailError, sendMail } from "@/lib/server/mail";
 
 const text = z.string().trim().min(1).max(500);
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
   } else if (data.type === "tour") {
     const tour = tours.find((item) => item.id === data.tourId);
     if (!tour || data.persons < tour.minPersons || data.persons > tour.maxPersons) return NextResponse.json({ error: "Please check the tour and group size." }, { status: 400 });
-    Object.assign(details, { Tour: tour.title, Date: data.date, Persons: String(data.persons), "Estimated total": `$${(tour.pricePerPerson * data.persons).toFixed(2)}` });
+    Object.assign(details, { Tour: tour.title, Date: data.date, Persons: String(data.persons), Package: tour.duration, "Vehicle package price": formatCurrency(tour.packagePrice), "Pricing scope": TOUR_PACKAGE_NOTICE });
   } else Object.assign(details, { Phone: data.phone, Message: data.message });
 
   try {

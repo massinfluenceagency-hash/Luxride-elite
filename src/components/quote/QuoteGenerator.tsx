@@ -8,10 +8,10 @@ import { QuoteResult, ServiceType } from "@/types/quote";
 import QuoteResultCard from "./QuoteResult";
 import GlassCard from "@/components/ui/GlassCard";
 
-export default function QuoteGenerator({ locale }: { locale: string }) {
+export default function QuoteGenerator({ locale, initialVehicleId = "escalade-suv" }: { locale: string; initialVehicleId?: string }) {
   const t = useTranslations("quote");
   const [serviceType, setServiceType] = useState<ServiceType>("transfer");
-  const [vehicleId, setVehicleId] = useState("escalade-suv");
+  const [vehicleId, setVehicleId] = useState(initialVehicleId);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
@@ -106,7 +106,7 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
             </label>
             <select
               value={vehicleId}
-              onChange={(e) => setVehicleId(e.target.value)}
+              onChange={(e) => { setVehicleId(e.target.value); const vehicle = vehicles.find(v => v.id === e.target.value); if (vehicle) setPassengers(p => Math.min(p, vehicle.passengers)); }}
               className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
             >
               {vehicles.map((v) => (

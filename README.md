@@ -8,6 +8,10 @@ Quote emails now validate their input, reconstruct dates serialized by the brows
 
 The route calculator no longer invents mileage based on address length or silently uses a 15-mile default. It requires a successful Google Maps response before calculating a price.
 
+Vehicle quote rates now come from the same fleet data used by the public listings. Vehicle detail quotes initially select the vehicle being viewed. Tour prices are flat vehicle time-package prices throughout cards, detail pages, forms, and request emails. Only the vehicle, chauffeur, and agreed pickup/drop-off are included. Activity admission, meals, drinks, equipment, and third-party services are explicitly excluded and paid separately by guests. Suggested stops are optional rather than guaranteed activities. Half Day packages cover 3–4 hours; Full Day packages cover 6–8 hours, as confirmed by the owner. The business phone number in quote emails matches the existing site-wide phone update. Placeholder social links and the nonexistent Careers destination are removed; footer and contact phone/email links are actionable.
+
+Search discovery now includes robots.txt and a multilingual sitemap with the main pages, vehicles, and tours. The live site returned 404 for both discovery files before this update.
+
 ## Required hosting settings
 
 This project requires a running Next.js Node.js server because it uses API routes and locale middleware. A static upload alone cannot run these features.
@@ -25,14 +29,13 @@ Without those settings, visitors see an honest unavailable message and can conta
 
 ## Validation
 
-- `node scripts/test-requests.cjs`: 15 checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
+- `node scripts/test-requests.cjs`: 18 checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
 - `node node_modules/typescript/bin/tsc --noEmit`: type check.
 - `node node_modules/next/dist/bin/next build`: production build.
 
 ## Still needs owner confirmation
 
-- Confirm the live Hostinger URL and which Hostinger service runs the application.
-- Confirm the correct business phone number: the contact page uses 1 (800) 240-4727 while the quote email contains (786) 948-2298.
+- Confirm which Hostinger service runs https://www.luxrideelite.com and configure its server environment.
 - Supply the earlier marketing audit so its remaining findings can be addressed accurately.
 - Verify actual email delivery and live route calculations once the hosting settings are present.
 

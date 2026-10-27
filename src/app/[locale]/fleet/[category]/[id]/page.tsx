@@ -106,7 +106,7 @@ export default async function VehicleDetailPage({
             {/* Right: quote generator */}
             <div className="lg:col-span-3">
               <h2 className="font-display font-bold text-2xl text-white mb-6">Get Your Quote for the {vehicle.name}</h2>
-              <QuoteGenerator locale={locale} />
+              <QuoteGenerator initialVehicleId={vehicle.id} locale={locale} />
             </div>
           </div>
 
