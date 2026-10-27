@@ -1,4 +1,5 @@
 "use client";
+import { submitRequest } from "@/lib/utils/submitRequest";
 import { useState } from "react";
 import { use } from "react";
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
@@ -12,13 +13,18 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setSent(true);
-    setSending(false);
+    if (sending) return;
+    setSending(true); setError("");
+    try {
+      await submitRequest({ type: "contact", ...form });
+      setSent(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to send your message. Please try again or call us.");
+    } finally { setSending(false); }
   };
 
   const CONTACT_INFO = [
@@ -67,6 +73,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                     width="100%"
                     height="100%"
                     style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+                    title="LuxRide Elite service area in Miami"
                     loading="lazy"
                     allowFullScreen
                   />
@@ -89,8 +96,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                       <h3 className="font-display font-bold text-2xl text-white mb-6">Send Us a Message</h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div>
-                          <label className="block text-gold text-xs font-semibold mb-2 tracking-wide">Full Name</label>
-                          <input
+                          <label htmlFor="field-1" className="block text-gold text-xs font-semibold mb-2 tracking-wide">Full Name</label>
+                          <input id="field-1"
                             required
                             value={form.name}
                             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -99,8 +106,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                           />
                         </div>
                         <div>
-                          <label className="block text-gold text-xs font-semibold mb-2 tracking-wide">Phone</label>
-                          <input
+                          <label htmlFor="field-2" className="block text-gold text-xs font-semibold mb-2 tracking-wide">Phone</label>
+                          <input id="field-2"
                             value={form.phone}
                             onChange={(e) => setForm({ ...form, phone: e.target.value })}
                             className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none"
@@ -109,8 +116,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                         </div>
                       </div>
                       <div>
-                        <label className="block text-gold text-xs font-semibold mb-2 tracking-wide">Email Address</label>
-                        <input
+                        <label htmlFor="field-3" className="block text-gold text-xs font-semibold mb-2 tracking-wide">Email Address</label>
+                        <input id="field-3"
                           type="email"
                           required
                           value={form.email}
@@ -120,8 +127,8 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                         />
                       </div>
                       <div>
-                        <label className="block text-gold text-xs font-semibold mb-2 tracking-wide">Message</label>
-                        <textarea
+                        <label htmlFor="field-4" className="block text-gold text-xs font-semibold mb-2 tracking-wide">Message</label>
+                        <textarea id="field-4"
                           required
                           rows={5}
                           value={form.message}
@@ -130,6 +137,7 @@ export default function ContactPage({ params }: { params: Promise<{ locale: stri
                           placeholder="Tell us about your transportation needs..."
                         />
                       </div>
+                      {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
                       <button
                         type="submit"
                         disabled={sending}

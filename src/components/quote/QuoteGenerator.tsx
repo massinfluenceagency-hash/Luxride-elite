@@ -20,7 +20,6 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
   const [isAirport, setIsAirport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QuoteResult | null>(null);
-  const [distanceMiles, setDistanceMiles] = useState(15);
   const [error, setError] = useState("");
 
   const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
@@ -34,22 +33,16 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
     setError("");
     setLoading(true);
     try {
-      // Try Google Maps API; fall back to estimate if no key
-      let miles = distanceMiles;
-      try {
-        const res = await fetch("/api/maps", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ origin, destination }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          miles = data.distanceMiles ?? miles;
-          setDistanceMiles(miles);
-        }
-      } catch {
-        // fallback: estimate 15 miles
-      }
+      setResult(null);
+      const res = await fetch("/api/maps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ origin, destination }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Unable to calculate the route. Please try again.");
+      const miles = data.distanceMiles;
+      if (!Number.isFinite(miles) || miles < 0) throw new Error("Unable to calculate the route. Please contact us for a quote.");
 
       const quoteResult = calculateQuote(
         {
@@ -66,6 +59,8 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
         selectedVehicle?.name ?? vehicleId
       );
       setResult(quoteResult);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to calculate your quote. Please try again or contact us.");
     } finally {
       setLoading(false);
     }
@@ -206,7 +201,7 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
             </label>
           </div>
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
 
           <button
             type="submit"
@@ -220,7 +215,7 @@ export default function QuoteGenerator({ locale }: { locale: string }) {
 
       {result && (
         <div className="mt-8">
-          <QuoteResultCard result={result} locale={locale} />
+          <QuoteResultCard key={result.quoteId} result={result} locale={locale} />
         </div>
       )}
     </div>

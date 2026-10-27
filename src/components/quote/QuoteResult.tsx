@@ -13,20 +13,25 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
   const [email, setEmail] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [sending, setSending] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const handleEmail = async () => {
-    if (!email) return;
+    if (sending) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setEmailError("Please enter a valid email address."); return; }
+    setEmailError("");
     setSending(true);
     try {
-      await fetch("/api/email", {
+      const response = await fetch("/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ to: email, quote: result }),
       });
+      const data = await response.json();
+      if (!response.ok || data.success !== true) throw new Error(data.error || "Unable to send your quote.");
       setEmailSent(true);
       setShowEmailForm(false);
-    } catch {
-      // silent fail — user can retry
+    } catch (error) {
+      setEmailError(error instanceof Error ? error.message : "Unable to send your quote. Please try again.");
     } finally {
       setSending(false);
     }
@@ -126,6 +131,7 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
         </button>
       </div>
 
+      {emailError && <p role="alert" className="text-red-400 text-sm mt-4">{emailError}</p>}
       {/* Email form */}
       {showEmailForm && !emailSent && (
         <div className="mt-4 flex gap-3">

@@ -1,4 +1,5 @@
 "use client";
+import { submitRequest } from "@/lib/utils/submitRequest";
 import { useState } from "react";
 import { use } from "react";
 import { CheckCircle, Car, MapPin, User, MessageSquare } from "lucide-react";
@@ -20,6 +21,8 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
   const { locale } = use(params);
   const [step, setStep] = useState(0);
   const [confirmed, setConfirmed] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     vehicleId: "escalade-suv",
     serviceType: "transfer",
@@ -36,7 +39,29 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
   const update = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val }));
   const selectedVehicle = vehicles.find((v) => v.id === form.vehicleId);
 
-  const handleConfirm = () => setConfirmed(true);
+  const nextStep = () => {
+    setError("");
+    if (step === 1 && (!form.pickup.trim() || !form.dropoff.trim() || !form.date || !form.time)) {
+      setError("Please enter pickup, dropoff, date, and time."); return;
+    }
+    if (step === 1 && new Date(form.date + "T" + form.time).getTime() < Date.now()) {
+      setError("Please choose a future pickup date and time."); return;
+    }
+    if (step === 2 && (!form.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) || !form.phone.trim())) {
+      setError("Please enter your name, a valid email address, and phone number."); return;
+    }
+    setStep(s => s + 1);
+  };
+  const handleConfirm = async () => {
+    if (sending) return;
+    setError(""); setSending(true);
+    try {
+      await submitRequest({ type: "booking", ...form });
+      setConfirmed(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to send your request. Please try again or call us.");
+    } finally { setSending(false); }
+  };
 
   const inputClass = "w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none";
   const labelClass = "block text-gold text-xs font-semibold mb-2 tracking-wide";
@@ -50,9 +75,9 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
             <div className="w-24 h-24 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center mx-auto mb-8">
               <CheckCircle size={40} className="text-gold" />
             </div>
-            <h2 className="font-display font-black text-4xl text-white mb-4">Booking Confirmed!</h2>
+            <h2 className="font-display font-black text-4xl text-white mb-4">Booking Request Sent!</h2>
             <p className="text-cream/60 text-lg mb-2">Thank you, {form.name}.</p>
-            <p className="text-cream/50 mb-8">We&apos;ll contact you at {form.email} within 30 minutes to confirm all details of your LuxRide Elite reservation.</p>
+            <p className="text-cream/50 mb-8">Your request has been sent. Our team will contact you at {form.email} to confirm availability, pricing, and reservation details.</p>
             <div className="bg-gold/10 border border-gold/30 rounded-2xl p-6 text-left space-y-2">
               <div className="flex justify-between text-sm"><span className="text-cream/40">Vehicle:</span><span className="text-white">{selectedVehicle?.name}</span></div>
               <div className="flex justify-between text-sm"><span className="text-cream/40">Pickup:</span><span className="text-white">{form.pickup || "TBD"}</span></div>
@@ -99,14 +124,14 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 <div className="space-y-5">
                   <h3 className="font-display font-bold text-xl text-white mb-6">Select Your Service</h3>
                   <div>
-                    <label className={labelClass}>Vehicle</label>
-                    <select value={form.vehicleId} onChange={(e) => update("vehicleId", e.target.value)} className={inputClass}>
+                    <label htmlFor="field-1" className={labelClass}>Vehicle</label>
+                    <select id="field-1" value={form.vehicleId} onChange={(e) => update("vehicleId", e.target.value)} className={inputClass}>
                       {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — ${v.hourlyRate}/hr</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className={labelClass}>Service Type</label>
-                    <select value={form.serviceType} onChange={(e) => update("serviceType", e.target.value)} className={inputClass}>
+                    <label htmlFor="field-2" className={labelClass}>Service Type</label>
+                    <select id="field-2" value={form.serviceType} onChange={(e) => update("serviceType", e.target.value)} className={inputClass}>
                       <option value="transfer">Point-to-Point Transfer</option>
                       <option value="hourly">Hourly Charter</option>
                       <option value="airport">Airport Transfer</option>
@@ -119,21 +144,21 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 <div className="space-y-5">
                   <h3 className="font-display font-bold text-xl text-white mb-6">Pickup & Schedule</h3>
                   <div>
-                    <label className={labelClass}>Pickup Address</label>
-                    <input value={form.pickup} onChange={(e) => update("pickup", e.target.value)} className={inputClass} placeholder="e.g. Miami International Airport" />
+                    <label htmlFor="field-3" className={labelClass}>Pickup Address</label>
+                    <input id="field-3" value={form.pickup} onChange={(e) => update("pickup", e.target.value)} className={inputClass} placeholder="e.g. Miami International Airport" />
                   </div>
                   <div>
-                    <label className={labelClass}>Dropoff Address</label>
-                    <input value={form.dropoff} onChange={(e) => update("dropoff", e.target.value)} className={inputClass} placeholder="e.g. 1 Hotel South Beach" />
+                    <label htmlFor="field-4" className={labelClass}>Dropoff Address</label>
+                    <input id="field-4" value={form.dropoff} onChange={(e) => update("dropoff", e.target.value)} className={inputClass} placeholder="e.g. 1 Hotel South Beach" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className={labelClass}>Date</label>
-                      <input type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className={inputClass} />
+                      <label htmlFor="field-5" className={labelClass}>Date</label>
+                      <input id="field-5" type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className={inputClass} />
                     </div>
                     <div>
-                      <label className={labelClass}>Time</label>
-                      <input type="time" value={form.time} onChange={(e) => update("time", e.target.value)} className={inputClass} />
+                      <label htmlFor="field-6" className={labelClass}>Time</label>
+                      <input id="field-6" type="time" value={form.time} onChange={(e) => update("time", e.target.value)} className={inputClass} />
                     </div>
                   </div>
                 </div>
@@ -142,16 +167,16 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 <div className="space-y-5">
                   <h3 className="font-display font-bold text-xl text-white mb-6">Your Contact Information</h3>
                   <div>
-                    <label className={labelClass}>Full Name</label>
-                    <input required value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} placeholder="Your full name" />
+                    <label htmlFor="field-7" className={labelClass}>Full Name</label>
+                    <input id="field-7" required value={form.name} onChange={(e) => update("name", e.target.value)} className={inputClass} placeholder="Your full name" />
                   </div>
                   <div>
-                    <label className={labelClass}>Email Address</label>
-                    <input type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} className={inputClass} placeholder="your@email.com" />
+                    <label htmlFor="field-8" className={labelClass}>Email Address</label>
+                    <input id="field-8" type="email" required value={form.email} onChange={(e) => update("email", e.target.value)} className={inputClass} placeholder="your@email.com" />
                   </div>
                   <div>
-                    <label className={labelClass}>Phone Number</label>
-                    <input type="tel" required value={form.phone} onChange={(e) => update("phone", e.target.value)} className={inputClass} placeholder="(305) 000-0000" />
+                    <label htmlFor="field-9" className={labelClass}>Phone Number</label>
+                    <input id="field-9" type="tel" required value={form.phone} onChange={(e) => update("phone", e.target.value)} className={inputClass} placeholder="(305) 000-0000" />
                   </div>
                 </div>
               )}
@@ -197,20 +222,21 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 </div>
               )}
 
+              {error && <p role="alert" className="text-red-400 text-sm mt-6">{error}</p>}
               {/* Navigation */}
               <div className="flex gap-4 mt-8">
                 {step > 0 && (
-                  <button onClick={() => setStep(s => s - 1)} className="border border-white/20 text-cream px-6 py-3 rounded-xl hover:border-gold hover:text-gold transition-all">
+                  <button disabled={sending} onClick={() => { setError(""); setStep(s => s - 1); }} className="border border-white/20 text-cream px-6 py-3 rounded-xl hover:border-gold hover:text-gold transition-all">
                     Back
                   </button>
                 )}
                 {step < 4 ? (
-                  <button onClick={() => setStep(s => s + 1)} className="flex-1 bg-gold-gradient text-black font-bold py-3 rounded-xl hover:shadow-gold transition-all duration-300">
+                  <button onClick={nextStep} className="flex-1 bg-gold-gradient text-black font-bold py-3 rounded-xl hover:shadow-gold transition-all duration-300">
                     Next Step
                   </button>
                 ) : (
-                  <button onClick={handleConfirm} className="flex-1 bg-gold-gradient text-black font-bold py-3 rounded-xl hover:shadow-gold transition-all duration-300">
-                    Confirm Booking
+                  <button disabled={sending} onClick={handleConfirm} className="flex-1 bg-gold-gradient text-black font-bold py-3 rounded-xl hover:shadow-gold transition-all duration-300">
+                    {sending ? "Sending..." : "Send Booking Request"}
                   </button>
                 )}
               </div>

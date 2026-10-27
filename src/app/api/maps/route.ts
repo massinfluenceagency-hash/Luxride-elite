@@ -5,7 +5,7 @@ const cache = new Map<string, { data: object; expires: number }>();
 export async function POST(req: NextRequest) {
   try {
     const { origin, destination } = await req.json();
-    if (!origin || !destination) {
+    if (typeof origin !== "string" || typeof destination !== "string" || !origin.trim() || !destination.trim() || origin.length > 500 || destination.length > 500) {
       return NextResponse.json({ error: "Missing origin or destination" }, { status: 400 });
     }
 
@@ -17,9 +17,7 @@ export async function POST(req: NextRequest) {
 
     const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY;
     if (!apiKey) {
-      // Return a plausible estimate if no API key configured
-      const estimated = estimateDistance(origin, destination);
-      return NextResponse.json(estimated);
+      return NextResponse.json({ error: "Route pricing is temporarily unavailable. Please contact us for an accurate quote." }, { status: 503 });
     }
 
     const url = new URL("https://maps.googleapis.com/maps/api/distancematrix/json");
@@ -28,16 +26,16 @@ export async function POST(req: NextRequest) {
     url.searchParams.set("units", "imperial");
     url.searchParams.set("key", apiKey);
 
-    const res = await fetch(url.toString());
+    const res = await fetch(url.toString(), { signal: AbortSignal.timeout(10000) });
     const data = await res.json();
 
     if (data.status !== "OK" || !data.rows?.[0]?.elements?.[0]) {
-      return NextResponse.json(estimateDistance(origin, destination));
+      return NextResponse.json({ error: "We could not find a driving route. Please check both addresses or contact us for a quote." }, { status: 422 });
     }
 
     const element = data.rows[0].elements[0];
     if (element.status !== "OK") {
-      return NextResponse.json(estimateDistance(origin, destination));
+      return NextResponse.json({ error: "We could not find a driving route. Please check both addresses or contact us for a quote." }, { status: 422 });
     }
 
     const distanceMeters: number = element.distance.value;
@@ -50,22 +48,10 @@ export async function POST(req: NextRequest) {
       distanceText: element.distance.text,
     };
 
+    if (cache.size >= 500) cache.clear();
     cache.set(cacheKey, { data: result, expires: Date.now() + 60 * 60 * 1000 });
     return NextResponse.json(result);
   } catch {
     return NextResponse.json({ error: "Distance calculation failed" }, { status: 500 });
   }
-}
-
-function estimateDistance(origin: string, destination: string) {
-  const seed = (origin.length + destination.length) % 40;
-  const miles = 10 + seed;
-  return {
-    distanceMiles: miles,
-    distanceKm: miles * 1.60934,
-    durationMinutes: Math.round(miles * 2.2),
-    durationText: `${Math.round(miles * 2.2)} mins`,
-    distanceText: `${miles} mi`,
-    estimated: true,
-  };
 }

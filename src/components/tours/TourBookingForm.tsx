@@ -1,20 +1,30 @@
 "use client";
+import { submitRequest } from "@/lib/utils/submitRequest";
 import { useState } from "react";
 import { Tour } from "@/types/tour";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 
 export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour; locale: string }) {
-  const [persons, setPersons] = useState(2);
+  const [persons, setPersons] = useState(Math.max(2, tour.minPersons));
   const [date, setDate] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const total = persons * tour.pricePerPerson;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    if (sending) return;
+    setSending(true); setError("");
+    try {
+      await submitRequest({ type: "tour", tourId: tour.id, persons, date, name, email });
+      setSubmitted(true);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Unable to send your request. Please try again or call us.");
+    } finally { setSending(false); }
   };
 
   if (submitted) {
@@ -24,7 +34,7 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
           <span className="text-green-400 text-2xl">✓</span>
         </div>
         <h4 className="text-white font-bold text-lg mb-2">Booking Request Sent!</h4>
-        <p className="text-cream/50 text-sm">We&apos;ll confirm your {tour.title} booking within 30 minutes.</p>
+        <p className="text-cream/50 text-sm">Your {tour.title} request has been sent. Our team will contact you to confirm availability and pricing.</p>
       </div>
     );
   }
@@ -32,9 +42,10 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Date</label>
-        <input
+        <label htmlFor="field-1" className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Date</label>
+        <input id="field-1"
           type="date"
+          min={new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" })}
           required
           value={date}
           onChange={(e) => setDate(e.target.value)}
@@ -42,10 +53,10 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
         />
       </div>
       <div>
-        <label className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">
+        <label htmlFor="field-2" className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">
           Persons ({tour.minPersons}–{tour.maxPersons})
         </label>
-        <input
+        <input id="field-2"
           type="number"
           min={tour.minPersons}
           max={tour.maxPersons}
@@ -56,8 +67,8 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
         />
       </div>
       <div>
-        <label className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Full Name</label>
-        <input
+        <label htmlFor="field-3" className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Full Name</label>
+        <input id="field-3"
           type="text"
           required
           value={name}
@@ -67,8 +78,8 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
         />
       </div>
       <div>
-        <label className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Email</label>
-        <input
+        <label htmlFor="field-4" className="block text-gold text-xs font-semibold mb-1.5 tracking-wide">Email</label>
+        <input id="field-4"
           type="email"
           required
           value={email}
@@ -83,11 +94,13 @@ export default function TourBookingForm({ tour, locale: _locale }: { tour: Tour;
           <span className="text-white font-bold">{formatCurrency(total)}</span>
         </div>
       </div>
+      {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
       <button
         type="submit"
+        disabled={sending}
         className="w-full bg-gold-gradient text-black font-bold py-4 rounded-xl hover:shadow-gold transition-all duration-300"
       >
-        Book This Tour — {formatCurrency(total)}
+        {sending ? "Sending..." : `Request This Tour — ${formatCurrency(total)}`}
       </button>
     </form>
   );

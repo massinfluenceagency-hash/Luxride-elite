@@ -1,51 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-import { QuoteResult } from "@/types/quote";
+import { z } from "zod";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { escapeHtml, MailError, sendMail } from "@/lib/server/mail";
+
+const schema = z.object({
+  to: z.email().max(254),
+  quote: z.object({
+    quoteId: z.string().min(1).max(80), vehicleName: z.string().min(1).max(200),
+    origin: z.string().min(1).max(500), destination: z.string().min(1).max(500),
+    distanceMiles: z.number().nonnegative().max(100000), durationHours: z.number().positive().max(1000),
+    validUntil: z.coerce.date(),
+    breakdown: z.array(z.object({ label: z.string().max(300), amount: z.number().nonnegative(), type: z.enum(["base", "distance", "airport", "peak", "subtotal", "tax", "total"]) })).min(1).max(20),
+  }),
+});
+
+type EmailQuote = z.infer<typeof schema>["quote"];
 
 export async function POST(req: NextRequest) {
+  let body: unknown;
+  try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid request." }, { status: 400 }); }
+  const parsed = schema.safeParse(body);
+  if (!parsed.success) return NextResponse.json({ error: "Please provide a valid email address and quote." }, { status: 400 });
   try {
-    const { to, quote }: { to: string; quote: QuoteResult } = await req.json();
-    if (!to || !quote) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    const sgKey = process.env.SENDGRID_API_KEY;
-    if (!sgKey) {
-      // Log for development — no email sent without key
-      console.log(`[DEV] Would send quote ${quote.quoteId} to ${to}`);
-      return NextResponse.json({ success: true, dev: true });
-    }
-
-    const html = buildEmailHtml(quote);
-    const res = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${sgKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        personalizations: [{ to: [{ email: to }] }],
-        from: { email: "quotes@luxrideelite.com", name: "LuxRide Elite" },
-        subject: `Your LuxRide Elite Quote — ${quote.quoteId}`,
-        content: [{ type: "text/html", value: html }],
-      }),
-    });
-
-    if (!res.ok) {
-      return NextResponse.json({ error: "Email send failed" }, { status: 500 });
-    }
+    const { to, quote } = parsed.data;
+    await sendMail(to, "Your LuxRide Elite Quote — " + quote.quoteId, buildEmailHtml(quote));
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error instanceof MailError ? error.message : "Unable to send your quote. Please try again or call us." }, { status: error instanceof MailError ? error.status : 502 });
   }
 }
 
-function buildEmailHtml(quote: QuoteResult): string {
+function buildEmailHtml(quote: EmailQuote): string {
   const rows = quote.breakdown
     .map(
       (item) =>
         `<tr style="border-bottom:1px solid #2a2a2a">
-          <td style="padding:10px 16px;color:${item.type === "total" ? "#C9A765" : "#ccc"};font-weight:${item.type === "total" ? "bold" : "normal"}">${item.label}</td>
+          <td style="padding:10px 16px;color:${item.type === "total" ? "#C9A765" : "#ccc"};font-weight:${item.type === "total" ? "bold" : "normal"}">${escapeHtml(item.label)}</td>
           <td style="padding:10px 16px;text-align:right;color:${item.type === "total" ? "#C9A765" : "#ccc"};font-weight:${item.type === "total" ? "bold" : "normal"}">${formatCurrency(item.amount)}</td>
         </tr>`
     )
@@ -61,12 +51,12 @@ function buildEmailHtml(quote: QuoteResult): string {
     </div>
     <div style="background:#1a1a1a;padding:32px;border-radius:0 0 16px 16px">
       <h2 style="color:#C9A765;font-size:20px;margin:0 0 8px">Your Quote is Ready</h2>
-      <p style="color:#888;margin:0 0 24px;font-size:13px">Quote ID: <span style="color:#C9A765;font-family:monospace">${quote.quoteId}</span></p>
+      <p style="color:#888;margin:0 0 24px;font-size:13px">Quote ID: <span style="color:#C9A765;font-family:monospace">${escapeHtml(quote.quoteId)}</span></p>
       <div style="background:#0a0a0a;border-radius:12px;padding:20px;margin-bottom:24px">
         <table style="width:100%;border-collapse:collapse;font-size:13px">
-          <tr><td style="padding:8px 0;color:#888">Vehicle</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.vehicleName}</td></tr>
-          <tr><td style="padding:8px 0;color:#888">From</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.origin}</td></tr>
-          <tr><td style="padding:8px 0;color:#888">To</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.destination}</td></tr>
+          <tr><td style="padding:8px 0;color:#888">Vehicle</td><td style="padding:8px 0;color:#fff;text-align:right">${escapeHtml(quote.vehicleName)}</td></tr>
+          <tr><td style="padding:8px 0;color:#888">From</td><td style="padding:8px 0;color:#fff;text-align:right">${escapeHtml(quote.origin)}</td></tr>
+          <tr><td style="padding:8px 0;color:#888">To</td><td style="padding:8px 0;color:#fff;text-align:right">${escapeHtml(quote.destination)}</td></tr>
           <tr><td style="padding:8px 0;color:#888">Distance</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.distanceMiles.toFixed(1)} miles</td></tr>
           <tr><td style="padding:8px 0;color:#888">Duration</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.durationHours} hours</td></tr>
         </table>
