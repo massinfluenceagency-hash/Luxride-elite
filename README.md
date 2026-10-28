@@ -18,10 +18,13 @@ This project requires a running Next.js Node.js server because it uses API route
 
 Set these server environment variables in the hosting service, using `.env.example` as the names-only template:
 
-- `SENDGRID_API_KEY`: an API key with mail sending permission.
-- `MAIL_FROM`: a sender address verified in SendGrid.
+- `SMTP_HOST`: `smtp.ionos.com`.
+- `SMTP_PORT`: `465` (implicit TLS), or `587` (required STARTTLS).
+- `SMTP_USER`: `info@luxrideelite.com`.
+- `SMTP_PASSWORD`: the password for that mailbox, entered directly in Vercel as a sensitive variable.
+- `MAIL_FROM`: `info@luxrideelite.com`.
 - `BOOKING_EMAIL`: the business inbox that should receive all contact and reservation requests.
-- `GOOGLE_MAPS_SERVER_KEY`: a server key authorized for the Google Distance Matrix API used by the existing implementation.
+- `GOOGLE_MAPS_SERVER_KEY`: a server key restricted to Google Routes API. The server uses Compute Routes rather than the legacy Distance Matrix endpoint.
 
 Keep real credentials out of GitHub and chat. Build with the existing build command and run the existing start command. Restart or redeploy after changing environment variables.
 
@@ -29,13 +32,13 @@ Without those settings, visitors see an honest unavailable message and can conta
 
 ## Validation
 
-- `node scripts/test-requests.cjs`: 18 checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
+- `node scripts/test-requests.cjs`: 24 checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
 - `node node_modules/typescript/bin/tsc --noEmit`: type check.
 - `node node_modules/next/dist/bin/next build`: production build.
 
 ## Still needs owner confirmation
 
-- Confirm which Hostinger service runs https://www.luxrideelite.com and configure its server environment.
+- Hosting is confirmed as Vercel project luxride-elite; Hostinger manages domain DNS, and IONOS manages the mailbox. Add the private mailbox password in Vercel and verify delivery before publication.
 - Supply the earlier marketing audit so its remaining findings can be addressed accurately.
 - Verify actual email delivery and live route calculations once the hosting settings are present.
 

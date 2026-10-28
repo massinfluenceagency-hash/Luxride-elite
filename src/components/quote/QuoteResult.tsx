@@ -78,6 +78,7 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
         ))}
       </div>
 
+      <p className="text-cream/40 text-xs mb-6">Powered by Google, ©{new Date().getFullYear()} Google</p>
       {/* Breakdown */}
       <div className="space-y-3 mb-8">
         {result.breakdown.map((item) => (
