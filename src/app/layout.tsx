@@ -17,6 +17,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.luxrideelite.com"),
   title: {
     default: "LuxRide Elite | Miami's Premier Luxury Transportation",
     template: "%s | LuxRide Elite",

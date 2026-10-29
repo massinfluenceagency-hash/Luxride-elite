@@ -1,21 +1,21 @@
 "use client";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function HeroSection({ locale }: { locale: string }) {
   const t = useTranslations("hero");
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[85svh] pt-28 pb-16 flex items-center justify-center overflow-hidden">
       {/* Background video / image */}
       <div className="absolute inset-0 z-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=1920&q=90')",
+              "url('/images/fleet/escalade.jpg')",
           }}
         />
         <div className="absolute inset-0 bg-hero-overlay" />
@@ -41,7 +41,7 @@ export default function HeroSection({ locale }: { locale: string }) {
       {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
@@ -67,10 +67,10 @@ export default function HeroSection({ locale }: { locale: string }) {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              href={`/${locale}/quote`}
+              href={`/${locale}/booking`}
               className="group bg-gold-gradient text-black font-semibold px-10 py-4 rounded-full hover:shadow-gold hover:scale-105 transition-all duration-300 flex items-center gap-2 text-lg"
             >
-              {t("cta_quote")}
+              Request My Ride
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
@@ -82,16 +82,8 @@ export default function HeroSection({ locale }: { locale: string }) {
           </div>
         </motion.div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream/40 text-xs tracking-widest uppercase"
-        >
-          <span>{t("scroll")}</span>
-          <ChevronDown size={16} className="animate-bounce" />
-        </motion.div>
+        <p className="mt-8 text-cream/80 text-sm">Airport pickups · Hourly chauffeur service · Private sightseeing · Special events</p>
+        <a href="tel:+18002404727" className="inline-flex items-center gap-2 mt-4 py-2 text-gold font-semibold"><Phone size={16} /> 1 (800) 240-4727</a>
       </div>
     </section>
   );

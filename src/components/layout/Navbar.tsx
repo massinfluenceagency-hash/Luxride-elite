@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Phone, Menu, X, ChevronDown } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import LuxRideLogo from "./LuxRideLogo";
 import { cn } from "@/lib/utils/cn";
@@ -103,7 +103,7 @@ export default function Navbar({ locale }: { locale: string }) {
                 className="bg-gold-gradient text-black text-sm font-semibold px-6 py-2.5 rounded-full"
                 onClick={() => setMobileOpen(false)}
               >
-                {t("booking")}
+                {t("quote")}
               </Link>
             </div>
           </div>

@@ -1,9 +1,15 @@
+import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
 import { vehicles } from "@/lib/data/fleet";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import QuoteGenerator from "@/components/quote/QuoteGenerator";
 import SectionHeading from "@/components/ui/SectionHeading";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(locale, "/quote", "Request a Miami Transportation Quote", "Estimate your route and vehicle service, or send trip details directly for a personal quote. All pickup times are Miami time.");
+}
 
 export default async function QuotePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ vehicle?: string | string[] }> }) {
   const { locale } = await params;
@@ -22,7 +28,7 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
             <div className="w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl" />
           </div>
           <div className="container-luxe relative z-10 text-center">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Transparent Pricing"
               title="Get Your Instant Quote"
               subtitle="Real-time pricing based on your route, vehicle, and schedule. No hidden fees."

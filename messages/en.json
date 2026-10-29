@@ -10,8 +10,8 @@
     "booking": "Book Now"
   },
   "hero": {
-    "tagline": "Where Luxury Meets the Road",
-    "subtitle": "Miami's premier luxury transportation — limousines, black SUVs, exotic cars & exclusive tours",
+    "tagline": "Miami Luxury Car & Chauffeur Service",
+    "subtitle": "Plan your airport pickup, private ride, special event, or sightseeing time package. Choose your vehicle and send your trip details for availability and final pricing.",
     "cta_quote": "Get Instant Quote",
     "cta_fleet": "View Our Fleet",
     "scroll": "Scroll to explore"
@@ -39,7 +39,7 @@
     },
     "tours": {
       "title": "City Tours",
-      "desc": "Explore Miami with a private vehicle and chauffeur"
+      "desc": "Private sightseeing with a vehicle and chauffeur. Activities paid separately."
     }
   },
   "fleet": {

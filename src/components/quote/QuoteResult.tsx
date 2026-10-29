@@ -5,9 +5,9 @@ import { Download, Mail, CheckCircle, Car, MapPin, Clock, Users } from "lucide-r
 import { QuoteResult } from "@/types/quote";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import GlassCard from "@/components/ui/GlassCard";
-import Link from "next/link";
 
-export default function QuoteResultCard({ result, locale }: { result: QuoteResult; locale: string }) {
+
+export default function QuoteResultCard({ result, onBook }: { result: QuoteResult; locale: string; onBook: () => void }) {
   const t = useTranslations("quote");
   const [emailSent, setEmailSent] = useState(false);
   const [email, setEmail] = useState("");
@@ -112,12 +112,13 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Link
-          href={`/${locale}/booking`}
+        <button
+          type="button"
+          onClick={onBook}
           className="flex-1 bg-gold-gradient text-black font-bold py-3.5 rounded-xl text-center hover:shadow-gold transition-all duration-300"
         >
           {t("book_now")}
-        </Link>
+        </button>
         <button
           onClick={handlePDF}
           className="flex items-center justify-center gap-2 border border-gold/50 text-cream px-6 py-3.5 rounded-xl hover:border-gold hover:bg-gold/10 transition-all duration-300 text-sm"
@@ -137,6 +138,7 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
       {showEmailForm && !emailSent && (
         <div className="mt-4 flex gap-3">
           <input
+            aria-label="Email address for your quote"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

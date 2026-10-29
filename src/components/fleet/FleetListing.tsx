@@ -23,7 +23,7 @@ export default function FleetListing({ locale, initialCategory }: { locale: stri
         <div className="relative py-20 bg-black-charcoal border-b border-gold/20 overflow-hidden">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1920&q=60')] bg-cover bg-center opacity-10" />
           <div className="container-luxe relative z-10 text-center">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Our Fleet"
               title={t("title")}
               subtitle={t("subtitle")}

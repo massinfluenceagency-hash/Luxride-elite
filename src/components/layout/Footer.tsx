@@ -73,7 +73,7 @@ export default function Footer({ locale }: { locale: string }) {
                 <Mail size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
                   <a href="mailto:info@luxrideelite.com" className="text-cream/80 font-medium hover:text-gold">info@luxrideelite.com</a>
-                  <div className="text-xs">Reply within 1 hour</div>
+                  <div className="text-xs">Booking and service inquiries</div>
                 </div>
               </li>
               <li className="flex items-start gap-3 text-cream/50 text-sm">

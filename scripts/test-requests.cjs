@@ -31,7 +31,7 @@ async function main() {
   let checks = 0; let outbound;
   async function check(label, fn) { await fn(); checks++; console.log('PASS ' + label); }
   const contact = { type: 'contact', name: '<b>Test</b>', email: 'customer@example.com', phone: '3055550100', message: '<img src=x onerror=alert(1)>' };
-  const booking = { type: 'booking', name: 'Test Customer', email: 'customer@example.com', phone: '3055550100', vehicleId: 'escalade-suv', serviceType: 'transfer', pickup: 'Miami Airport', dropoff: 'Miami Beach', date: '2099-12-01', time: '14:00', requests: '' };
+  const booking = { type: 'booking', name: 'Test Customer', email: 'customer@example.com', phone: '3055550100', vehicleId: 'escalade-suv', serviceType: 'transfer', pickup: 'Miami Airport', dropoff: 'Miami Beach', date: '2099-12-01', time: '14:00', requests: '', durationHours: 3, passengerCount: 2 };
   const quote = { quoteId: 'LRE-TEST', vehicleName: 'Escalade', origin: '<b>Airport</b>', destination: 'Miami Beach', distanceMiles: 15, durationHours: 3, validUntil: '2099-12-01T00:00:00.000Z', breakdown: [{ label: '<b>Total</b>', amount: 385.2, type: 'total' }] };
   try {
     await check('all vehicle quotes match published fleet rates', async()=>{
@@ -56,6 +56,16 @@ async function main() {
     smtpState.send=async message=>{outbound=message;return {accepted:[message.to],rejected:[]};};
     await check('contact reaches business inbox with reply-to and escaped HTML',async()=>{assert.equal((await post(requestRoute,contact)).status,200);assert.equal(outbound.to,'business@example.com');assert.equal(outbound.replyTo,contact.email);assert.ok(outbound.html.includes('&lt;img'));assert.ok(!outbound.html.includes('<img'));});
     await check('valid booking request accepted',async()=>assert.equal((await post(requestRoute,booking)).status,200));
+    await check('booking email contains service hours and passengers',async()=>{await post(requestRoute,booking);assert.ok(outbound.html.includes('Service hours'));assert.ok(outbound.html.includes('Passengers'));});
+    await check('oversized booking group rejected',async()=>assert.equal((await post(requestRoute,{...booking,passengerCount:99})).status,400));
+    await check('invalid duration rejected',async()=>assert.equal((await post(requestRoute,{...booking,durationHours:0})).status,400));
+    await check('campaign labels reach the inbox with escaped HTML',async()=>{await post(requestRoute,{...contact,campaign:{utm_source:'google',utm_campaign:'<b>airport</b>'}});assert.ok(outbound.html.includes('google'));assert.ok(outbound.html.includes('&lt;b&gt;airport'));});
+    const {miamiDateTime,isFutureMiamiPickup}=load(path.join(root,'src/lib/utils/miamiTime.ts'));
+    await check('Miami pickup validation is independent of visitor timezone',async()=>{const now=new Date('2026-10-29T15:00:00Z');assert.equal(miamiDateTime(now),'2026-10-29T11:00');assert.equal(isFutureMiamiPickup('2026-10-29','10:59',now),false);assert.equal(isFutureMiamiPickup('2026-10-29','11:01',now),true);});
+    const {saveBookingDraft,takeBookingDraft}=load(path.join(root,'src/lib/utils/bookingDraft.ts'));const storage=new Map();global.sessionStorage={setItem:(k,v)=>storage.set(k,v),getItem:k=>storage.get(k)||null,removeItem:k=>storage.delete(k)};
+    const draft={vehicleId:'escalade-suv',serviceType:'airport',pickup:'Miami Airport',dropoff:'Miami Beach',date:'2099-12-01',time:'14:00',durationHours:3,passengerCount:2};
+    await check('trip draft preserves details and is consumed once',async()=>{assert.equal(saveBookingDraft(draft),true);assert.deepEqual(takeBookingDraft(),draft);assert.equal(takeBookingDraft(),null);});
+    await check('trip draft rejects invalid capacity and expires',async()=>{assert.equal(saveBookingDraft({...draft,passengerCount:99}),false);storage.set('luxride-booking-draft',JSON.stringify({expires:0,draft}));assert.equal(takeBookingDraft(),null);});
     await check('unknown vehicle rejected',async()=>assert.equal((await post(requestRoute,{...booking,vehicleId:'fake'})).status,400));
     await check('past booking rejected',async()=>assert.equal((await post(requestRoute,{...booking,date:'2000-01-01'})).status,400));
     await check('invalid email rejected',async()=>assert.equal((await post(requestRoute,{...contact,email:'invalid'})).status,400));

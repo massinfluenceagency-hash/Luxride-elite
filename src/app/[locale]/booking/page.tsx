@@ -1,6 +1,8 @@
 "use client";
 import { submitRequest } from "@/lib/utils/submitRequest";
-import { useState } from "react";
+import { takeBookingDraft } from "@/lib/utils/bookingDraft";
+import { isFutureMiamiPickup, miamiDateTime } from "@/lib/utils/miamiTime";
+import { useEffect, useState } from "react";
 import { use } from "react";
 import { CheckCircle, Car, MapPin, User, MessageSquare } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -34,18 +36,28 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
     email: "",
     phone: "",
     requests: "",
+    durationHours: "3",
+    passengerCount: "2",
   });
+
+  useEffect(() => {
+    const draft = takeBookingDraft();
+    if (draft) setForm(previous => ({ ...previous, ...draft, durationHours: String(draft.durationHours), passengerCount: String(draft.passengerCount) }));
+  }, []);
 
   const update = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val }));
   const selectedVehicle = vehicles.find((v) => v.id === form.vehicleId);
 
   const nextStep = () => {
     setError("");
+    if (step === 0 && (!Number.isInteger(Number(form.passengerCount)) || Number(form.passengerCount) < 1 || Number(form.passengerCount) > (selectedVehicle?.passengers ?? 0) || Number(form.durationHours) < 1 || Number(form.durationHours) > 24)) {
+      setError("Please select 1–24 hours and a passenger count within the vehicle capacity."); return;
+    }
     if (step === 1 && (!form.pickup.trim() || !form.dropoff.trim() || !form.date || !form.time)) {
       setError("Please enter pickup, dropoff, date, and time."); return;
     }
-    if (step === 1 && new Date(form.date + "T" + form.time).getTime() < Date.now()) {
-      setError("Please choose a future pickup date and time."); return;
+    if (step === 1 && !isFutureMiamiPickup(form.date, form.time)) {
+      setError("Please choose a future pickup date and time in Miami."); return;
     }
     if (step === 2 && (!form.name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) || !form.phone.trim())) {
       setError("Please enter your name, a valid email address, and phone number."); return;
@@ -56,7 +68,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
     if (sending) return;
     setError(""); setSending(true);
     try {
-      await submitRequest({ type: "booking", ...form });
+      await submitRequest({ type: "booking", ...form, durationHours: Number(form.durationHours), passengerCount: Number(form.passengerCount) });
       setConfirmed(true);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Unable to send your request. Please try again or call us.");
@@ -96,7 +108,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
       <main className="min-h-screen pt-24">
         <div className="py-12 border-b border-gold/20">
           <div className="container-luxe">
-            <SectionHeading label="Reservation" title="Reserve Your Vehicle" subtitle="Complete your booking in just a few steps" />
+            <SectionHeading as="h1" label="Reservation" title="Request Your Ride" subtitle="Tell us your plans. Our team will confirm availability and final pricing before your reservation is secured." />
           </div>
         </div>
 
@@ -119,13 +131,13 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
               ))}
             </div>
 
-            <GlassCard className="p-8">
+            <GlassCard className="p-5 sm:p-8">
               {step === 0 && (
                 <div className="space-y-5">
                   <h3 className="font-display font-bold text-xl text-white mb-6">Select Your Service</h3>
                   <div>
                     <label htmlFor="field-1" className={labelClass}>Vehicle</label>
-                    <select id="field-1" value={form.vehicleId} onChange={(e) => update("vehicleId", e.target.value)} className={inputClass}>
+                    <select id="field-1" value={form.vehicleId} onChange={(e) => { update("vehicleId", e.target.value); const capacity = vehicles.find(v => v.id === e.target.value)?.passengers ?? 1; update("passengerCount", String(Math.min(Number(form.passengerCount), capacity))); }} className={inputClass}>
                       {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — ${v.hourlyRate}/hr</option>)}
                     </select>
                   </div>
@@ -138,6 +150,12 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                       <option value="event">Special Event</option>
                     </select>
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min="1" max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
+                    <div><label htmlFor="booking-passengers" className={labelClass}>Passengers (up to {selectedVehicle?.passengers})</label><input id="booking-passengers" type="number" min="1" max={selectedVehicle?.passengers} value={form.passengerCount} onChange={e => update("passengerCount", e.target.value)} className={inputClass} /></div>
+                  </div>
+                  <p className="text-cream/70 text-sm">For a transfer, enter your estimated service time; our team will confirm the schedule. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>
                 </div>
               )}
               {step === 1 && (
@@ -154,10 +172,10 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="field-5" className={labelClass}>Date</label>
-                      <input id="field-5" type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className={inputClass} />
+                      <input id="field-5" type="date" min={miamiDateTime().slice(0, 10)} value={form.date} onChange={(e) => update("date", e.target.value)} className={inputClass} />
                     </div>
                     <div>
-                      <label htmlFor="field-6" className={labelClass}>Time</label>
+                      <label htmlFor="field-6" className={labelClass}>Time (Miami / Eastern)</label>
                       <input id="field-6" type="time" value={form.time} onChange={(e) => update("time", e.target.value)} className={inputClass} />
                     </div>
                   </div>
@@ -184,25 +202,28 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 <div className="space-y-5">
                   <h3 className="font-display font-bold text-xl text-white mb-6">Special Requests</h3>
                   <textarea
+                    aria-label="Special requests"
                     rows={6}
                     value={form.requests}
                     onChange={(e) => update("requests", e.target.value)}
                     className={`${inputClass} resize-none`}
                     placeholder="Any special accommodations, decorations, routes, dietary requirements, or anything else we should know..."
                   />
-                  <p className="text-cream/30 text-sm">We accommodate virtually any request. No detail is too small.</p>
+                  <p className="text-cream/30 text-sm">Tell us about luggage, flight details, child seats, or accessibility needs. Our team will confirm what is available.</p>
                 </div>
               )}
               {step === 4 && (
                 <div className="space-y-5">
-                  <h3 className="font-display font-bold text-xl text-white mb-6">Confirm Your Booking</h3>
+                  <h3 className="font-display font-bold text-xl text-white mb-6">Review Your Request</h3>
                   <div className="space-y-3">
                     {[
                       ["Vehicle", selectedVehicle?.name ?? ""],
                       ["Service", form.serviceType],
+                      ["Service hours", form.durationHours],
+                      ["Passengers", form.passengerCount],
                       ["Pickup", form.pickup || "TBD"],
                       ["Dropoff", form.dropoff || "TBD"],
-                      ["Date & Time", `${form.date} ${form.time}`],
+                      ["Date & Time", `${form.date} ${form.time} (Miami time)`],
                       ["Name", form.name],
                       ["Email", form.email],
                       ["Phone", form.phone],
