@@ -27,7 +27,15 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ origin: { address: origin.trim() }, destination: { address: destination.trim() }, travelMode: "DRIVE", routingPreference: "TRAFFIC_UNAWARE" }),
       signal: AbortSignal.timeout(10000),
     });
-    if (!response.ok) return NextResponse.json({ error: "Route pricing is temporarily unavailable. Please try again or contact us." }, { status: 502 });
+    if (!response.ok) {
+      const failure = await response.json().catch(() => ({}));
+      console.error("Google Routes request failed", {
+        status: response.status,
+        code: failure.error?.status,
+        reasons: Array.isArray(failure.error?.details) ? failure.error.details.map((detail: { reason?: string }) => detail.reason).filter(Boolean) : [],
+      });
+      return NextResponse.json({ error: "Route pricing is temporarily unavailable. Please try again or contact us." }, { status: 502 });
+    }
     const data = await response.json();
     const route = data.routes?.[0];
     if (!route) return NextResponse.json({ error: "We could not find a driving route. Please check both addresses or contact us for a quote." }, { status: 422 });
@@ -46,3 +54,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Distance calculation failed. Please try again or contact us." }, { status: 502 });
   }
 }
+
