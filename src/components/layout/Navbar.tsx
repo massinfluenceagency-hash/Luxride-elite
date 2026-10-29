@@ -73,7 +73,9 @@ export default function Navbar({ locale }: { locale: string }) {
           <button
             className="lg:hidden text-white p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -82,7 +84,7 @@ export default function Navbar({ locale }: { locale: string }) {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
+        <div id="mobile-navigation" className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
           <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4">
             {NAV_LINKS.map((link) => (
               <Link

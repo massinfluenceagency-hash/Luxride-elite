@@ -1,12 +1,15 @@
 import { setRequestLocale } from "next-intl/server";
+import { vehicles } from "@/lib/data/fleet";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import QuoteGenerator from "@/components/quote/QuoteGenerator";
 import SectionHeading from "@/components/ui/SectionHeading";
 
-export default async function QuotePage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function QuotePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ vehicle?: string | string[] }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const { vehicle } = await searchParams;
+  const initialVehicleId = vehicles.find((item) => item.id === vehicle)?.id;
 
   return (
     <>
@@ -30,7 +33,7 @@ export default async function QuotePage({ params }: { params: Promise<{ locale: 
         <section className="pb-24">
           <div className="container-luxe">
             <div className="max-w-4xl mx-auto">
-              <QuoteGenerator locale={locale} />
+              <QuoteGenerator key={initialVehicleId} locale={locale} initialVehicleId={initialVehicleId} />
             </div>
           </div>
         </section>

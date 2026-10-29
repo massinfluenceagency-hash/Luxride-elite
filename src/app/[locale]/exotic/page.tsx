@@ -86,7 +86,7 @@ export default async function ExoticPage({ params }: { params: Promise<{ locale:
                         Book Now
                       </Link>
                       <Link
-                        href={`/${locale}/quote`}
+                        href={`/${locale}/quote?vehicle=${encodeURIComponent(vehicle.id)}`}
                         className="border border-gold/40 text-gold text-sm font-semibold py-3 px-4 rounded-xl hover:bg-gold/10 transition-all duration-300"
                       >
                         Quote
