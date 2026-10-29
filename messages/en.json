@@ -10,8 +10,8 @@
     "booking": "Book Now"
   },
   "hero": {
-    "tagline": "Where Luxury Meets the Road",
-    "subtitle": "Miami's premier luxury transportation — limousines, black SUVs, exotic cars & exclusive tours",
+    "tagline": "Miami Luxury Car & Chauffeur Service",
+    "subtitle": "Plan your airport pickup, private ride, special event, or sightseeing time package. Choose your vehicle and send your trip details for availability and final pricing.",
     "cta_quote": "Get Instant Quote",
     "cta_fleet": "View Our Fleet",
     "scroll": "Scroll to explore"
@@ -39,7 +39,7 @@
     },
     "tours": {
       "title": "City Tours",
-      "desc": "Guided Miami tours in ultimate comfort"
+      "desc": "Private sightseeing with a vehicle and chauffeur. Activities paid separately."
     }
   },
   "fleet": {
@@ -101,7 +101,7 @@
   },
   "tours": {
     "title": "Discover Miami in Style",
-    "subtitle": "Exclusive guided tours in our luxury vehicles",
+    "subtitle": "Private vehicle and chauffeur time packages. Activities cost extra.",
     "per_person": "per person",
     "duration": "Duration",
     "highlights": "Highlights",
@@ -111,27 +111,27 @@
     "city": {
       "title": "Miami City Tour",
       "desc": "Explore the Magic City's iconic landmarks, art deco architecture, and vibrant neighborhoods",
-      "duration": "4 hours"
+      "duration": "3–4 hours"
     },
     "adventure": {
       "title": "Adventure Tour",
       "desc": "Thrilling outdoor experiences through the Everglades and Florida Keys",
-      "duration": "8 hours"
+      "duration": "6–8 hours"
     },
     "nature": {
       "title": "Nature & Wildlife Tour",
       "desc": "Discover Florida's breathtaking natural wonders and diverse ecosystems",
-      "duration": "6 hours"
+      "duration": "6–8 hours"
     },
     "culture": {
       "title": "Culture & Art Tour",
       "desc": "Immerse yourself in Miami's world-renowned art scene, museums & galleries",
-      "duration": "5 hours"
+      "duration": "3–4 hours"
     },
     "food": {
       "title": "Food & Gastronomy Tour",
       "desc": "Savor Miami's diverse culinary scene — from Cuban to haute cuisine",
-      "duration": "4 hours"
+      "duration": "3–4 hours"
     }
   },
   "reviews": {

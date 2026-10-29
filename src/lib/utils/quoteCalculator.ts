@@ -1,27 +1,6 @@
+import { getVehicleById } from "@/lib/data/fleet";
 import { QuoteInput, QuoteResult, QuoteLineItem } from "@/types/quote";
 
-const PRICING: Record<string, { hourly: number; perMile: number; freeMiles: number }> = {
-  "stretch-limo": { hourly: 150, perMile: 3.5, freeMiles: 30 },
-  "party-bus": { hourly: 200, perMile: 4.0, freeMiles: 30 },
-  "escalade-suv": { hourly: 120, perMile: 2.5, freeMiles: 30 },
-  "navigator-suv": { hourly: 110, perMile: 2.0, freeMiles: 30 },
-  "suburban-suv": { hourly: 105, perMile: 2.0, freeMiles: 30 },
-  "rolls-royce": { hourly: 600, perMile: 12.0, freeMiles: 20 },
-  "ferrari-488": { hourly: 500, perMile: 10.0, freeMiles: 20 },
-  "lamborghini-huracan": { hourly: 550, perMile: 11.0, freeMiles: 20 },
-  "bentley-flying-spur": { hourly: 450, perMile: 9.0, freeMiles: 20 },
-  "mclaren-720s": { hourly: 480, perMile: 10.0, freeMiles: 20 },
-  "lamborghini-urus": { hourly: 420, perMile: 9.0, freeMiles: 20 },
-  "ferrari-f8": { hourly: 520, perMile: 11.0, freeMiles: 20 },
-  "maybach-gls": { hourly: 750, perMile: 14.0, freeMiles: 20 },
-  "mercedes-g-wagon": { hourly: 380, perMile: 8.0, freeMiles: 25 },
-  "infiniti-qx80": { hourly: 115, perMile: 2.0, freeMiles: 30 },
-  "mercedes-s580": { hourly: 320, perMile: 7.0, freeMiles: 25 },
-  "bmw-760": { hourly: 280, perMile: 6.0, freeMiles: 25 },
-  "corvette-c8": { hourly: 380, perMile: 8.0, freeMiles: 20 },
-};
-
-const DEFAULT_PRICING = { hourly: 120, perMile: 2.5, freeMiles: 30 };
 const AIRPORT_FEE = 75;
 const PEAK_MULTIPLIER = 0.2;
 const TAX_RATE = 0.07;
@@ -34,7 +13,9 @@ function isPeakHour(date: Date): boolean {
 }
 
 export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteResult {
-  const pricing = PRICING[input.vehicleId] ?? DEFAULT_PRICING;
+  const vehicle = getVehicleById(input.vehicleId);
+  if (!vehicle) throw new Error("Please select a valid vehicle.");
+  const pricing = { hourly: vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };
   const baseRate = pricing.hourly * input.durationHours;
   const excessMiles = Math.max(0, input.distanceMiles - pricing.freeMiles);
   const distanceSurcharge = excessMiles * pricing.perMile;

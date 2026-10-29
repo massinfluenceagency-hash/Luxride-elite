@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,11 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import { vehicles } from "@/lib/data/fleet";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(locale, "/exotic", "Exotic & Luxury Cars in Miami", "Explore exotic and luxury vehicles. Choose your preferred model and request availability and final pricing for your Miami plans.");
+}
 
 export default async function ExoticPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -22,7 +28,7 @@ export default async function ExoticPage({ params }: { params: Promise<{ locale:
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=1920&q=60')] bg-cover bg-center opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/95 to-black" />
           <div className="container-luxe relative z-10">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Exotic Car Rental"
               title="Drive the Extraordinary"
               subtitle="Miami's finest selection of supercars and ultra-luxury vehicles — reserved exclusively for those with exceptional taste"
@@ -86,7 +92,7 @@ export default async function ExoticPage({ params }: { params: Promise<{ locale:
                         Book Now
                       </Link>
                       <Link
-                        href={`/${locale}/quote`}
+                        href={`/${locale}/quote?vehicle=${encodeURIComponent(vehicle.id)}`}
                         className="border border-gold/40 text-gold text-sm font-semibold py-3 px-4 rounded-xl hover:bg-gold/10 transition-all duration-300"
                       >
                         Quote
@@ -109,10 +115,10 @@ export default async function ExoticPage({ params }: { params: Promise<{ locale:
             />
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               {[
-                { title: "100% Owned Fleet", desc: "No brokers, no middlemen. Every car is ours, maintained to factory specs." },
-                { title: "Insured & Certified", desc: "Full commercial insurance, roadside assistance, 24/7 support included." },
+                { title: "Vehicle Selection", desc: "Choose your preferred model and ask our team to confirm availability for your dates." },
+                { title: "Plan with Confidence", desc: "Confirm insurance requirements, service terms, and support details with our team before reserving." },
                 { title: "Delivery Available", desc: "We deliver to your hotel, airport, or venue anywhere in South Florida." },
-                { title: "Flexible Terms", desc: "From 2-hour experiences to week-long adventures — we accommodate your plans." },
+                { title: "Flexible Terms", desc: "Tell us your preferred schedule and we will confirm the available options." },
               ].map(({ title, desc }) => (
                 <div key={title} className="text-center">
                   <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center mx-auto mb-4">

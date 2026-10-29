@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import GlassCard from "@/components/ui/GlassCard";
-import { getTourBySlug } from "@/lib/data/tours";
+import { getTourBySlug, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import TourBookingForm from "@/components/tours/TourBookingForm";
 
@@ -51,7 +51,7 @@ export default async function TourDetailPage({
 
               {/* Highlights */}
               <GlassCard className="p-6">
-                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">Tour Highlights</h3>
+                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">Optional Destinations & Activities</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {tour.highlights.map((h) => (
                     <div key={h} className="flex items-center gap-3 text-cream/70 text-sm">
@@ -64,7 +64,7 @@ export default async function TourDetailPage({
 
               {/* Includes */}
               <GlassCard className="p-6">
-                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">What&apos;s Included</h3>
+                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-4">Included Transportation</h3>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {tour.includes.map((i) => (
                     <li key={i} className="flex items-center gap-3 text-cream/70 text-sm">
@@ -75,10 +75,12 @@ export default async function TourDetailPage({
                 </ul>
               </GlassCard>
 
+              <p className="text-cream/70 text-sm leading-relaxed border border-gold/30 rounded-xl p-4">{TOUR_PACKAGE_NOTICE}</p>
               {/* Itinerary */}
               <div>
-                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-6">Tour Itinerary</h3>
+                <h3 className="text-gold font-semibold text-sm tracking-widest uppercase mb-6">Suggested Stops</h3>
                 <div className="relative pl-8">
+                  <p className="text-cream/60 text-sm mb-6">Choose stops within your reserved time. The itinerary and availability of separately paid activities must be agreed before booking.</p>
                   {tour.itinerary.map((stop, i) => (
                     <div key={i} className="relative pb-8 last:pb-0">
                       {i < tour.itinerary.length - 1 && (
@@ -89,7 +91,7 @@ export default async function TourDetailPage({
                       </div>
                       <div className="flex items-start gap-4">
                         <div className="text-gold font-mono text-xs bg-gold/10 border border-gold/20 rounded-full px-3 py-1 flex-shrink-0">
-                          {stop.time}
+                          Optional stop
                         </div>
                         <div>
                           <div className="text-white font-semibold mb-1 flex items-center gap-2">
@@ -109,8 +111,8 @@ export default async function TourDetailPage({
               <div className="sticky top-28">
                 <GlassCard glow className="p-6">
                   <div className="text-center mb-6">
-                    <div className="text-gold font-display font-black text-4xl">{formatCurrency(tour.pricePerPerson)}</div>
-                    <div className="text-cream/40 text-sm">per person</div>
+                    <div className="text-gold font-display font-black text-4xl">{formatCurrency(tour.packagePrice)}</div>
+                    <div className="text-cream/40 text-sm">per {tour.duration.toLowerCase()} vehicle package</div>
                   </div>
                   <TourBookingForm tour={tour} locale={locale} />
                 </GlassCard>

@@ -1,12 +1,21 @@
+import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
+import { vehicles } from "@/lib/data/fleet";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import QuoteGenerator from "@/components/quote/QuoteGenerator";
 import SectionHeading from "@/components/ui/SectionHeading";
 
-export default async function QuotePage({ params }: { params: Promise<{ locale: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(locale, "/quote", "Request a Miami Transportation Quote", "Estimate your route and vehicle service, or send trip details directly for a personal quote. All pickup times are Miami time.");
+}
+
+export default async function QuotePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ vehicle?: string | string[] }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const { vehicle } = await searchParams;
+  const initialVehicleId = vehicles.find((item) => item.id === vehicle)?.id;
 
   return (
     <>
@@ -19,7 +28,7 @@ export default async function QuotePage({ params }: { params: Promise<{ locale: 
             <div className="w-[500px] h-[500px] bg-gold/5 rounded-full blur-3xl" />
           </div>
           <div className="container-luxe relative z-10 text-center">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Transparent Pricing"
               title="Get Your Instant Quote"
               subtitle="Real-time pricing based on your route, vehicle, and schedule. No hidden fees."
@@ -30,7 +39,7 @@ export default async function QuotePage({ params }: { params: Promise<{ locale: 
         <section className="pb-24">
           <div className="container-luxe">
             <div className="max-w-4xl mx-auto">
-              <QuoteGenerator locale={locale} />
+              <QuoteGenerator key={initialVehicleId} locale={locale} initialVehicleId={initialVehicleId} />
             </div>
           </div>
         </section>

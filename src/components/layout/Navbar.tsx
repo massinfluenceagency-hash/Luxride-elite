@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Phone, Menu, X, ChevronDown } from "lucide-react";
+import { Phone, Menu, X } from "lucide-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import LuxRideLogo from "./LuxRideLogo";
 import { cn } from "@/lib/utils/cn";
@@ -73,7 +73,9 @@ export default function Navbar({ locale }: { locale: string }) {
           <button
             className="lg:hidden text-white p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -82,7 +84,7 @@ export default function Navbar({ locale }: { locale: string }) {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
+        <div id="mobile-navigation" className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
           <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4">
             {NAV_LINKS.map((link) => (
               <Link
@@ -101,7 +103,7 @@ export default function Navbar({ locale }: { locale: string }) {
                 className="bg-gold-gradient text-black text-sm font-semibold px-6 py-2.5 rounded-full"
                 onClick={() => setMobileOpen(false)}
               >
-                {t("booking")}
+                {t("quote")}
               </Link>
             </div>
           </div>

@@ -5,28 +5,33 @@ import { Download, Mail, CheckCircle, Car, MapPin, Clock, Users } from "lucide-r
 import { QuoteResult } from "@/types/quote";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import GlassCard from "@/components/ui/GlassCard";
-import Link from "next/link";
 
-export default function QuoteResultCard({ result, locale }: { result: QuoteResult; locale: string }) {
+
+export default function QuoteResultCard({ result, onBook }: { result: QuoteResult; locale: string; onBook: () => void }) {
   const t = useTranslations("quote");
   const [emailSent, setEmailSent] = useState(false);
   const [email, setEmail] = useState("");
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [sending, setSending] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
   const handleEmail = async () => {
-    if (!email) return;
+    if (sending) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setEmailError("Please enter a valid email address."); return; }
+    setEmailError("");
     setSending(true);
     try {
-      await fetch("/api/email", {
+      const response = await fetch("/api/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ to: email, quote: result }),
       });
+      const data = await response.json();
+      if (!response.ok || data.success !== true) throw new Error(data.error || "Unable to send your quote.");
       setEmailSent(true);
       setShowEmailForm(false);
-    } catch {
-      // silent fail — user can retry
+    } catch (error) {
+      setEmailError(error instanceof Error ? error.message : "Unable to send your quote. Please try again.");
     } finally {
       setSending(false);
     }
@@ -73,6 +78,7 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
         ))}
       </div>
 
+      <p className="text-cream/40 text-xs mb-6">Powered by Google, ©{new Date().getFullYear()} Google</p>
       {/* Breakdown */}
       <div className="space-y-3 mb-8">
         {result.breakdown.map((item) => (
@@ -106,12 +112,13 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
 
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <Link
-          href={`/${locale}/booking`}
+        <button
+          type="button"
+          onClick={onBook}
           className="flex-1 bg-gold-gradient text-black font-bold py-3.5 rounded-xl text-center hover:shadow-gold transition-all duration-300"
         >
           {t("book_now")}
-        </Link>
+        </button>
         <button
           onClick={handlePDF}
           className="flex items-center justify-center gap-2 border border-gold/50 text-cream px-6 py-3.5 rounded-xl hover:border-gold hover:bg-gold/10 transition-all duration-300 text-sm"
@@ -126,10 +133,12 @@ export default function QuoteResultCard({ result, locale }: { result: QuoteResul
         </button>
       </div>
 
+      {emailError && <p role="alert" className="text-red-400 text-sm mt-4">{emailError}</p>}
       {/* Email form */}
       {showEmailForm && !emailSent && (
         <div className="mt-4 flex gap-3">
           <input
+            aria-label="Email address for your quote"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}

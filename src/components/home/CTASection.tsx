@@ -11,14 +11,14 @@ export default function CTASection({ locale }: { locale: string }) {
           Ready to Ride in Luxury?
         </h2>
         <p className="text-black/70 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-          Book your LuxRide Elite experience today. Available 24/7 for transfers, tours, and special events across Miami.
+          Tell us where you want to go. Request a vehicle and chauffeur for your next Miami transfer, sightseeing day, or special event.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href={`/${locale}/quote`}
+            href={`/${locale}/booking`}
             className="inline-flex items-center gap-2 bg-black text-white font-semibold px-10 py-4 rounded-full hover:bg-black/80 transition-all duration-300 group text-lg"
           >
-            Get Instant Quote
+            Request My Ride
             <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           <a

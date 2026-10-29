@@ -32,13 +32,16 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
   const switchLocale = (code: string) => {
     const segments = pathname.split("/");
     segments[1] = code;
-    router.push(segments.join("/") || "/");
+    router.push((segments.join("/") || "/") + window.location.search);
     setOpen(false);
   };
 
   return (
     <div ref={ref} className="relative">
       <button
+        aria-label={`Language: ${current.label}`}
+        aria-expanded={open}
+        onKeyDown={(event) => { if (event.key === "Escape") setOpen(false); }}
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 text-cream/70 hover:text-gold transition-colors text-sm py-1.5 px-2 rounded-lg hover:bg-gold/5"
       >
@@ -53,6 +56,8 @@ export default function LanguageSwitcher({ currentLocale }: { currentLocale: str
           {LANGUAGES.map((lang) => (
             <button
               key={lang.code}
+              lang={lang.code}
+              aria-current={lang.code === currentLocale ? "true" : undefined}
               onClick={() => switchLocale(lang.code)}
               className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors hover:bg-gold/10 hover:text-gold ${
                 lang.code === currentLocale ? "text-gold font-semibold" : "text-cream/70"

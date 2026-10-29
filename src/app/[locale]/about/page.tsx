@@ -1,3 +1,4 @@
+import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,17 +8,17 @@ import Footer from "@/components/layout/Footer";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 
-const STATS = [
-  { Icon: Users, value: "500+", label: "Satisfied Clients" },
-  { Icon: Award, value: "10+", label: "Years of Excellence" },
-  { Icon: Star, value: "4.9★", label: "Average Rating" },
-  { Icon: Clock, value: "24/7", label: "Always Available" },
-];
+
 
 const TEAM = [
   { name: "Brian", role: "Co-Founder" },
   { name: "Franklin", role: "Co-Founder" },
 ];
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(locale, "/about", "About LuxRide Elite", "Learn about LuxRide Elite transportation services in Miami and South Florida. Plan airport pickups, private rides, celebrations, and sightseeing.");
+}
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -32,28 +33,13 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1920&q=60')] bg-cover bg-center opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/95 to-black" />
           <div className="container-luxe relative z-10 text-center">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Our Story"
               title="Where Luxury Meets the Road"
-              subtitle="A decade of defining Miami's premium transportation experience — built on trust, crafted for excellence"
+              subtitle="Luxury vehicles and chauffeur service for your plans in Miami and South Florida"
             />
           </div>
         </div>
-
-        {/* Stats */}
-        <section className="py-12 border-y border-gold/10 bg-black-charcoal/30">
-          <div className="container-luxe">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {STATS.map(({ Icon, value, label }) => (
-                <div key={label} className="text-center">
-                  <Icon size={24} className="text-gold mx-auto mb-3" />
-                  <div className="font-display font-black text-3xl text-gold mb-1">{value}</div>
-                  <div className="text-cream/50 text-sm">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Story */}
         <section className="section-padding">
@@ -64,8 +50,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
                 <h2 className="font-display font-black text-4xl text-white mb-6">Born from a Passion for Perfection</h2>
                 <div className="space-y-4 text-cream/60 leading-relaxed">
                   <p>LuxRide Elite was founded with a singular vision: to redefine what luxury transportation means in Miami. We believed that getting from point A to point B should be an experience in itself — not just a means to an end.</p>
-                  <p>Starting with a single stretch limousine and an unwavering commitment to excellence, we have grown into Miami's most trusted luxury transportation company, with a fleet of over 15 world-class vehicles and a team of highly trained professional chauffeurs.</p>
-                  <p>Today, we serve discerning clients who expect nothing less than the absolute best — from Fortune 500 executives and celebrities to couples celebrating their most special moments. Every ride is approached with the same meticulous attention to detail that has defined our reputation.</p>
+                  <p>Choose from the vehicles and services listed on our website. Share your itinerary, passenger count, and preferred vehicle so our team can confirm availability and the right arrangement for your trip.</p>
+                  <p>From airport pickups and business trips to celebrations and private sightseeing, we help you plan the transportation details. Activities and third-party services are arranged and paid for separately.</p>
                 </div>
                 <Link
                   href={`/${locale}/quote`}
@@ -77,7 +63,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               <div className="relative h-96 lg:h-full min-h-96 rounded-2xl overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"
-                  alt="LuxRide Elite fleet"
+                  alt="Luxury car illustration"
                   fill
                   className="object-cover"
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -95,7 +81,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { title: "Discretion", desc: "Your privacy is paramount. We treat every client with absolute confidentiality and professionalism." },
-                { title: "Punctuality", desc: "We understand that your time is invaluable. Our chauffeurs are always early — never late." },
+                { title: "Punctuality", desc: "We understand that your time is invaluable. Share your schedule and flight information so we can plan your pickup." },
                 { title: "Excellence", desc: "From the condition of our vehicles to the presentation of our chauffeurs — every detail matters." },
               ].map(({ title, desc }) => (
                 <GlassCard key={title} className="p-8 text-center">

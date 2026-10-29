@@ -15,7 +15,7 @@ export interface Tour {
   image: string;
   gallery: string[];
   duration: string;
-  pricePerPerson: number;
+  packagePrice: number;
   minPersons: number;
   maxPersons: number;
   highlights: string[];

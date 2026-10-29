@@ -1,10 +1,11 @@
+import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import TourCard from "@/components/tours/TourCard";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { tours } from "@/lib/data/tours";
+import { tours, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 
 function ToursContent({ locale }: { locale: string }) {
   const t = useTranslations("tours");
@@ -16,7 +17,7 @@ function ToursContent({ locale }: { locale: string }) {
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506146332389-18140dc7b2fb?w=1920&q=60')] bg-cover bg-center opacity-15" />
           <div className="absolute inset-0 bg-gradient-to-b from-black via-black/80 to-black" />
           <div className="container-luxe relative z-10 text-center">
-            <SectionHeading
+            <SectionHeading as="h1"
               label="Miami Experiences"
               title={t("title")}
               subtitle={t("subtitle")}
@@ -44,8 +45,7 @@ function ToursContent({ locale }: { locale: string }) {
               ))}
             </div>
             <p className="text-cream/30 text-xs text-center mt-8">
-              * Quoted rates cover luxury transportation and professional guide services only.
-              Admission fees, activity costs, meals, and gratuities are not included and are the responsibility of the guest.
+              {TOUR_PACKAGE_NOTICE}
             </p>
           </div>
         </section>
@@ -53,6 +53,11 @@ function ToursContent({ locale }: { locale: string }) {
       <Footer locale={locale} />
     </>
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return pageMetadata(locale, "/tours", "Miami Private Chauffeur Time Packages", "Book a luxury vehicle and chauffeur for 3–4 hour Half Day or 6–8 hour Full Day sightseeing packages. Activities and admission paid separately.");
 }
 
 export default async function ToursPage({ params }: { params: Promise<{ locale: string }> }) {
