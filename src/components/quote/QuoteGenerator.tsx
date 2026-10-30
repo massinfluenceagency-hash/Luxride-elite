@@ -27,6 +27,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QuoteResult | null>(null);
   const [error, setError] = useState("");
+  const [matchedRoute, setMatchedRoute] = useState<{ origin: string; destination: string } | null>(null);
 
   const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
 
@@ -41,6 +42,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
     setLoading(true);
     try {
       setResult(null);
+      setMatchedRoute(null);
       const res = await fetch("/api/maps", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,6 +67,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
         },
         selectedVehicle?.name ?? vehicleId
       );
+      setMatchedRoute({ origin: data.resolvedOrigin, destination: data.resolvedDestination });
       setResult(quoteResult);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Unable to calculate your quote. Please try again or contact us.");
@@ -238,6 +241,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
 
       {result && (
         <div className="mt-8">
+          {matchedRoute && <div className="mb-4 rounded-xl border border-gold/30 bg-gold/5 p-5 text-sm text-cream/80"><p className="font-semibold text-gold mb-2">Check the matched route</p><p>Pickup: {matchedRoute.origin}</p><p className="mt-1">Dropoff: {matchedRoute.destination}</p><p className="mt-3">If these locations differ from your plans, correct the addresses before requesting your ride.</p></div>}
           <QuoteResultCard key={result.quoteId} result={result} locale={locale} onBook={continueBooking} />
         </div>
       )}
