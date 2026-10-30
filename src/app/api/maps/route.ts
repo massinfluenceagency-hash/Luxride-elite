@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   if (typeof origin !== "string" || typeof destination !== "string" || !origin.trim() || !destination.trim() || origin.length > 500 || destination.length > 500) {
     return NextResponse.json({ error: "Please enter valid pickup and dropoff addresses." }, { status: 400 });
   }
-  const key = process.env.GEOAPIFY_API_KEY;
+  const key = process.env.GEOAPIFY_API_KEY || process.env.Geoapify;
   if (!key) return NextResponse.json({ error: "Route calculation is temporarily unavailable. Please send your trip details to our team." }, { status: 503 });
   const cacheKey = JSON.stringify([origin.trim(), destination.trim()]);
   const cached = cache.get(cacheKey);

@@ -26,7 +26,7 @@ async function main() {
   const emailRoute = load(path.join(root, 'src/app/api/email/route.ts'));
   const mapsRoute = load(path.join(root, 'src/app/api/maps/route.ts'));
   const post = (route, body) => route.POST(new Request('http://localhost/api/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: typeof body === 'string' ? body : JSON.stringify(body) }));
-  const keys = ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASSWORD','MAIL_FROM','BOOKING_EMAIL','GEOAPIFY_API_KEY'];
+  const keys = ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASSWORD','MAIL_FROM','BOOKING_EMAIL','GEOAPIFY_API_KEY','Geoapify'];
   const old = Object.fromEntries(keys.map(key => [key, process.env[key]])); const originalFetch = global.fetch;
   let checks = 0; let outbound;
   async function check(label, fn) { await fn(); checks++; console.log('PASS ' + label); }
@@ -104,6 +104,7 @@ async function main() {
     await check('Geoapify resolves addresses and returns real driving miles without exposing the key',async()=>{
       global.fetch=mockGeo();const response=await post(mapsRoute,{origin:'Verified origin',destination:'Verified destination'});assert.equal(response.status,200);const data=await response.json();assert.equal(data.distanceMiles,10);assert.equal(data.durationMinutes,20);assert.equal(data.provider,'geoapify');assert.ok(data.resolvedOrigin.includes('Miami'));assert.ok(!JSON.stringify(data).includes('test-only'));
     });
+    await check('existing Vercel Geoapify secret name is supported',async()=>{delete process.env.GEOAPIFY_API_KEY;process.env.Geoapify='test-only';global.fetch=mockGeo();assert.equal((await post(mapsRoute,{origin:'Alias origin',destination:'Alias destination'})).status,200);delete process.env.Geoapify;process.env.GEOAPIFY_API_KEY='test-only';});
     await check('repeated route uses the bounded cache instead of external calls',async()=>{
       global.fetch=async()=>{throw new Error('Should use cached result');};assert.equal((await post(mapsRoute,{origin:'Verified origin',destination:'Verified destination'})).status,200);
     });
