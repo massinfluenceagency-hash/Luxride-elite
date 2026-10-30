@@ -85,7 +85,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         ))}
       </div>
 
-      <p className="text-cream/40 text-xs mb-6">Powered by Google, ©{new Date().getFullYear()} Google</p>
+      <p className="text-cream/70 text-xs mb-6">Route estimates powered by <a href="https://www.geoapify.com/" className="underline">Geoapify</a> · © <a href="https://www.openstreetmap.org/copyright" className="underline">OpenStreetMap contributors</a>. Driving time excludes live traffic.</p>
       {/* Breakdown */}
       <div className="space-y-3 mb-8">
         {result.breakdown.map((item) => (

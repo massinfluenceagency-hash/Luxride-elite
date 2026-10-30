@@ -87,6 +87,8 @@ export async function generateQuotePDF(result: QuoteResult): Promise<void> {
   doc.setTextColor(150, 150, 150);
   doc.text("© LuxRide Elite | luxrideelite.com | Available 24/7", pageW / 2, footerY, { align: "center" });
   doc.text("This quote is valid for 48 hours from the date of issue.", pageW / 2, footerY + 5, { align: "center" });
+  doc.textWithLink("Routing: Geoapify", 20, footerY + 10, { url: "https://www.geoapify.com/" });
+  doc.textWithLink("© OpenStreetMap contributors", 95, footerY + 10, { url: "https://www.openstreetmap.org/copyright" });
 
   doc.save(`LuxRide-Quote-${result.quoteId}.pdf`);
 }

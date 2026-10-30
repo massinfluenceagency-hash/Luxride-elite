@@ -26,7 +26,7 @@ async function main() {
   const emailRoute = load(path.join(root, 'src/app/api/email/route.ts'));
   const mapsRoute = load(path.join(root, 'src/app/api/maps/route.ts'));
   const post = (route, body) => route.POST(new Request('http://localhost/api/test', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: typeof body === 'string' ? body : JSON.stringify(body) }));
-  const keys = ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASSWORD','MAIL_FROM','BOOKING_EMAIL','GOOGLE_MAPS_SERVER_KEY'];
+  const keys = ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASSWORD','MAIL_FROM','BOOKING_EMAIL','GEOAPIFY_API_KEY','Geoapify'];
   const old = Object.fromEntries(keys.map(key => [key, process.env[key]])); const originalFetch = global.fetch;
   let checks = 0; let outbound;
   async function check(label, fn) { await fn(); checks++; console.log('PASS ' + label); }
@@ -94,19 +94,43 @@ async function main() {
     await check('unsafe SMTP port is rejected',async()=>{
       process.env.SMTP_PORT='25';assert.equal((await post(requestRoute,contact)).status,503);
     });
-    process.env.GOOGLE_MAPS_SERVER_KEY='test-only';
-    await check('Routes API returns real miles with server-side authorization',async()=>{
-      global.fetch=async(url,options)=>{
-        assert.equal(url,'https://routes.googleapis.com/directions/v2:computeRoutes');assert.equal(options.headers['X-Goog-Api-Key'],'test-only');
-        assert.equal(JSON.parse(options.body).origin.address,'Test origin');return Response.json({routes:[{distanceMeters:16093.44,duration:'1200s'}]});
-      };
-      const result=await post(mapsRoute,{origin:'Test origin',destination:'Test destination'});assert.equal(result.status,200);const data=await result.json();assert.equal(data.distanceMiles,10);assert.equal(data.durationMinutes,20);
+    process.env.GEOAPIFY_API_KEY='test-only';
+    function mockGeo({location={},route={distance:16093.44,time:1200,distance_units:'meters'},empty=false}={}) {
+      return async raw=>{const url=new URL(raw);assert.equal(url.hostname,'api.geoapify.com');assert.equal(url.searchParams.get('apiKey'),'test-only');
+        if(url.pathname==='/v1/geocode/search') {assert.equal(url.searchParams.get('filter'),'countrycode:us');return Response.json({results:[{lat:25.8,lon:-80.2,formatted:'Verified street address, Miami, FL',result_type:'building',rank:{confidence:0.95},...location}]});}
+        assert.equal(url.pathname,'/v1/routing');assert.equal(url.searchParams.get('mode'),'drive');assert.equal(url.searchParams.get('units'),'metric');assert.equal(url.searchParams.get('waypoints'),'25.8,-80.2|25.8,-80.2');
+        return Response.json({features:empty?[]:[{properties:route}]});};
+    }
+    await check('Geoapify resolves addresses and returns real driving miles without exposing the key',async()=>{
+      global.fetch=mockGeo();const response=await post(mapsRoute,{origin:'Verified origin',destination:'Verified destination'});assert.equal(response.status,200);const data=await response.json();assert.equal(data.distanceMiles,10);assert.equal(data.durationMinutes,20);assert.equal(data.provider,'geoapify');assert.ok(data.resolvedOrigin.includes('Miami'));assert.ok(!JSON.stringify(data).includes('test-only'));
     });
-    await check('Routes API billing or authorization errors never invent mileage',async()=>{
-      global.fetch=async()=>new Response(null,{status:403});assert.equal((await post(mapsRoute,{origin:'Error origin',destination:'Error destination'})).status,502);
+    await check('existing Vercel Geoapify secret name is supported',async()=>{delete process.env.GEOAPIFY_API_KEY;process.env.Geoapify='test-only';global.fetch=mockGeo();assert.equal((await post(mapsRoute,{origin:'Alias origin',destination:'Alias destination'})).status,200);delete process.env.Geoapify;process.env.GEOAPIFY_API_KEY='test-only';});
+    await check('repeated route uses the bounded cache instead of external calls',async()=>{
+      global.fetch=async()=>{throw new Error('Should use cached result');};assert.equal((await post(mapsRoute,{origin:'Verified origin',destination:'Verified destination'})).status,200);
+    });
+    await check('provider authorization errors never invent mileage',async()=>{
+      global.fetch=async()=>new Response(null,{status:403});const response=await post(mapsRoute,{origin:'Error origin',destination:'Error destination'});assert.equal(response.status,502);assert.equal((await response.json()).distanceMiles,undefined);
     });
     await check('missing driving route is reported',async()=>{
-      global.fetch=async()=>Response.json({routes:[]});assert.equal((await post(mapsRoute,{origin:'No route',destination:'No destination'})).status,422);
+      global.fetch=mockGeo({empty:true});assert.equal((await post(mapsRoute,{origin:'No route',destination:'No destination'})).status,422);
+    });
+    await check('city-only geocoding cannot generate a street-level quote',async()=>{
+      global.fetch=mockGeo({location:{result_type:'city'}});assert.equal((await post(mapsRoute,{origin:'Miami city',destination:'Other city'})).status,422);
+    });
+    await check('uncertain geocoding asks for a precise address',async()=>{
+      global.fetch=mockGeo({location:{rank:{confidence:0.2}}});assert.equal((await post(mapsRoute,{origin:'Uncertain origin',destination:'Uncertain destination'})).status,422);
+    });
+    await check('invalid coordinates are rejected before routing',async()=>{
+      global.fetch=mockGeo({location:{lat:999}});assert.equal((await post(mapsRoute,{origin:'Invalid location',destination:'Invalid destination'})).status,422);
+    });
+    await check('route unit mismatch is rejected instead of mispricing miles',async()=>{
+      global.fetch=mockGeo({route:{distance:10,time:1200,distance_units:'Miles'}});assert.equal((await post(mapsRoute,{origin:'Wrong units origin',destination:'Wrong units destination'})).status,502);
+    });
+    await check('negative route duration is rejected',async()=>{
+      global.fetch=mockGeo({route:{distance:16093.44,time:-1,distance_units:'meters'}});assert.equal((await post(mapsRoute,{origin:'Bad duration origin',destination:'Bad duration destination'})).status,502);
+    });
+    await check('malformed maps requests never call the provider',async()=>{
+      global.fetch=async()=>{throw new Error('No provider call expected');};assert.equal((await post(mapsRoute,'{')).status,400);assert.equal((await post(mapsRoute,{origin:123,destination:'Miami'})).status,400);
     });
     console.log(checks + ' checks passed; no real emails sent.');
   } finally {

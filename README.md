@@ -6,7 +6,7 @@ Contact, vehicle reservation, and tour requests now post to a validated server e
 
 Quote emails now validate their input, reconstruct dates serialized by the browser, escape customer-provided HTML, and surface delivery errors. Missing email settings return an unavailable error rather than false success.
 
-The route calculator no longer invents mileage based on address length or silently uses a 15-mile default. It requires a successful Google Maps response before calculating a price.
+The route calculator no longer invents mileage based on address length or silently uses a 15-mile default. It requires a successful Geoapify driving-route response before calculating a price.
 
 Vehicle quote rates now come from the same fleet data used by the public listings. Vehicle detail quotes initially select the vehicle being viewed. Tour prices are flat vehicle time-package prices throughout cards, detail pages, forms, and request emails. Only the vehicle, chauffeur, and agreed pickup/drop-off are included. Activity admission, meals, drinks, equipment, and third-party services are explicitly excluded and paid separately by guests. Suggested stops are optional rather than guaranteed activities. Half Day packages cover 3–4 hours; Full Day packages cover 6–8 hours, as confirmed by the owner. The business phone number in quote emails matches the existing site-wide phone update. Placeholder social links and the nonexistent Careers destination are removed; footer and contact phone/email links are actionable.
 
@@ -24,7 +24,7 @@ Set these server environment variables in the hosting service, using `.env.examp
 - `SMTP_PASSWORD`: the password for that mailbox, entered directly in Vercel as a sensitive variable.
 - `MAIL_FROM`: `info@luxrideelite.com`.
 - `BOOKING_EMAIL`: the business inbox that should receive all contact and reservation requests.
-- `GOOGLE_MAPS_SERVER_KEY`: a server key restricted to Google Routes API. The server uses Compute Routes rather than the legacy Distance Matrix endpoint.
+- `GEOAPIFY_API_KEY`: private Geoapify project API key, stored as sensitive for Production and Preview. Calls run on the server; never use a NEXT_PUBLIC prefix. The server geocodes both US addresses with a Miami proximity bias, then computes an actual driving route. No Google billing account is required. Include Geoapify and OpenStreetMap attribution with route results.
 
 Keep real credentials out of GitHub and chat. Build with the existing build command and run the existing start command. Restart or redeploy after changing environment variables.
 
@@ -32,7 +32,7 @@ Without those settings, visitors see an honest unavailable message and can conta
 
 ## Validation
 
-- `node scripts/test-requests.cjs`: 24 checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
+- `node scripts/test-requests.cjs`: Geoapify and inquiry regression checks covering validation, missing configuration, quote date serialization, escaped email content, provider errors, and successful mocked delivery. No real emails are sent.
 - `node node_modules/typescript/bin/tsc --noEmit`: type check.
 - `node node_modules/next/dist/bin/next build`: production build.
 
