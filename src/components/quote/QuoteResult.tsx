@@ -14,6 +14,8 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [sending, setSending] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [pdfError, setPdfError] = useState("");
+  const [downloading, setDownloading] = useState(false);
 
   const handleEmail = async () => {
     if (sending) return;
@@ -38,8 +40,13 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
   };
 
   const handlePDF = async () => {
-    const { generateQuotePDF } = await import("@/lib/utils/pdfGenerator");
-    generateQuotePDF(result);
+    if (downloading) return;
+    setDownloading(true); setPdfError("");
+    try {
+      const { generateQuotePDF } = await import("@/lib/utils/pdfGenerator");
+      await generateQuotePDF(result);
+    } catch { setPdfError("Unable to download your quote. Please try again or email the quote instead."); }
+    finally { setDownloading(false); }
   };
 
   return (
@@ -121,9 +128,10 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         </button>
         <button
           onClick={handlePDF}
+          disabled={downloading}
           className="flex items-center justify-center gap-2 border border-gold/50 text-cream px-6 py-3.5 rounded-xl hover:border-gold hover:bg-gold/10 transition-all duration-300 text-sm"
         >
-          <Download size={16} className="text-gold" /> {t("download_pdf")}
+          <Download size={16} className="text-gold" /> {downloading ? "Preparing PDF..." : t("download_pdf")}
         </button>
         <button
           onClick={() => setShowEmailForm(!showEmailForm)}
@@ -133,6 +141,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         </button>
       </div>
 
+      {pdfError && <p role="alert" className="text-red-400 text-sm mt-4">{pdfError}</p>}
       {emailError && <p role="alert" className="text-red-400 text-sm mt-4">{emailError}</p>}
       {/* Email form */}
       {showEmailForm && !emailSent && (
