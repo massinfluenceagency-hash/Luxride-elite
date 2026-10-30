@@ -95,7 +95,7 @@ async function main() {
       process.env.SMTP_PORT='25';assert.equal((await post(requestRoute,contact)).status,503);
     });
     process.env.GEOAPIFY_API_KEY='test-only';
-    function mockGeo({location={},route={distance:16093.44,time:1200,distance_units:'Meters'},empty=false}={}) {
+    function mockGeo({location={},route={distance:16093.44,time:1200,distance_units:'meters'},empty=false}={}) {
       return async raw=>{const url=new URL(raw);assert.equal(url.hostname,'api.geoapify.com');assert.equal(url.searchParams.get('apiKey'),'test-only');
         if(url.pathname==='/v1/geocode/search') {assert.equal(url.searchParams.get('filter'),'countrycode:us');return Response.json({results:[{lat:25.8,lon:-80.2,formatted:'Verified street address, Miami, FL',result_type:'building',rank:{confidence:0.95},...location}]});}
         assert.equal(url.pathname,'/v1/routing');assert.equal(url.searchParams.get('mode'),'drive');assert.equal(url.searchParams.get('units'),'metric');assert.equal(url.searchParams.get('waypoints'),'25.8,-80.2|25.8,-80.2');
@@ -127,7 +127,7 @@ async function main() {
       global.fetch=mockGeo({route:{distance:10,time:1200,distance_units:'Miles'}});assert.equal((await post(mapsRoute,{origin:'Wrong units origin',destination:'Wrong units destination'})).status,502);
     });
     await check('negative route duration is rejected',async()=>{
-      global.fetch=mockGeo({route:{distance:16093.44,time:-1,distance_units:'Meters'}});assert.equal((await post(mapsRoute,{origin:'Bad duration origin',destination:'Bad duration destination'})).status,502);
+      global.fetch=mockGeo({route:{distance:16093.44,time:-1,distance_units:'meters'}});assert.equal((await post(mapsRoute,{origin:'Bad duration origin',destination:'Bad duration destination'})).status,502);
     });
     await check('malformed maps requests never call the provider',async()=>{
       global.fetch=async()=>{throw new Error('No provider call expected');};assert.equal((await post(mapsRoute,'{')).status,400);assert.equal((await post(mapsRoute,{origin:123,destination:'Miami'})).status,400);

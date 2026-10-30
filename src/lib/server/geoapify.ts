@@ -41,7 +41,7 @@ export async function calculateRoute(origin: string, destination: string, key: s
   const data = await request(url);
   const route = data.features?.[0]?.properties;
   if (!route) throw new RouteError("We could not find a driving route. Check both addresses or contact our team.", 422);
-  if (!Number.isFinite(route.distance) || route.distance < 0 || !Number.isFinite(route.time) || route.time < 0 || route.distance_units !== "Meters") {
+  if (!Number.isFinite(route.distance) || route.distance < 0 || !Number.isFinite(route.time) || route.time < 0 || typeof route.distance_units !== "string" || route.distance_units.toLowerCase() !== "meters") {
     throw new RouteError("The route response could not be verified. Please try again or contact our team.");
   }
   return {
