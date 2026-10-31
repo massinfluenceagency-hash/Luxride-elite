@@ -26,6 +26,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
+    firstTimePromotion: false,
     vehicleId: "escalade-suv",
     serviceType: "transfer",
     pickup: "",
@@ -36,7 +37,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
     email: "",
     phone: "",
     requests: "",
-    durationHours: "3",
+    durationHours: "1",
     passengerCount: "2",
   });
 
@@ -45,12 +46,12 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
     if (draft) setForm(previous => ({ ...previous, ...draft, durationHours: String(draft.durationHours), passengerCount: String(draft.passengerCount) }));
   }, []);
 
-  const update = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val }));
+  const update = (key: string, val: string) => setForm((f) => ({ ...f, [key]: val, ...(key === "serviceType" && val !== "hourly" ? { firstTimePromotion: false } : {}) }));
   const selectedVehicle = vehicles.find((v) => v.id === form.vehicleId);
 
   const nextStep = () => {
     setError("");
-    if (step === 0 && form.serviceType === "hourly" && Number(form.durationHours) < 3) { setError("Hourly chauffeur service has a three-hour minimum."); return; }
+    if (step === 0 && form.firstTimePromotion && Number(form.durationHours) < 3) { setError("The first-time chauffeur promotion has a three-hour minimum."); return; }
     if (step === 0 && (!Number.isInteger(Number(form.passengerCount)) || Number(form.passengerCount) < 1 || Number(form.passengerCount) > (selectedVehicle?.passengers ?? 0) || Number(form.durationHours) < 1 || Number(form.durationHours) > 24)) {
       setError("Please select 1–24 hours and a passenger count within the vehicle capacity."); return;
     }
@@ -139,7 +140,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                   <div>
                     <label htmlFor="field-1" className={labelClass}>Vehicle</label>
                     <select id="field-1" value={form.vehicleId} onChange={(e) => { update("vehicleId", e.target.value); const capacity = vehicles.find(v => v.id === e.target.value)?.passengers ?? 1; update("passengerCount", String(Math.min(Number(form.passengerCount), capacity))); }} className={inputClass}>
-                      {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — ${v.hourlyRate}/hr</option>)}
+                      {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — ${form.firstTimePromotion ? (v.id === "suburban-suv" ? 50 : 75) : v.hourlyRate}/hr</option>)}
                     </select>
                   </div>
                   <div>
@@ -152,8 +153,9 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     </select>
                   </div>
 
+                  {form.serviceType === "hourly" && <label className="flex items-start gap-3 border border-gold/40 rounded-xl p-4 text-sm text-cream/80"><input type="checkbox" checked={form.firstTimePromotion} onChange={e => setForm(f => ({ ...f, firstTimePromotion: e.target.checked, durationHours: e.target.checked ? String(Math.max(3, Number(f.durationHours))) : f.durationHours }))} className="mt-1 accent-gold" /><span><strong className="text-gold">First-time chauffeur offer</strong><br />Suburban $50/hour · Escalade $75/hour. Three-hour minimum for this promotion only. Eligibility confirmed by our team.</span></label>}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.serviceType === "hourly" ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
+                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.firstTimePromotion ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
                     <div><label htmlFor="booking-passengers" className={labelClass}>Passengers (up to {selectedVehicle?.passengers})</label><input id="booking-passengers" type="number" min="1" max={selectedVehicle?.passengers} value={form.passengerCount} onChange={e => update("passengerCount", e.target.value)} className={inputClass} /></div>
                   </div>
                   <p className="text-cream/70 text-sm">For a transfer, enter your estimated service time; our team will confirm the schedule. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>
@@ -221,6 +223,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                       ["Vehicle", selectedVehicle?.name ?? ""],
                       ["Service", form.serviceType],
                       ["Service hours", form.durationHours],
+                      ["Promotion", form.firstTimePromotion ? "First-time chauffeur offer (3-hour minimum; eligibility requires confirmation)" : "Regular service"],
                       ["Passengers", form.passengerCount],
                       ["Pickup", form.pickup || "TBD"],
                       ["Dropoff", form.dropoff || "TBD"],

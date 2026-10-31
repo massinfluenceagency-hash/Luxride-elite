@@ -1,6 +1,7 @@
 export type ServiceType = "transfer" | "hourly" | "airport" | "tour" | "event";
 
 export interface QuoteInput {
+  firstTimePromotion?: boolean;
   serviceType: ServiceType;
   vehicleId: string;
   origin: string;
@@ -19,6 +20,7 @@ export interface QuoteLineItem {
 }
 
 export interface QuoteResult {
+  firstTimePromotion?: boolean;
   quoteId: string;
   vehicleName: string;
   serviceType: ServiceType;

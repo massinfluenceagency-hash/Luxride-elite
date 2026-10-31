@@ -11,10 +11,11 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   return pageMetadata(locale, "/quote", "Request a Miami Transportation Quote", "Estimate your route and vehicle service, or send trip details directly for a personal quote. All pickup times are Miami time.");
 }
 
-export default async function QuotePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ vehicle?: string | string[] }> }) {
+export default async function QuotePage({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ vehicle?: string | string[]; promotion?: string | string[] }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { vehicle } = await searchParams;
+  const { vehicle, promotion } = await searchParams;
+  const initialPromotion = promotion === "first-time";
   const initialVehicleId = vehicles.find((item) => item.id === vehicle)?.id;
 
   return (
@@ -39,7 +40,7 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
         <section className="pb-24">
           <div className="container-luxe">
             <div className="max-w-4xl mx-auto">
-              <QuoteGenerator key={initialVehicleId} locale={locale} initialVehicleId={initialVehicleId} />
+              <QuoteGenerator key={`${initialVehicleId}-${initialPromotion}`} locale={locale} initialVehicleId={initialVehicleId} initialPromotion={initialPromotion} />
             </div>
           </div>
         </section>

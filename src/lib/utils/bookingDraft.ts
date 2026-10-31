@@ -1,7 +1,9 @@
 import { z } from "zod";
 import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
+import { firstRideRate } from "@/lib/data/promotions";
 
 export const bookingDraftSchema = z.object({
+  firstTimePromotion: z.boolean().optional(),
   vehicleId: z.string().refine(id => vehicles.some(vehicle => vehicle.id === id)),
   serviceType: z.enum(["transfer", "hourly", "airport", "event"]),
   pickup: z.string().max(500), dropoff: z.string().max(500),
@@ -10,7 +12,7 @@ export const bookingDraftSchema = z.object({
   durationHours: z.number().min(1).max(24),
   passengerCount: z.number().int().positive(),
 }).refine(draft => draft.passengerCount <= (vehicles.find(vehicle => vehicle.id === draft.vehicleId)?.passengers ?? 0))
-  .refine(draft => draft.serviceType !== "hourly" || draft.durationHours >= 3);
+  .refine(draft => { if (!draft.firstTimePromotion) return true; try { firstRideRate(draft.vehicleId, draft.serviceType, draft.durationHours); return true; } catch { return false; } });
 export type BookingDraft = z.infer<typeof bookingDraftSchema>;
 const KEY = "luxride-booking-draft";
 

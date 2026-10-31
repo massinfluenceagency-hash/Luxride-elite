@@ -64,10 +64,21 @@ async function main() {
     await check('valid booking request accepted',async()=>assert.equal((await post(requestRoute,booking)).status,200));
     await check('booking email contains service hours and passengers',async()=>{await post(requestRoute,booking);assert.ok(outbound.html.includes('Service hours'));assert.ok(outbound.html.includes('Passengers'));});
     await check('oversized booking group rejected',async()=>assert.equal((await post(requestRoute,{...booking,passengerCount:99})).status,400));
-    await check('hourly chauffeur has a three-hour minimum across quotes and requests',async()=>{
-      assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours:2})).status,400);
-      assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours:3})).status,200);
-      assert.throws(()=>calculateQuote({...booking,serviceType:'hourly',durationHours:2},'Escalade'),/three-hour/);
+    await check('regular hourly chauffeur allows shorter requests and quotes',async()=>{
+      for(const durationHours of [1,2])assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours})).status,200);
+      const regular=calculateQuote({...booking,serviceType:'hourly',durationHours:1,distanceMiles:0,date:new Date('2099-12-01T12:00:00Z')},'Escalade');assert.equal(regular.baseRate,120);
+    });
+    await check('first-time chauffeur promotion alone enforces three hours',async()=>{
+      assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours:2,firstTimePromotion:true})).status,400);
+      assert.equal((await post(requestRoute,{...booking,serviceType:'transfer',durationHours:3,firstTimePromotion:true})).status,400);
+      assert.throws(()=>calculateQuote({...booking,serviceType:'hourly',durationHours:2,firstTimePromotion:true},'Escalade'),/three-hour/);
+    });
+    await check('first-time offer uses confirmed hourly base rates and flags booking emails',async()=>{
+      for(const [vehicleId,rate] of [['suburban-suv',50],['escalade-suv',75]]){
+        const promo={...booking,vehicleId,serviceType:'hourly',durationHours:3,firstTimePromotion:true};
+        const q=calculateQuote({...promo,distanceMiles:0,date:new Date('2099-12-01T12:00:00Z')},'SUV');assert.equal(q.baseRate,rate*3);assert.ok(q.breakdown[0].label.includes('First-time offer'));
+        assert.equal((await post(requestRoute,promo)).status,200);assert.ok(outbound.html.includes('First-time chauffeur offer'));assert.ok(outbound.html.includes(rate===50?'150.00':'225.00'));
+      }
     });
     await check('point-to-point transfers do not inherit hourly minimum',async()=>assert.equal((await post(requestRoute,{...booking,serviceType:'transfer',durationHours:1})).status,200));
     await check('invalid duration rejected',async()=>assert.equal((await post(requestRoute,{...booking,durationHours:0})).status,400));
@@ -97,8 +108,17 @@ async function main() {
     });
     await check('rental days and past dates validated',async()=>{for(const days of [0,1.5,31])assert.equal((await post(requestRoute,{...rental,days})).status,400);assert.equal((await post(requestRoute,{...rental,date:'2020-01-01'})).status,400);});
     await check('rental-only car cannot enter chauffeur booking',async()=>assert.equal((await post(requestRoute,{...booking,vehicleId:'ferrari-f8'})).status,400));
+    await check('first car rental discount is recalculated server-side at 25 percent',async()=>{
+      assert.equal((await post(requestRoute,{...rental,firstRentalPromotion:true,discount:0.99,total:1})).status,200);
+      assert.ok(outbound.html.includes('2,250.00'));assert.ok(outbound.html.includes('750.00'));assert.ok(outbound.html.includes('25% off first car rental'));
+    });
     const draft={vehicleId:'escalade-suv',serviceType:'airport',pickup:'Miami Airport',dropoff:'Miami Beach',date:'2099-12-01',time:'14:00',durationHours:3,passengerCount:2};
     await check('trip draft preserves details and is consumed once',async()=>{assert.equal(saveBookingDraft(draft),true);assert.deepEqual(takeBookingDraft(),draft);assert.equal(takeBookingDraft(),null);});
+    await check('booking drafts preserve promotion and restrict only promotional duration',async()=>{
+      assert.equal(saveBookingDraft({...draft,serviceType:'hourly',durationHours:1}),true);assert.equal(takeBookingDraft().durationHours,1);
+      assert.equal(saveBookingDraft({...draft,serviceType:'hourly',durationHours:2,firstTimePromotion:true}),false);
+      assert.equal(saveBookingDraft({...draft,serviceType:'hourly',durationHours:3,firstTimePromotion:true}),true);assert.equal(takeBookingDraft().firstTimePromotion,true);
+    });
     await check('trip draft rejects invalid capacity and expires',async()=>{assert.equal(saveBookingDraft({...draft,passengerCount:99}),false);storage.set('luxride-booking-draft',JSON.stringify({expires:0,draft}));assert.equal(takeBookingDraft(),null);});
     await check('unknown vehicle rejected',async()=>assert.equal((await post(requestRoute,{...booking,vehicleId:'fake'})).status,400));
     await check('past booking rejected',async()=>assert.equal((await post(requestRoute,{...booking,date:'2000-01-01'})).status,400));

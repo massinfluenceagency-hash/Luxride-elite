@@ -1,4 +1,5 @@
 import { getVehicleById } from "@/lib/data/fleet";
+import { firstRideRate } from "@/lib/data/promotions";
 import { QuoteInput, QuoteResult, QuoteLineItem } from "@/types/quote";
 
 const AIRPORT_FEE = 75;
@@ -13,10 +14,9 @@ function isPeakHour(date: Date): boolean {
 }
 
 export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteResult {
-  if (input.serviceType === "hourly" && input.durationHours < 3) throw new Error("Hourly chauffeur service has a three-hour minimum.");
   const vehicle = getVehicleById(input.vehicleId);
   if (!vehicle?.chauffeurAvailable) throw new Error("Please select a valid vehicle.");
-  const pricing = { hourly: vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };
+  const pricing = { hourly: input.firstTimePromotion ? firstRideRate(vehicle.id, input.serviceType, input.durationHours) : vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };
   const baseRate = pricing.hourly * input.durationHours;
   const excessMiles = Math.max(0, input.distanceMiles - pricing.freeMiles);
   const distanceSurcharge = excessMiles * pricing.perMile;
@@ -28,7 +28,7 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
   const total = subtotal + tax;
 
   const breakdown: QuoteLineItem[] = [
-    { label: `Base Rate (${input.durationHours}h × $${pricing.hourly}/hr)`, amount: baseRate, type: "base" },
+    { label: `${input.firstTimePromotion ? "First-time offer — " : ""}Base Rate (${input.durationHours}h × $${pricing.hourly}/hr)`, amount: baseRate, type: "base" },
     ...(distanceSurcharge > 0
       ? [{ label: `Distance Charge (${excessMiles.toFixed(1)} extra mi × $${pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
       : []),
@@ -43,6 +43,7 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
   const quoteId = `LRE-${Date.now().toString(36).toUpperCase()}`;
 
   return {
+    firstTimePromotion: input.firstTimePromotion,
     quoteId,
     vehicleName,
     serviceType: input.serviceType,
