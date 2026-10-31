@@ -15,7 +15,7 @@ export default function FleetPreview({ locale }: { locale: string }) {
         <SectionHeading
           label="Our Fleet"
           title={t("title")}
-          subtitle="40 vehicles across 18 model types. Explore daily rental rates and request your preferred vehicle."
+          subtitle="40 vehicles across 17 model types. Explore daily rental rates and request your preferred vehicle."
         />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {preview.map((vehicle) => (

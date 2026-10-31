@@ -165,31 +165,6 @@ export const vehicles: Vehicle[] = [
     "popular": false
   },
   {
-    "id": "mercedes-cle",
-    "category": "exotic",
-    "name": "Mercedes-Benz CLE",
-    "tagline": "Luxury and exotic car rental in South Florida",
-    "image": "",
-    "gallery": [],
-    "dailyRate": 400,
-    "hourlyRate": 0,
-    "perMileRate": 0,
-    "freeMiles": 30,
-    "passengers": 0,
-    "luggage": 0,
-    "chauffeurAvailable": false,
-    "features": [
-      "Daily rental",
-      "Availability by request"
-    ],
-    "specs": {
-      "make": "Mercedes-Benz",
-      "model": "CLE"
-    },
-    "available": true,
-    "popular": false
-  },
-  {
     "id": "mercedes-gt",
     "category": "exotic",
     "name": "Mercedes-Benz GT",

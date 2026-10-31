@@ -41,9 +41,9 @@ async function main() {
         assert.equal(quote.distanceSurcharge,vehicle.perMileRate*10,vehicle.id);
       }
     });
-    await check('confirmed 18 daily prices and no stock inventory photos',async()=>{
-      assert.equal(vehicles.length,18);
-      const expected={'mercedes-gle':400,'ferrari-f8':1500,'lamborghini-urus':1000,'mercedes-s580':500,'mercedes-g-wagon':700,'mercedes-cle':400,'mercedes-gt':500,'maybach-gls':800,'bmw-760':450,'bentley-bentayga':600,'rolls-royce-dawn':1000,'rolls-royce-cullinan':1200,'porsche-cayenne':500,'corvette-c8':400,'suburban-suv':400,'escalade-suv':600,'tesla-cybertruck':350,'hummer-ev':400};
+    await check('confirmed 17 daily prices and no stock inventory photos',async()=>{
+      assert.equal(vehicles.length,17);
+      const expected={'mercedes-gle':400,'ferrari-f8':1500,'lamborghini-urus':1000,'mercedes-s580':500,'mercedes-g-wagon':700,'mercedes-gt':500,'maybach-gls':800,'bmw-760':450,'bentley-bentayga':600,'rolls-royce-dawn':1000,'rolls-royce-cullinan':1200,'porsche-cayenne':500,'corvette-c8':400,'suburban-suv':400,'escalade-suv':600,'tesla-cybertruck':350,'hummer-ev':400};
       for(const v of vehicles){assert.equal(v.dailyRate,expected[v.id],v.id);assert.ok(!v.image||v.image.startsWith('/images/fleet/real/'));}
       assert.throws(()=>calculateQuote({...booking,vehicleId:'ferrari-f8'},'F8'));
     });
