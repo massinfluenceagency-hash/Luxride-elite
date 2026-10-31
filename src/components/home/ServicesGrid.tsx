@@ -5,7 +5,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 
 const SERVICES = [
-  { key: "limo", href: "/fleet?category=limousines", Icon: Car, color: "from-gold/20 to-gold/5" },
+  { key: "limo", href: "/fleet", Icon: Car, color: "from-gold/20 to-gold/5" },
   { key: "suv", href: "/fleet?category=suvs", Icon: Truck, color: "from-blue-900/20 to-blue-900/5" },
   { key: "exotic", href: "/exotic", Icon: Zap, color: "from-red-900/20 to-red-900/5" },
   { key: "tours", href: "/tours", Icon: Map, color: "from-emerald-900/20 to-emerald-900/5" },
@@ -30,10 +30,10 @@ export default function ServicesGrid({ locale }: { locale: string }) {
                   <Icon size={26} className="text-gold" />
                 </div>
                 <h3 className="font-display font-bold text-xl text-white mb-3">
-                  {t(`${key}.title`)}
+                  {key === "limo" ? "Daily Car Rentals" : t(`${key}.title`)}
                 </h3>
                 <p className="text-cream/50 text-sm leading-relaxed mb-6">
-                  {t(`${key}.desc`)}
+                  {key === "limo" ? "Choose from our luxury and exotic rental models" : t(`${key}.desc`)}
                 </p>
                 <div className="flex items-center gap-2 text-gold text-sm font-semibold group-hover:gap-3 transition-all duration-300">
                   Learn More <ArrowRight size={14} />

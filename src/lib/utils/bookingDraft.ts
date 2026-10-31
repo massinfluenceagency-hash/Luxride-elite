@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { vehicles } from "@/lib/data/fleet";
+import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 
 export const bookingDraftSchema = z.object({
   vehicleId: z.string().refine(id => vehicles.some(vehicle => vehicle.id === id)),

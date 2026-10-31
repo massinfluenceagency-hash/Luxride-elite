@@ -2,7 +2,7 @@
 import { useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { MapPin, Clock, Users, Car, Plane } from "lucide-react";
-import { vehicles } from "@/lib/data/fleet";
+import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 import { calculateQuote } from "@/lib/utils/quoteCalculator";
 import { QuoteResult, ServiceType } from "@/types/quote";
 import QuoteResultCard from "./QuoteResult";

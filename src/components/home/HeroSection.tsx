@@ -2,6 +2,8 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
+import VehiclePhoto from "@/components/fleet/VehiclePhoto";
+import { vehicles } from "@/lib/data/fleet";
 import { motion } from "framer-motion";
 
 export default function HeroSection({ locale }: { locale: string }) {
@@ -11,13 +13,7 @@ export default function HeroSection({ locale }: { locale: string }) {
     <section className="relative min-h-[85svh] pt-28 pb-16 flex items-center justify-center overflow-hidden">
       {/* Background video / image */}
       <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage:
-              "url('/images/fleet/escalade.jpg')",
-          }}
-        />
+        <VehiclePhoto vehicle={vehicles[0]} priority />
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
       </div>

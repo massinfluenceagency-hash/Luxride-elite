@@ -4,7 +4,7 @@ import FleetListing from "@/components/fleet/FleetListing";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(locale, "/fleet", "Luxury Vehicles in Miami", "Explore SUVs, limousines, and exotic vehicles in Miami. Compare passenger capacity and published rates, then request availability.");
+  return pageMetadata(locale, "/fleet", "Luxury Vehicles in Miami", "Explore 17 luxury SUV, sports car, and exotic rental models in Miami. View daily rates and request availability.");
 }
 
 export default async function FleetPage({ params, searchParams }: {

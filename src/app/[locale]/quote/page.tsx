@@ -1,6 +1,6 @@
 import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
-import { vehicles } from "@/lib/data/fleet";
+import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import QuoteGenerator from "@/components/quote/QuoteGenerator";
