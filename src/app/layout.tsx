@@ -19,22 +19,22 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.luxrideelite.com"),
   title: {
-    default: "LuxRide Elite | Miami's Premier Luxury Transportation",
+    default: "LuxRide Elite | Miami Black SUV & Limo Service",
     template: "%s | LuxRide Elite",
   },
   description:
-    "Miami's premier luxury transportation — limousines, black SUVs, exotic car rental, and exclusive guided tours. Available 24/7.",
+    "Miami black SUV and limo service with professional chauffeurs. Suburban and Escalade airport pickups, private transfers, hourly drivers, and event rides.",
   keywords: [
     "luxury limousine Miami",
-    "exotic car rental Miami",
+    "black SUV service Miami",
     "black car service",
     "chauffeur service Miami",
     "city tours Miami",
   ],
   openGraph: {
-    title: "LuxRide Elite | Where Luxury Meets the Road",
+    title: "LuxRide Elite | Miami Black SUV & Limo Service",
     description:
-      "Miami's premier luxury transportation service — limousines, black SUVs, exotic cars & exclusive tours.",
+      "Professional chauffeur service in black Suburban and Escalade SUVs for airport pickups, transfers, hourly rides, and events.",
     type: "website",
   },
   appleWebApp: {

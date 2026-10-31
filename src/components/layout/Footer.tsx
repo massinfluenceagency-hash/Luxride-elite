@@ -26,11 +26,11 @@ export default function Footer({ locale }: { locale: string }) {
             <h4 className="text-gold font-semibold text-sm tracking-widest uppercase mb-5">{t("services")}</h4>
             <ul className="space-y-3">
               {[
+                { label: nav("chauffeur"), href: "/chauffeur" },
+                { label: nav("quote"), href: "/quote" },
                 { label: nav("fleet"), href: "/fleet" },
                 { label: nav("tours"), href: "/tours" },
-                { label: nav("exotic"), href: "/exotic" },
                 { label: "Yacht Charters", href: "/yachts" },
-                { label: nav("quote"), href: "/quote" },
                 { label: nav("booking"), href: "/booking" },
               ].map(({ label, href }) => (
                 <li key={href}>

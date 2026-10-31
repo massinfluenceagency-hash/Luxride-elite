@@ -50,6 +50,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
 
   const nextStep = () => {
     setError("");
+    if (step === 0 && form.serviceType === "hourly" && Number(form.durationHours) < 3) { setError("Hourly chauffeur service has a three-hour minimum."); return; }
     if (step === 0 && (!Number.isInteger(Number(form.passengerCount)) || Number(form.passengerCount) < 1 || Number(form.passengerCount) > (selectedVehicle?.passengers ?? 0) || Number(form.durationHours) < 1 || Number(form.durationHours) > 24)) {
       setError("Please select 1–24 hours and a passenger count within the vehicle capacity."); return;
     }
@@ -108,7 +109,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
       <main className="min-h-screen pt-24">
         <div className="py-12 border-b border-gold/20">
           <div className="container-luxe">
-            <SectionHeading as="h1" label="Reservation" title="Request Your Ride" subtitle="Tell us your plans. Our team will confirm availability and final pricing before your reservation is secured." />
+            <SectionHeading as="h1" label="Black SUV & Chauffeur Service" title="Request Your Chauffeur Ride" subtitle="Choose a Suburban or Escalade with a professional driver. Send your route and schedule; our team will confirm availability and final pricing." />
           </div>
         </div>
 
@@ -152,7 +153,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min="1" max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
+                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.serviceType === "hourly" ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
                     <div><label htmlFor="booking-passengers" className={labelClass}>Passengers (up to {selectedVehicle?.passengers})</label><input id="booking-passengers" type="number" min="1" max={selectedVehicle?.passengers} value={form.passengerCount} onChange={e => update("passengerCount", e.target.value)} className={inputClass} /></div>
                   </div>
                   <p className="text-cream/70 text-sm">For a transfer, enter your estimated service time; our team will confirm the schedule. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>

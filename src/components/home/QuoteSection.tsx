@@ -11,9 +11,9 @@ export default function QuoteSection({ locale }: { locale: string }) {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-gold/5 rounded-full blur-3xl pointer-events-none" />
       <div className="container-luxe relative z-10">
         <SectionHeading
-          label="Instant Pricing"
-          title={t("title")}
-          subtitle={t("subtitle")}
+          label="Chauffeured Black SUV Service"
+          title="Get Your Ride Quote"
+          subtitle="Choose your Suburban or Escalade, enter your route, and request chauffeur service. Availability and final arrangements are confirmed by our team."
         />
         <div className="max-w-4xl mx-auto">
           <QuoteGenerator locale={locale} />

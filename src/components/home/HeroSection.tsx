@@ -2,8 +2,7 @@
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { ArrowRight, Phone } from "lucide-react";
-import VehiclePhoto from "@/components/fleet/VehiclePhoto";
-import { vehicles } from "@/lib/data/fleet";
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 export default function HeroSection({ locale }: { locale: string }) {
@@ -13,7 +12,7 @@ export default function HeroSection({ locale }: { locale: string }) {
     <section className="relative min-h-[85svh] pt-28 pb-16 flex items-center justify-center overflow-hidden">
       {/* Background video / image */}
       <div className="absolute inset-0 z-0">
-        <VehiclePhoto vehicle={vehicles[0]} priority />
+        <Image src="/images/fleet/real/suburban-suv.webp" alt="Black Chevrolet Suburban for professional chauffeur service" fill priority sizes="100vw" className="object-cover" style={{ objectPosition: "center 52%" }} />
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-transparent" />
       </div>
@@ -45,7 +44,7 @@ export default function HeroSection({ locale }: { locale: string }) {
           <div className="inline-flex items-center gap-3 mb-6">
             <div className="h-px w-12 bg-gold-gradient" />
             <span className="text-gold text-sm font-semibold tracking-[0.3em] uppercase">
-              Miami&apos;s Premier Luxury Service
+              Black SUVs · Professional Chauffeurs
             </span>
             <div className="h-px w-12 bg-gold-gradient" />
           </div>
@@ -66,11 +65,11 @@ export default function HeroSection({ locale }: { locale: string }) {
               href={`/${locale}/booking`}
               className="group bg-gold-gradient text-black font-semibold px-10 py-4 rounded-full hover:shadow-gold hover:scale-105 transition-all duration-300 flex items-center gap-2 text-lg"
             >
-              Request My Ride
+              Request a Chauffeur Ride
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
-              href={`/${locale}/fleet`}
+              href={`/${locale}/chauffeur`}
               className="border border-gold/50 text-cream px-10 py-4 rounded-full hover:border-gold hover:bg-gold/10 transition-all duration-300 text-lg"
             >
               {t("cta_fleet")}
@@ -78,7 +77,7 @@ export default function HeroSection({ locale }: { locale: string }) {
           </div>
         </motion.div>
 
-        <p className="mt-8 text-cream/80 text-sm">Airport pickups · Hourly chauffeur service · Private sightseeing · Special events</p>
+        <p className="mt-8 text-cream/80 text-sm">Airport pickups · Private transfers · Hourly drivers · Events</p>
         <a href="tel:+18002404727" className="inline-flex items-center gap-2 mt-4 py-2 text-gold font-semibold"><Phone size={16} /> 1 (800) 240-4727</a>
       </div>
     </section>

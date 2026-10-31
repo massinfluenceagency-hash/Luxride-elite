@@ -33,6 +33,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
 
   const handleCalculate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (serviceType === "hourly" && hours < 3) { setError("Hourly chauffeur service has a three-hour minimum."); return; }
     if (!origin || !destination) {
       setError("Please enter both pickup and dropoff addresses.");
       return;
@@ -101,7 +102,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                   key={value}
                   aria-pressed={serviceType === value}
                   type="button"
-                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); }}
+                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); if (value === "hourly") setHours(current => Math.max(3, current)); }}
                   className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
                     serviceType === value
                       ? "bg-gold text-black border-gold"
@@ -180,7 +181,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
               </label>
               <input id={`${id}-hours`}
                 type="number"
-                min={1}
+                min={serviceType === "hourly" ? 3 : 1}
                 max={24}
                 value={hours}
                 onChange={(e) => setHours(Number(e.target.value))}

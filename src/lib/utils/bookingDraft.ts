@@ -9,7 +9,8 @@ export const bookingDraftSchema = z.object({
   time: z.union([z.iso.time({ precision: -1 }), z.literal("")]),
   durationHours: z.number().min(1).max(24),
   passengerCount: z.number().int().positive(),
-}).refine(draft => draft.passengerCount <= (vehicles.find(vehicle => vehicle.id === draft.vehicleId)?.passengers ?? 0));
+}).refine(draft => draft.passengerCount <= (vehicles.find(vehicle => vehicle.id === draft.vehicleId)?.passengers ?? 0))
+  .refine(draft => draft.serviceType !== "hourly" || draft.durationHours >= 3);
 export type BookingDraft = z.infer<typeof bookingDraftSchema>;
 const KEY = "luxride-booking-draft";
 

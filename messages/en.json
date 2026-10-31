@@ -1,20 +1,21 @@
 {
   "nav": {
     "home": "Home",
-    "fleet": "Our Fleet",
+    "fleet": "Car Rentals",
     "tours": "Tours",
     "exotic": "Exotic Cars",
-    "quote": "Get a Quote",
+    "quote": "Get a Ride Quote",
     "pov": "Experience",
     "contact": "Contact",
-    "booking": "Book Now",
-    "yachts": "Yacht Charters"
+    "booking": "Request a Ride",
+    "yachts": "Yacht Charters",
+    "chauffeur": "Black SUV Service"
   },
   "hero": {
-    "tagline": "Miami Luxury Car & Chauffeur Service",
-    "subtitle": "Plan your airport pickup, private ride, special event, or sightseeing time package. Choose your vehicle and send your trip details for availability and final pricing.",
+    "tagline": "Miami Black SUV & Limo Service",
+    "subtitle": "Professional chauffeurs. Black Suburbans and Escalades. Airport pickups, private drop-offs, and hourly service throughout Miami and South Florida.",
     "cta_quote": "Get Instant Quote",
-    "cta_fleet": "View Our Fleet",
+    "cta_fleet": "Explore Our Black SUVs",
     "scroll": "Scroll to explore"
   },
   "stats": {

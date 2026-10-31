@@ -5,16 +5,14 @@ import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
 import BookingFAQ from "@/components/home/BookingFAQ";
 import ServicesGrid from "@/components/home/ServicesGrid";
-import FleetPreview from "@/components/home/FleetPreview";
-import ToursPreview from "@/components/home/ToursPreview";
+import ChauffeurFleet from "@/components/home/ChauffeurFleet";
+import MoreExperiences from "@/components/home/MoreExperiences";
 import CTASection from "@/components/home/CTASection";
 import QuoteSection from "@/components/home/QuoteSection";
-import ExoticPreview from "@/components/home/ExoticPreview";
-import YachtPreview from "@/components/home/YachtPreview";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  return pageMetadata(locale, "", "Miami Luxury Car & Chauffeur Service", "Request Miami airport transportation, private chauffeur service, limousines, and sightseeing time packages. Availability and final pricing confirmed by our team.");
+  return pageMetadata(locale, "", "Miami Black SUV & Limo Service", "Chauffeured Suburban and Escalade rides in Miami and South Florida. Request airport pickups, private transfers, hourly black SUV service, and event transportation.");
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -27,13 +25,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <main>
         <HeroSection locale={locale} />
         <ServicesGrid locale={locale} />
-        <FleetPreview locale={locale} />
         <QuoteSection locale={locale} />
-        <ToursPreview locale={locale} />
-        <ExoticPreview locale={locale} />
-        <YachtPreview locale={locale} />
+        <ChauffeurFleet locale={locale} />
         <BookingFAQ locale={locale} />
         <CTASection locale={locale} />
+        <MoreExperiences locale={locale} />
       </main>
       <Footer locale={locale} />
     </>

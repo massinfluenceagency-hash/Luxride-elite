@@ -8,9 +8,9 @@ import LuxRideLogo from "./LuxRideLogo";
 import { cn } from "@/lib/utils/cn";
 
 const NAV_LINKS = [
+  { key: "chauffeur", href: "/chauffeur" },
   { key: "fleet", href: "/fleet" },
   { key: "tours", href: "/tours" },
-  { key: "exotic", href: "/exotic" },
   { key: "yachts", href: "/yachts" },
   { key: "contact", href: "/contact" },
 ];
