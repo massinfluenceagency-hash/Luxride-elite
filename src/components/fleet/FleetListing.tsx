@@ -26,7 +26,7 @@ export default function FleetListing({ locale, initialCategory }: { locale: stri
             <SectionHeading as="h1"
               label="Our Fleet"
               title="Choose Your Rental"
-              subtitle="40 vehicles across 17 model types. Daily rental rates shown; request your dates, preferred year, and configuration. Chauffeured service is quoted separately."
+              subtitle="40 vehicles across 18 model types. Daily rental rates shown; request your dates, preferred year, and configuration. Chauffeured service is quoted separately."
             />
           </div>
         </div>
