@@ -66,6 +66,20 @@ async function main() {
     await check('oversized booking group rejected',async()=>assert.equal((await post(requestRoute,{...booking,passengerCount:99})).status,400));
     await check('invalid duration rejected',async()=>assert.equal((await post(requestRoute,{...booking,durationHours:0})).status,400));
     await check('campaign labels reach the inbox with escaped HTML',async()=>{await post(requestRoute,{...contact,campaign:{utm_source:'google',utm_campaign:'<b>airport</b>'}});assert.ok(outbound.html.includes('google'));assert.ok(outbound.html.includes('&lt;b&gt;airport'));});
+    const {yachts,CHARTER_HOURS,MAX_CHARTER_GUESTS}=load(path.join(root,'src/lib/data/yachts.ts'));
+    const charter={type:'yacht',name:'Charter Customer',email:'customer@example.com',phone:'3055550100',date:'2099-12-01',yachtId:yachts[0].id,guests:13,requests:'<b>Birthday</b>'};
+    await check('all six yachts use confirmed duration and capacity with no public price',async()=>{
+      assert.equal(yachts.length,6);assert.equal(CHARTER_HOURS,4);assert.equal(MAX_CHARTER_GUESTS,13);
+      for(const yacht of yachts){assert.equal(yacht.price,undefined);assert.equal(yacht.images.length,2);for(const src of yacht.images)assert.ok(fs.existsSync(path.join(root,'public',src)));}
+    });
+    await check('every yacht inquiry reaches inbox with four hours and no invented price',async()=>{
+      for(const yacht of yachts){assert.equal((await post(requestRoute,{...charter,yachtId:yacht.id,durationHours:1,total:1})).status,200);assert.ok(outbound.html.includes(yacht.name));assert.ok(outbound.html.includes('Charter hours:</strong> 4'));assert.ok(outbound.html.includes('Guests:</strong> 13'));assert.ok(outbound.html.includes('&lt;b&gt;Birthday'));assert.ok(!outbound.html.includes(String.fromCharCode(36)));}
+    });
+    await check('yacht inquiries reject invalid guests, old dates, and unknown yachts',async()=>{
+      for(const guests of [0,14,1.5])assert.equal((await post(requestRoute,{...charter,guests})).status,400);
+      assert.equal((await post(requestRoute,{...charter,date:'2020-01-01'})).status,400);
+      assert.equal((await post(requestRoute,{...charter,yachtId:'unknown'})).status,400);
+    });
     const {miamiDateTime,isFutureMiamiPickup}=load(path.join(root,'src/lib/utils/miamiTime.ts'));
     await check('Miami pickup validation is independent of visitor timezone',async()=>{const now=new Date('2026-10-29T15:00:00Z');assert.equal(miamiDateTime(now),'2026-10-29T11:00');assert.equal(isFutureMiamiPickup('2026-10-29','10:59',now),false);assert.equal(isFutureMiamiPickup('2026-10-29','11:01',now),true);});
     const {saveBookingDraft,takeBookingDraft}=load(path.join(root,'src/lib/utils/bookingDraft.ts'));const storage=new Map();global.sessionStorage={setItem:(k,v)=>storage.set(k,v),getItem:k=>storage.get(k)||null,removeItem:k=>storage.delete(k)};

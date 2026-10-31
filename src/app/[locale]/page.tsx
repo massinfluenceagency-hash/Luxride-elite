@@ -10,6 +10,7 @@ import ToursPreview from "@/components/home/ToursPreview";
 import CTASection from "@/components/home/CTASection";
 import QuoteSection from "@/components/home/QuoteSection";
 import ExoticPreview from "@/components/home/ExoticPreview";
+import YachtPreview from "@/components/home/YachtPreview";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -30,6 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <QuoteSection locale={locale} />
         <ToursPreview locale={locale} />
         <ExoticPreview locale={locale} />
+        <YachtPreview locale={locale} />
         <BookingFAQ locale={locale} />
         <CTASection locale={locale} />
       </main>

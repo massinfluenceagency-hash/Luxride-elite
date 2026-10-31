@@ -1,0 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
+export default function YachtPreview({ locale }: { locale: string }) {
+  return <section className="container-luxe py-16"><div className="grid md:grid-cols-2 overflow-hidden rounded-2xl border border-gold/20 bg-black-charcoal"><div className="relative min-h-64"><Image src="/images/yachts/sunseeker-predator-75-1.webp" alt="Sunseeker yacht available for charter" fill sizes="(max-width:768px) 100vw, 50vw" className="object-contain" /></div><div className="p-8 md:p-12"><p className="text-gold text-xs uppercase tracking-[0.2em] mb-4">Yacht Charters</p><h2 className="font-display text-white text-3xl font-bold">Take Your Plans to the Water</h2><p className="text-cream/60 mt-4">Explore six yachts from 46 to 110 feet. Four-hour charters for up to 13 guests, with availability and pricing confirmed for your plans.</p><Link href={`/${locale}/yachts`} className="inline-block text-gold font-semibold mt-6">Explore Yacht Charters →</Link></div></div></section>;
+}

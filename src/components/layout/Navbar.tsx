@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { key: "fleet", href: "/fleet" },
   { key: "tours", href: "/tours" },
   { key: "exotic", href: "/exotic" },
+  { key: "yachts", href: "/yachts" },
   { key: "contact", href: "/contact" },
 ];
 
@@ -34,7 +35,7 @@ export default function Navbar({ locale }: { locale: string }) {
           : "bg-transparent py-5"
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 xl:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href={`/${locale}`} className="group">
@@ -42,7 +43,7 @@ export default function Navbar({ locale }: { locale: string }) {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden xl:flex items-center gap-5">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.key}
@@ -55,7 +56,7 @@ export default function Navbar({ locale }: { locale: string }) {
           </div>
 
           {/* Right side */}
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden xl:flex items-center gap-4">
             <LanguageSwitcher currentLocale={locale} />
             <a href="tel:+18002404727" className="flex items-center gap-2 text-cream/70 hover:text-gold transition-colors text-sm">
               <Phone size={14} />
@@ -71,7 +72,7 @@ export default function Navbar({ locale }: { locale: string }) {
 
           {/* Mobile menu toggle */}
           <button
-            className="lg:hidden text-white p-2"
+            className="xl:hidden text-white p-2"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
@@ -84,7 +85,7 @@ export default function Navbar({ locale }: { locale: string }) {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div id="mobile-navigation" className="lg:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
+        <div id="mobile-navigation" className="xl:hidden bg-black/98 backdrop-blur-md border-t border-gold/20 mt-3">
           <div className="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-4">
             {NAV_LINKS.map((link) => (
               <Link
