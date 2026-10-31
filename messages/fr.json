@@ -1,20 +1,21 @@
 {
   "nav": {
     "home": "Accueil",
-    "fleet": "Notre Flotte",
+    "fleet": "Location de voitures",
     "tours": "Tours",
     "exotic": "Voitures Exotiques",
-    "quote": "Obtenir un Devis",
+    "quote": "Devis pour un trajet",
     "pov": "Expérience",
     "contact": "Contact",
-    "booking": "Réserver",
-    "yachts": "Location de yachts"
+    "booking": "Demander un trajet",
+    "yachts": "Location de yachts",
+    "chauffeur": "Service avec chauffeur"
   },
   "hero": {
-    "tagline": "Là Où le Luxe Rencontre la Route",
-    "subtitle": "Le service de transport de luxe premier de Miami — limousines, SUVs noirs, voitures exotiques et tours exclusifs",
+    "tagline": "Service de SUV noirs avec chauffeur à Miami",
+    "subtitle": "Chauffeurs professionnels en Suburban et Escalade. Transferts aéroport, trajets privés et service à l’heure à Miami et en Floride du Sud.",
     "cta_quote": "Devis Instantané",
-    "cta_fleet": "Voir Notre Flotte",
+    "cta_fleet": "Découvrir nos SUV noirs",
     "scroll": "Faites défiler pour explorer"
   },
   "stats": {

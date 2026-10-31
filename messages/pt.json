@@ -1,20 +1,21 @@
 {
   "nav": {
     "home": "Início",
-    "fleet": "Nossa Frota",
+    "fleet": "Aluguel de carros",
     "tours": "Tours",
     "exotic": "Carros Exóticos",
-    "quote": "Obter Cotação",
+    "quote": "Cotar uma viagem",
     "pov": "Experiência",
     "contact": "Contato",
-    "booking": "Reservar Agora",
-    "yachts": "Aluguel de iates"
+    "booking": "Solicitar uma viagem",
+    "yachts": "Aluguel de iates",
+    "chauffeur": "Serviço com motorista"
   },
   "hero": {
-    "tagline": "Onde o Luxo Encontra a Estrada",
-    "subtitle": "O serviço de transporte de luxo premier de Miami — limusines, SUVs pretos, carros exóticos e tours exclusivos",
+    "tagline": "SUVs pretos e serviço de motorista em Miami",
+    "subtitle": "Motoristas profissionais em Suburban e Escalade. Traslados de aeroporto, viagens privadas e serviço por hora em Miami e no sul da Flórida.",
     "cta_quote": "Cotação Instantânea",
-    "cta_fleet": "Ver Nossa Frota",
+    "cta_fleet": "Conheça nossos SUVs pretos",
     "scroll": "Role para explorar"
   },
   "stats": {

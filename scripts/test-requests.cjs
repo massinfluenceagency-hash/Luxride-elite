@@ -64,6 +64,12 @@ async function main() {
     await check('valid booking request accepted',async()=>assert.equal((await post(requestRoute,booking)).status,200));
     await check('booking email contains service hours and passengers',async()=>{await post(requestRoute,booking);assert.ok(outbound.html.includes('Service hours'));assert.ok(outbound.html.includes('Passengers'));});
     await check('oversized booking group rejected',async()=>assert.equal((await post(requestRoute,{...booking,passengerCount:99})).status,400));
+    await check('hourly chauffeur has a three-hour minimum across quotes and requests',async()=>{
+      assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours:2})).status,400);
+      assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours:3})).status,200);
+      assert.throws(()=>calculateQuote({...booking,serviceType:'hourly',durationHours:2},'Escalade'),/three-hour/);
+    });
+    await check('point-to-point transfers do not inherit hourly minimum',async()=>assert.equal((await post(requestRoute,{...booking,serviceType:'transfer',durationHours:1})).status,200));
     await check('invalid duration rejected',async()=>assert.equal((await post(requestRoute,{...booking,durationHours:0})).status,400));
     await check('campaign labels reach the inbox with escaped HTML',async()=>{await post(requestRoute,{...contact,campaign:{utm_source:'google',utm_campaign:'<b>airport</b>'}});assert.ok(outbound.html.includes('google'));assert.ok(outbound.html.includes('&lt;b&gt;airport'));});
     const {yachts,CHARTER_HOURS,MAX_CHARTER_GUESTS}=load(path.join(root,'src/lib/data/yachts.ts'));

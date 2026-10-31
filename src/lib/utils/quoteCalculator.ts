@@ -13,6 +13,7 @@ function isPeakHour(date: Date): boolean {
 }
 
 export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteResult {
+  if (input.serviceType === "hourly" && input.durationHours < 3) throw new Error("Hourly chauffeur service has a three-hour minimum.");
   const vehicle = getVehicleById(input.vehicleId);
   if (!vehicle?.chauffeurAvailable) throw new Error("Please select a valid vehicle.");
   const pricing = { hourly: vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };

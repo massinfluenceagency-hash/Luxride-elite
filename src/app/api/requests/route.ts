@@ -30,6 +30,7 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
   const details: Record<string, string> = { Name: data.name, Email: data.email };
   if (data.type === "booking") {
+    if (data.serviceType === "hourly" && data.durationHours < 3) return NextResponse.json({ error: "Hourly chauffeur service has a three-hour minimum." }, { status: 400 });
     const vehicle = vehicles.find((item) => item.id === data.vehicleId);
     if (!vehicle?.chauffeurAvailable) return NextResponse.json({ error: "Please select a vehicle available for chauffeured service." }, { status: 400 });
     if (data.passengerCount > vehicle.passengers) return NextResponse.json({ error: "The passenger count exceeds this vehicle's capacity." }, { status: 400 });

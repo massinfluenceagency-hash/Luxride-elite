@@ -3,10 +3,11 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function BookingFAQ({ locale }: { locale: string }) {
   const questions = [
-    ["How do I reserve a vehicle?", "Send your pickup and drop-off locations, date, Miami pickup time, passenger count, and preferred vehicle. Our team will confirm availability, final pricing, and reservation details. Sending a request does not secure a reservation."],
-    ["What does a sightseeing package include?", "The reserved luxury vehicle and professional chauffeur. Half Day packages cover 3–4 hours; Full Day packages cover 6–8 hours. The package price covers the group within the listed capacity."],
-    ["Are activities and admission tickets included?", "No. Activities, admission, yacht services, food, drinks, equipment, and other third-party services must be arranged and paid for separately. Stops depend on the agreed schedule and available time."],
-    ["Can I request an airport pickup or a special event?", "Yes. Share your flight or event details, luggage requirements, and any special requests. Ask the team to confirm child seats, accessibility needs, and other arrangements before reserving."],
+    ["Does my ride include a chauffeur?", "Yes. Our black SUV service pairs a Chevrolet Suburban or Cadillac Escalade with a professional driver. Daily self-drive car rentals are a separate service."],
+    ["Can I book just a pickup and drop-off?", "Yes. Send your pickup and destination addresses for a transfer quote. Airport and point-to-point rides are separate from hourly chauffeur service."],
+    ["Is there a minimum for hourly service?", "Hourly chauffeur service has a three-hour minimum. Tell us your schedule and stops so our team can confirm the service and final price."],
+    ["How do airport pickups work?", "Share your airport, flight details, arrival date, passenger count, and luggage requirements. Our team will confirm the pickup arrangements. Ask about child seats or other needs before reserving."],
+    ["How do I reserve my chauffeur ride?", "Send your pickup and drop-off locations, date, Miami pickup time, passenger count, and preferred SUV. Our team will confirm availability, pricing, and reservation details. Sending a request does not secure a reservation."],
     ["What if the online quote is unavailable?", "You can send a booking request without an automated quote, or call 1 (800) 240-4727. Our team will review your itinerary and provide pricing."],
   ];
   return <section className="section-padding border-t border-gold/20">

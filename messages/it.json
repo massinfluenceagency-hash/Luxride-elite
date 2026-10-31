@@ -1,20 +1,21 @@
 {
   "nav": {
     "home": "Home",
-    "fleet": "La Nostra Flotta",
+    "fleet": "Noleggio auto",
     "tours": "Tour",
     "exotic": "Auto Esotiche",
-    "quote": "Ottieni Preventivo",
+    "quote": "Preventivo per una corsa",
     "pov": "Esperienza",
     "contact": "Contatti",
-    "booking": "Prenota Ora",
-    "yachts": "Noleggio yacht"
+    "booking": "Richiedi una corsa",
+    "yachts": "Noleggio yacht",
+    "chauffeur": "Servizio con autista"
   },
   "hero": {
-    "tagline": "Dove il Lusso Incontra la Strada",
-    "subtitle": "Il servizio di trasporto di lusso premier di Miami — limousine, SUV neri, auto esotiche e tour esclusivi",
+    "tagline": "SUV neri con autista a Miami",
+    "subtitle": "Autisti professionisti su Suburban ed Escalade. Trasferimenti aeroportuali, corse private e servizio a ore a Miami e nel sud della Florida.",
     "cta_quote": "Preventivo Istantaneo",
-    "cta_fleet": "Vedi la Nostra Flotta",
+    "cta_fleet": "Scopri i nostri SUV neri",
     "scroll": "Scorri per esplorare"
   },
   "stats": {

@@ -1,48 +1,13 @@
-import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { Car, Truck, Zap, Map, ArrowRight } from "lucide-react";
+import { Plane, MapPin, Clock, CalendarDays, ArrowRight } from "lucide-react";
 import SectionHeading from "@/components/ui/SectionHeading";
-import GlassCard from "@/components/ui/GlassCard";
-
-const SERVICES = [
-  { key: "limo", href: "/fleet", Icon: Car, color: "from-gold/20 to-gold/5" },
-  { key: "suv", href: "/fleet?category=suvs", Icon: Truck, color: "from-blue-900/20 to-blue-900/5" },
-  { key: "exotic", href: "/exotic", Icon: Zap, color: "from-red-900/20 to-red-900/5" },
-  { key: "tours", href: "/tours", Icon: Map, color: "from-emerald-900/20 to-emerald-900/5" },
-];
 
 export default function ServicesGrid({ locale }: { locale: string }) {
-  const t = useTranslations("services");
-
-  return (
-    <section className="section-padding bg-black-charcoal/30">
-      <div className="container-luxe">
-        <SectionHeading
-          label="What We Offer"
-          title={t("title")}
-          subtitle={t("subtitle")}
-        />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {SERVICES.map(({ key, href, Icon, color }) => (
-            <Link key={key} href={`/${locale}${href}`}>
-              <GlassCard hover className="p-8 h-full group">
-                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={26} className="text-gold" />
-                </div>
-                <h3 className="font-display font-bold text-xl text-white mb-3">
-                  {key === "limo" ? "Daily Car Rentals" : t(`${key}.title`)}
-                </h3>
-                <p className="text-cream/50 text-sm leading-relaxed mb-6">
-                  {key === "limo" ? "Choose from our luxury and exotic rental models" : t(`${key}.desc`)}
-                </p>
-                <div className="flex items-center gap-2 text-gold text-sm font-semibold group-hover:gap-3 transition-all duration-300">
-                  Learn More <ArrowRight size={14} />
-                </div>
-              </GlassCard>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+  const services = [
+    { title: "Airport Pickups", description: "Private black SUV transfers to and from Miami and Fort Lauderdale airports. Share your flight and pickup details.", Icon: Plane },
+    { title: "Pickups & Drop-offs", description: "A professional chauffeur for your hotel, home, meeting, or venue. Send your route for a transfer quote.", Icon: MapPin },
+    { title: "Hourly Chauffeur", description: "Keep a driver and black SUV for meetings, errands, and multiple stops. Three-hour minimum for hourly service.", Icon: Clock },
+    { title: "Events & Nights Out", description: "Arrange your arrival and return ride for celebrations, dinners, concerts, and special occasions.", Icon: CalendarDays },
+  ];
+  return <section className="section-padding bg-black-charcoal/30"><div className="container-luxe"><SectionHeading label="Black SUV & Limo Service" title="Where Do You Need to Go?" subtitle="Chauffeured Suburban and Escalade service for your airport transfer, daily plans, or special occasion." /><div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">{services.map(({ title, description, Icon }) => <Link key={title} href={`/${locale}/booking`} className="rounded-2xl border border-gold/20 bg-black-charcoal p-7 hover:border-gold/50 transition-colors"><Icon size={28} className="text-gold mb-6" /><h3 className="font-display text-white font-bold text-xl">{title}</h3><p className="text-cream/60 text-sm mt-3 mb-6 leading-relaxed">{description}</p><span className="text-gold text-sm font-semibold inline-flex items-center gap-2">Request a Ride <ArrowRight size={14} /></span></Link>)}</div></div></section>;
 }

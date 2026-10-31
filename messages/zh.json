@@ -1,20 +1,21 @@
 {
   "nav": {
     "home": "首页",
-    "fleet": "我们的车队",
+    "fleet": "汽车租赁",
     "tours": "旅游",
     "exotic": "豪华跑车",
-    "quote": "获取报价",
+    "quote": "获取接送报价",
     "pov": "体验",
     "contact": "联系我们",
-    "booking": "立即预订",
-    "yachts": "游艇包租"
+    "booking": "预约接送",
+    "yachts": "游艇包租",
+    "chauffeur": "专职司机服务"
   },
   "hero": {
-    "tagline": "奢华与道路相遇之处",
-    "subtitle": "迈阿密顶级豪华交通服务 — 豪华轿车、黑色SUV、豪华跑车及独家游览",
+    "tagline": "迈阿密黑色SUV专职司机服务",
+    "subtitle": "专业司机驾驶Suburban和Escalade，提供迈阿密及南佛罗里达机场接送、私人接送和按小时包车服务。",
     "cta_quote": "即时报价",
-    "cta_fleet": "查看我们的车队",
+    "cta_fleet": "查看黑色SUV",
     "scroll": "向下滚动探索"
   },
   "stats": {
