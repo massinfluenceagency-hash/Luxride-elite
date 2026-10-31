@@ -2,6 +2,7 @@ import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { vehicles } from "@/lib/data/fleet";
+import { yachts, CHARTER_HOURS, MAX_CHARTER_GUESTS } from "@/lib/data/yachts";
 import { tours, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
 import { escapeHtml, MailError, sendMail } from "@/lib/server/mail";
 
@@ -12,6 +13,7 @@ const campaign = z.object({ utm_source: z.string().max(120).optional(), utm_medi
 const contact = { campaign, name: text.max(120), email: z.email().max(254) };
 const date = z.iso.date().refine((value) => value >= new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" }), "Please choose today or a future date.");
 const schema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("yacht"), ...contact, phone: text.max(40), yachtId: text, date, guests: z.number().int().min(1).max(MAX_CHARTER_GUESTS), requests: z.string().trim().max(5000) }),
   z.object({ type: z.literal("rental"), ...contact, phone: text.max(40), vehicleId: text, date, days: z.number().int().min(1).max(30), requests: z.string().trim().max(5000) }),
   z.object({ type: z.literal("contact"), ...contact, phone: z.string().trim().max(40), message: text.max(5000) }),
   z.object({ type: z.literal("booking"), ...contact, phone: text.max(40), vehicleId: text, serviceType: z.enum(["transfer", "hourly", "airport", "event"]), durationHours: z.number().min(1).max(24), passengerCount: z.number().int().positive(), pickup: text, dropoff: text, date, time: z.iso.time({ precision: -1 }), requests: z.string().trim().max(5000) }),
@@ -33,6 +35,10 @@ export async function POST(request: NextRequest) {
     if (data.passengerCount > vehicle.passengers) return NextResponse.json({ error: "The passenger count exceeds this vehicle's capacity." }, { status: 400 });
     if (!isFutureMiamiPickup(data.date, data.time)) return NextResponse.json({ error: "Please choose a future pickup time in Miami." }, { status: 400 });
     Object.assign(details, { "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
+  } else if (data.type === "yacht") {
+    const yacht = yachts.find(item => item.id === data.yachtId);
+    if (!yacht) return NextResponse.json({ error: "Please select a valid yacht." }, { status: 400 });
+    Object.assign(details, { Yacht: yacht.name, "Preferred date": data.date, "Charter hours": String(CHARTER_HOURS), Guests: String(data.guests), Phone: data.phone, Requests: data.requests, Terms: "Quote inquiry only. Availability, departure marina, charter price, captain and crew arrangements, fuel, marina fees, taxes, and gratuity require confirmation before reservation." });
   } else if (data.type === "rental") {
     const vehicle = vehicles.find(item => item.id === data.vehicleId);
     if (!vehicle?.dailyRate) return NextResponse.json({ error: "Please select a valid rental vehicle." }, { status: 400 });

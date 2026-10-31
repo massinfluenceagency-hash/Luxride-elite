@@ -7,7 +7,7 @@ const origin = "https://www.luxrideelite.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
-    "", "/about", "/contact", "/fleet", "/exotic", "/tours", "/quote", "/booking", "/privacy", "/terms",
+    "", "/about", "/contact", "/fleet", "/exotic", "/tours", "/yachts", "/quote", "/booking", "/privacy", "/terms",
     ...vehicles.map((vehicle) => `/fleet/${vehicle.category}/${vehicle.id}`),
     ...tours.map((tour) => `/tours/${tour.slug}`),
   ];

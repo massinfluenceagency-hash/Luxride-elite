@@ -29,6 +29,7 @@ export default function Footer({ locale }: { locale: string }) {
                 { label: nav("fleet"), href: "/fleet" },
                 { label: nav("tours"), href: "/tours" },
                 { label: nav("exotic"), href: "/exotic" },
+                { label: "Yacht Charters", href: "/yachts" },
                 { label: nav("quote"), href: "/quote" },
                 { label: nav("booking"), href: "/booking" },
               ].map(({ label, href }) => (
