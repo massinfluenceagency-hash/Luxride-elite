@@ -14,7 +14,7 @@ function isPeakHour(date: Date): boolean {
 
 export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteResult {
   const vehicle = getVehicleById(input.vehicleId);
-  if (!vehicle) throw new Error("Please select a valid vehicle.");
+  if (!vehicle?.chauffeurAvailable) throw new Error("Please select a valid vehicle.");
   const pricing = { hourly: vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };
   const baseRate = pricing.hourly * input.durationHours;
   const excessMiles = Math.max(0, input.distanceMiles - pricing.freeMiles);

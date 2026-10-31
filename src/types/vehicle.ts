@@ -11,14 +11,15 @@ export interface Vehicle {
   luggage: number;
   hourlyRate: number;
   dailyRate?: number;
+  chauffeurAvailable?: boolean;
   perMileRate: number;
   freeMiles: number;
   features: string[];
   specs: {
     make: string;
     model: string;
-    year: number;
-    color: string;
+    year?: number;
+    color?: string;
     mpg?: string;
   };
   available: boolean;

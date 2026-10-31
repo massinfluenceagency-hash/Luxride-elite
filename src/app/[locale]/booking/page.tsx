@@ -9,7 +9,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import GlassCard from "@/components/ui/GlassCard";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { vehicles } from "@/lib/data/fleet";
+import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 
 const STEPS = [
   { label: "Service", Icon: Car },

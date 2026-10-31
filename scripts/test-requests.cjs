@@ -35,11 +35,17 @@ async function main() {
   const quote = { quoteId: 'LRE-TEST', vehicleName: 'Escalade', origin: '<b>Airport</b>', destination: 'Miami Beach', distanceMiles: 15, durationHours: 3, validUntil: '2099-12-01T00:00:00.000Z', breakdown: [{ label: '<b>Total</b>', amount: 385.2, type: 'total' }] };
   try {
     await check('all vehicle quotes match published fleet rates', async()=>{
-      for (const vehicle of vehicles) {
+      for (const vehicle of vehicles.filter(v=>v.chauffeurAvailable)) {
         const quote=calculateQuote({vehicleId:vehicle.id,serviceType:'hourly',origin:'Miami',destination:'Miami Beach',distanceMiles:vehicle.freeMiles+10,durationHours:3,date:new Date('2099-12-01T12:00:00Z'),passengerCount:1,isAirportTransfer:false},vehicle.name);
         assert.equal(quote.baseRate,vehicle.hourlyRate*3,vehicle.id);
         assert.equal(quote.distanceSurcharge,vehicle.perMileRate*10,vehicle.id);
       }
+    });
+    await check('confirmed 17 daily prices and no stock inventory photos',async()=>{
+      assert.equal(vehicles.length,17);
+      const expected={'ferrari-f8':1500,'lamborghini-urus':1000,'mercedes-s580':500,'mercedes-g-wagon':700,'mercedes-cle':400,'mercedes-gt':500,'maybach-gls':800,'bmw-760':450,'bentley-bentayga':600,'rolls-royce-dawn':1000,'rolls-royce-cullinan':1200,'porsche-cayenne':500,'corvette-c8':400,'suburban-suv':400,'escalade-suv':600,'tesla-cybertruck':350,'hummer-ev':400};
+      for(const v of vehicles){assert.equal(v.dailyRate,expected[v.id],v.id);assert.ok(!v.image||v.image.startsWith('/images/fleet/real/'));}
+      assert.throws(()=>calculateQuote({...booking,vehicleId:'ferrari-f8'},'F8'));
     });
     await check('all packages exclude separately paid activities',async()=>{
       for(const tour of tours) {
@@ -63,6 +69,14 @@ async function main() {
     const {miamiDateTime,isFutureMiamiPickup}=load(path.join(root,'src/lib/utils/miamiTime.ts'));
     await check('Miami pickup validation is independent of visitor timezone',async()=>{const now=new Date('2026-10-29T15:00:00Z');assert.equal(miamiDateTime(now),'2026-10-29T11:00');assert.equal(isFutureMiamiPickup('2026-10-29','10:59',now),false);assert.equal(isFutureMiamiPickup('2026-10-29','11:01',now),true);});
     const {saveBookingDraft,takeBookingDraft}=load(path.join(root,'src/lib/utils/bookingDraft.ts'));const storage=new Map();global.sessionStorage={setItem:(k,v)=>storage.set(k,v),getItem:k=>storage.get(k)||null,removeItem:k=>storage.delete(k)};
+    const rental={type:'rental',name:'Rental Customer',email:'customer@example.com',phone:'3055550100',vehicleId:'ferrari-f8',date:'2099-12-01',days:2,requests:'Preferred year'};
+    await check('rental estimates use server daily rate and ignore tampered prices',async()=>{
+      smtpState.send=async message=>{outbound=message;return {accepted:[message.to],rejected:[]};};
+      assert.equal((await post(requestRoute,{...rental,dailyRate:1,total:1})).status,200);
+      assert.ok(outbound.html.includes('$3,000'));assert.ok(outbound.html.includes('Chauffeur not included'));
+    });
+    await check('rental days and past dates validated',async()=>{for(const days of [0,1.5,31])assert.equal((await post(requestRoute,{...rental,days})).status,400);assert.equal((await post(requestRoute,{...rental,date:'2020-01-01'})).status,400);});
+    await check('rental-only car cannot enter chauffeur booking',async()=>assert.equal((await post(requestRoute,{...booking,vehicleId:'ferrari-f8'})).status,400));
     const draft={vehicleId:'escalade-suv',serviceType:'airport',pickup:'Miami Airport',dropoff:'Miami Beach',date:'2099-12-01',time:'14:00',durationHours:3,passengerCount:2};
     await check('trip draft preserves details and is consumed once',async()=>{assert.equal(saveBookingDraft(draft),true);assert.deepEqual(takeBookingDraft(),draft);assert.equal(takeBookingDraft(),null);});
     await check('trip draft rejects invalid capacity and expires',async()=>{assert.equal(saveBookingDraft({...draft,passengerCount:99}),false);storage.set('luxride-booking-draft',JSON.stringify({expires:0,draft}));assert.equal(takeBookingDraft(),null);});

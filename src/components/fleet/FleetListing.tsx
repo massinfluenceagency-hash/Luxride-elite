@@ -7,7 +7,7 @@ import VehicleCard from "@/components/fleet/VehicleCard";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { vehicles } from "@/lib/data/fleet";
 
-const CATEGORIES = ["all", "limousines", "suvs", "exotic"] as const;
+const CATEGORIES = ["all", "suvs", "exotic"] as const;
 
 export default function FleetListing({ locale, initialCategory }: { locale: string; initialCategory: string }) {
   const t = useTranslations("fleet");
@@ -21,12 +21,12 @@ export default function FleetListing({ locale, initialCategory }: { locale: stri
       <main className="min-h-screen pt-24">
         {/* Hero */}
         <div className="relative py-20 bg-black-charcoal border-b border-gold/20 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=1920&q=60')] bg-cover bg-center opacity-10" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-black" />
           <div className="container-luxe relative z-10 text-center">
             <SectionHeading as="h1"
               label="Our Fleet"
-              title={t("title")}
-              subtitle={t("subtitle")}
+              title="Choose Your Rental"
+              subtitle="40 vehicles across 17 model types. Daily rental rates shown; request your dates, preferred year, and configuration. Chauffeured service is quoted separately."
             />
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function FleetListing({ locale, initialCategory }: { locale: stri
                       : "border border-white/10 text-cream/60 hover:border-gold/40 hover:text-cream"
                   }`}
                 >
-                  {t(`categories.${cat}`)}
+                  {cat === "all" ? "All models" : cat === "suvs" ? "SUVs & trucks" : "Luxury & sports cars"}
                 </button>
               ))}
             </div>
