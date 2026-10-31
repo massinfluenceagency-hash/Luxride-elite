@@ -1,7 +1,7 @@
 import Link from "next/link";
 export default function MoreExperiences({ locale }: { locale: string }) {
   const options = [
-    { title: "Luxury Car Rentals", description: "Prefer to drive? Explore our daily rental collection.", href: "/fleet" },
+    { title: "Luxury Car Rentals", description: "Prefer to drive? Get 25% off your first car rental. Eligibility confirmed before booking.", href: "/fleet" },
     { title: "Yacht Charters", description: "Plan a four-hour private charter for up to 13 guests.", href: "/yachts" },
     { title: "Private Sightseeing", description: "Explore South Florida with a vehicle and chauffeur. Activities paid separately.", href: "/tours" },
   ];

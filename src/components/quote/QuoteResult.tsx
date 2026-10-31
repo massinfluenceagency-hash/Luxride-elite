@@ -51,6 +51,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
 
   return (
     <GlassCard glow className="p-8">
+      {result.firstTimePromotion && <p className="text-gold text-sm mb-5">First-time chauffeur offer applied to the base rate. Three-hour promotional minimum. Eligibility and final charges require confirmation.</p>}
       {/* Header */}
       <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
         <div>

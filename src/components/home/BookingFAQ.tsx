@@ -5,7 +5,7 @@ export default function BookingFAQ({ locale }: { locale: string }) {
   const questions = [
     ["Does my ride include a chauffeur?", "Yes. Our black SUV service pairs a Chevrolet Suburban or Cadillac Escalade with a professional driver. Daily self-drive car rentals are a separate service."],
     ["Can I book just a pickup and drop-off?", "Yes. Send your pickup and destination addresses for a transfer quote. Airport and point-to-point rides are separate from hourly chauffeur service."],
-    ["Is there a minimum for hourly service?", "Hourly chauffeur service has a three-hour minimum. Tell us your schedule and stops so our team can confirm the service and final price."],
+    ["Does the first-time chauffeur promotion have a minimum?", "The Suburban $50/hour and Escalade $75/hour first-time offers require at least three hours. That minimum applies only to the promotion, not regular hourly service or transfers. Eligibility and final pricing are confirmed by our team."],
     ["How do airport pickups work?", "Share your airport, flight details, arrival date, passenger count, and luggage requirements. Our team will confirm the pickup arrangements. Ask about child seats or other needs before reserving."],
     ["How do I reserve my chauffeur ride?", "Send your pickup and drop-off locations, date, Miami pickup time, passenger count, and preferred SUV. Our team will confirm availability, pricing, and reservation details. Sending a request does not secure a reservation."],
     ["What if the online quote is unavailable?", "You can send a booking request without an automated quote, or call 1 (800) 240-4727. Our team will review your itinerary and provide pricing."],

@@ -1,6 +1,7 @@
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { firstRideRate, FIRST_RENTAL_DISCOUNT } from "@/lib/data/promotions";
 import { vehicles } from "@/lib/data/fleet";
 import { yachts, CHARTER_HOURS, MAX_CHARTER_GUESTS } from "@/lib/data/yachts";
 import { tours, TOUR_PACKAGE_NOTICE } from "@/lib/data/tours";
@@ -14,9 +15,9 @@ const contact = { campaign, name: text.max(120), email: z.email().max(254) };
 const date = z.iso.date().refine((value) => value >= new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" }), "Please choose today or a future date.");
 const schema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("yacht"), ...contact, phone: text.max(40), yachtId: text, date, guests: z.number().int().min(1).max(MAX_CHARTER_GUESTS), requests: z.string().trim().max(5000) }),
-  z.object({ type: z.literal("rental"), ...contact, phone: text.max(40), vehicleId: text, date, days: z.number().int().min(1).max(30), requests: z.string().trim().max(5000) }),
+  z.object({ type: z.literal("rental"), ...contact, firstRentalPromotion: z.boolean().optional(), phone: text.max(40), vehicleId: text, date, days: z.number().int().min(1).max(30), requests: z.string().trim().max(5000) }),
   z.object({ type: z.literal("contact"), ...contact, phone: z.string().trim().max(40), message: text.max(5000) }),
-  z.object({ type: z.literal("booking"), ...contact, phone: text.max(40), vehicleId: text, serviceType: z.enum(["transfer", "hourly", "airport", "event"]), durationHours: z.number().min(1).max(24), passengerCount: z.number().int().positive(), pickup: text, dropoff: text, date, time: z.iso.time({ precision: -1 }), requests: z.string().trim().max(5000) }),
+  z.object({ type: z.literal("booking"), ...contact, firstTimePromotion: z.boolean().optional(), phone: text.max(40), vehicleId: text, serviceType: z.enum(["transfer", "hourly", "airport", "event"]), durationHours: z.number().min(1).max(24), passengerCount: z.number().int().positive(), pickup: text, dropoff: text, date, time: z.iso.time({ precision: -1 }), requests: z.string().trim().max(5000) }),
   z.object({ type: z.literal("tour"), ...contact, tourId: text, persons: z.number().int().positive(), date }),
 ]);
 
@@ -30,9 +31,12 @@ export async function POST(request: NextRequest) {
   const data = parsed.data;
   const details: Record<string, string> = { Name: data.name, Email: data.email };
   if (data.type === "booking") {
-    if (data.serviceType === "hourly" && data.durationHours < 3) return NextResponse.json({ error: "Hourly chauffeur service has a three-hour minimum." }, { status: 400 });
     const vehicle = vehicles.find((item) => item.id === data.vehicleId);
     if (!vehicle?.chauffeurAvailable) return NextResponse.json({ error: "Please select a vehicle available for chauffeured service." }, { status: 400 });
+    if (data.firstTimePromotion) {
+      try { const rate = firstRideRate(vehicle.id, data.serviceType, data.durationHours); Object.assign(details, { Promotion: "First-time chauffeur offer", "Promotional hourly base rate": formatCurrency(rate), "Promotional base estimate": formatCurrency(rate * data.durationHours), "Offer conditions": "Three-hour minimum for promotion only. First-time eligibility, availability, and additional charges require confirmation." }); }
+      catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid promotional request." }, { status: 400 }); }
+    }
     if (data.passengerCount > vehicle.passengers) return NextResponse.json({ error: "The passenger count exceeds this vehicle's capacity." }, { status: 400 });
     if (!isFutureMiamiPickup(data.date, data.time)) return NextResponse.json({ error: "Please choose a future pickup time in Miami." }, { status: 400 });
     Object.assign(details, { "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
@@ -43,7 +47,10 @@ export async function POST(request: NextRequest) {
   } else if (data.type === "rental") {
     const vehicle = vehicles.find(item => item.id === data.vehicleId);
     if (!vehicle?.dailyRate) return NextResponse.json({ error: "Please select a valid rental vehicle." }, { status: 400 });
-    Object.assign(details, { Vehicle: vehicle.name, "Pickup date": data.date, "Rental days": String(data.days), "Daily vehicle rate": formatCurrency(vehicle.dailyRate), "Base rental estimate": formatCurrency(vehicle.dailyRate * data.days), Phone: data.phone, Requests: data.requests, Terms: "Rental inquiry only. Availability, exact vehicle, taxes, deposit, insurance, mileage, and delivery terms require confirmation. Chauffeur not included." });
+    const regularBase = vehicle.dailyRate * data.days;
+    const discount = data.firstRentalPromotion ? regularBase * FIRST_RENTAL_DISCOUNT : 0;
+    if (data.firstRentalPromotion) Object.assign(details, { Promotion: "25% off first car rental", "Regular rental base": formatCurrency(regularBase), "First-rental discount": formatCurrency(discount), "Eligibility": "First-time rental eligibility requires confirmation. Discount applies to the vehicle rental base only." });
+    Object.assign(details, { Vehicle: vehicle.name, "Pickup date": data.date, "Rental days": String(data.days), "Daily vehicle rate": formatCurrency(vehicle.dailyRate), "Base rental estimate": formatCurrency(regularBase - discount), Phone: data.phone, Requests: data.requests, Terms: "Rental inquiry only. Availability, exact vehicle, taxes, deposit, insurance, mileage, and delivery terms require confirmation. Chauffeur not included." });
   } else if (data.type === "tour") {
     const tour = tours.find((item) => item.id === data.tourId);
     if (!tour || data.persons < tour.minPersons || data.persons > tour.maxPersons) return NextResponse.json({ error: "Please check the tour and group size." }, { status: 400 });

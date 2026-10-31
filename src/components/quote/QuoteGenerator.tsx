@@ -1,8 +1,9 @@
 "use client";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { MapPin, Clock, Users, Car, Plane } from "lucide-react";
 import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
+import { firstRideRate } from "@/lib/data/promotions";
 import { calculateQuote } from "@/lib/utils/quoteCalculator";
 import { QuoteResult, ServiceType } from "@/types/quote";
 import QuoteResultCard from "./QuoteResult";
@@ -12,16 +13,17 @@ import { saveBookingDraft } from "@/lib/utils/bookingDraft";
 import { isFutureMiamiPickup, miamiDateTime } from "@/lib/utils/miamiTime";
 import GlassCard from "@/components/ui/GlassCard";
 
-export default function QuoteGenerator({ locale, initialVehicleId = "escalade-suv" }: { locale: string; initialVehicleId?: string }) {
+export default function QuoteGenerator({ locale, initialVehicleId = "escalade-suv", initialPromotion = false }: { locale: string; initialVehicleId?: string; initialPromotion?: boolean }) {
   const id = useId();
   const router = useRouter();
   const t = useTranslations("quote");
-  const [serviceType, setServiceType] = useState<ServiceType>("transfer");
+  const [serviceType, setServiceType] = useState<ServiceType>(initialPromotion ? "hourly" : "transfer");
   const [vehicleId, setVehicleId] = useState(initialVehicleId);
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
-  const [hours, setHours] = useState(3);
+  const [hours, setHours] = useState(initialPromotion ? 3 : 1);
+  const [firstTimePromotion, setFirstTimePromotion] = useState(initialPromotion);
   const [passengers, setPassengers] = useState(2);
   const [isAirport, setIsAirport] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,11 +31,13 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
   const [error, setError] = useState("");
   const [matchedRoute, setMatchedRoute] = useState<{ origin: string; destination: string } | null>(null);
 
+  useEffect(() => { setResult(null); setMatchedRoute(null); }, [serviceType, vehicleId, origin, destination, date, hours, passengers, isAirport, firstTimePromotion]);
+
   const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
 
   const handleCalculate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (serviceType === "hourly" && hours < 3) { setError("Hourly chauffeur service has a three-hour minimum."); return; }
+    if (firstTimePromotion) { try { firstRideRate(vehicleId, serviceType, hours); } catch (error) { setError(error instanceof Error ? error.message : "Please check the offer conditions."); return; } }
     if (!origin || !destination) {
       setError("Please enter both pickup and dropoff addresses.");
       return;
@@ -56,6 +60,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
 
       const quoteResult = calculateQuote(
         {
+          firstTimePromotion,
           serviceType,
           vehicleId,
           origin,
@@ -85,7 +90,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
   ];
 
   const continueBooking = () => {
-    saveBookingDraft({ vehicleId, serviceType: serviceType === "tour" ? "hourly" : serviceType, pickup: origin, dropoff: destination, date: date.slice(0, 10), time: date.slice(11, 16), durationHours: hours, passengerCount: passengers });
+    saveBookingDraft({ firstTimePromotion, vehicleId, serviceType: serviceType === "tour" ? "hourly" : serviceType, pickup: origin, dropoff: destination, date: date.slice(0, 10), time: date.slice(11, 16), durationHours: hours, passengerCount: passengers });
     router.push(`/${locale}/booking`);
   };
 
@@ -102,7 +107,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                   key={value}
                   aria-pressed={serviceType === value}
                   type="button"
-                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); if (value === "hourly") setHours(current => Math.max(3, current)); }}
+                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); if (value !== "hourly") setFirstTimePromotion(false); }}
                   className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
                     serviceType === value
                       ? "bg-gold text-black border-gold"
@@ -115,6 +120,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
             </div>
           </div>
 
+          {serviceType === "hourly" && <label className="flex items-start gap-3 rounded-xl border border-gold/40 bg-gold/5 p-4 text-sm text-cream/80"><input type="checkbox" checked={firstTimePromotion} onChange={e => { setFirstTimePromotion(e.target.checked); if (e.target.checked) setHours(current => Math.max(3, current)); }} className="mt-1 accent-gold" /><span><strong className="text-gold">Use the first-time chauffeur offer</strong><br />Suburban $50/hour · Escalade $75/hour. Three-hour minimum for this offer only. First-time eligibility and additional charges confirmed before booking.</span></label>}
           {/* Vehicle */}
           <div>
             <label htmlFor={`${id}-vehicle`} className="block text-gold text-sm font-semibold mb-2 tracking-wide">
@@ -127,7 +133,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
             >
               {vehicles.map((v) => (
                 <option key={v.id} value={v.id}>
-                  {v.name} — ${v.hourlyRate}/hr
+                  {v.name} — ${firstTimePromotion ? firstRideRate(v.id, "hourly", 3) : v.hourlyRate}/hr
                 </option>
               ))}
             </select>
@@ -181,7 +187,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
               </label>
               <input id={`${id}-hours`}
                 type="number"
-                min={serviceType === "hourly" ? 3 : 1}
+                min={firstTimePromotion ? 3 : 1}
                 max={24}
                 value={hours}
                 onChange={(e) => setHours(Number(e.target.value))}

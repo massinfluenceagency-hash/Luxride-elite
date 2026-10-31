@@ -77,7 +77,8 @@ export default function HeroSection({ locale }: { locale: string }) {
           </div>
         </motion.div>
 
-        <p className="mt-8 text-cream/80 text-sm">Airport pickups · Private transfers · Hourly drivers · Events</p>
+        <Link href={`/${locale}/quote?promotion=first-time&vehicle=suburban-suv`} className="inline-block mt-6 text-gold text-sm font-semibold underline underline-offset-4">First-time offer: Suburban $50/hr · Escalade $75/hr · 3-hour promotional minimum</Link>
+        <p className="mt-5 text-cream/80 text-sm">Airport pickups · Private transfers · Hourly drivers · Events</p>
         <a href="tel:+18002404727" className="inline-flex items-center gap-2 mt-4 py-2 text-gold font-semibold"><Phone size={16} /> 1 (800) 240-4727</a>
       </div>
     </section>
