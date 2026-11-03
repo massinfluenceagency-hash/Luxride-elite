@@ -1,5 +1,6 @@
 import { getVehicleById } from "@/lib/data/fleet";
 import { firstRideRate } from "@/lib/data/promotions";
+import { isDistanceService, transferFare } from "@/lib/data/transferPricing";
 import { QuoteInput, QuoteResult, QuoteLineItem } from "@/types/quote";
 
 const AIRPORT_FEE = 75;
@@ -17,20 +18,22 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
   const vehicle = getVehicleById(input.vehicleId);
   if (!vehicle?.chauffeurAvailable) throw new Error("Please select a valid vehicle.");
   const pricing = { hourly: input.firstTimePromotion ? firstRideRate(vehicle.id, input.serviceType, input.durationHours) : vehicle.hourlyRate, perMile: vehicle.perMileRate, freeMiles: vehicle.freeMiles };
-  const baseRate = pricing.hourly * input.durationHours;
+  const distanceBased = isDistanceService(input.serviceType);
+  const transfer = distanceBased ? transferFare(vehicle.id, input.distanceMiles) : null;
+  const baseRate = transfer ? transfer.base : pricing.hourly * input.durationHours;
   const excessMiles = Math.max(0, input.distanceMiles - pricing.freeMiles);
-  const distanceSurcharge = excessMiles * pricing.perMile;
-  const airportFee = input.isAirportTransfer ? AIRPORT_FEE : 0;
+  const distanceSurcharge = transfer ? transfer.distance : excessMiles * pricing.perMile;
+  const airportFee = !distanceBased && input.isAirportTransfer ? AIRPORT_FEE : 0;
   const subtotalBeforePeak = baseRate + distanceSurcharge + airportFee;
-  const peakSurcharge = isPeakHour(input.date) ? subtotalBeforePeak * PEAK_MULTIPLIER : 0;
+  const peakSurcharge = !distanceBased && isPeakHour(input.date) ? subtotalBeforePeak * PEAK_MULTIPLIER : 0;
   const subtotal = subtotalBeforePeak + peakSurcharge;
   const tax = subtotal * MIAMI_DADE_TAX;
   const total = subtotal + tax;
 
   const breakdown: QuoteLineItem[] = [
-    { label: `${input.firstTimePromotion ? "First-time offer — " : ""}Base Rate (${input.durationHours}h × $${pricing.hourly}/hr)`, amount: baseRate, type: "base" },
+    { label: transfer ? "One-way transfer — first 10 miles" : `${input.firstTimePromotion ? "First-time offer — " : ""}Base Rate (${input.durationHours}h × $${pricing.hourly}/hr)`, amount: baseRate, type: "base" },
     ...(distanceSurcharge > 0
-      ? [{ label: `Distance Charge (${excessMiles.toFixed(1)} extra mi × $${pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
+      ? [{ label: `Distance Charge (${(transfer ? transfer.excessMiles : excessMiles).toFixed(1)} extra mi × $${transfer ? transfer.perMile : pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
       : []),
     ...(airportFee > 0 ? [{ label: "Airport Transfer Fee", amount: airportFee, type: "airport" as const }] : []),
     ...(peakSurcharge > 0 ? [{ label: "Peak Hours Surcharge (20%)", amount: peakSurcharge, type: "peak" as const }] : []),

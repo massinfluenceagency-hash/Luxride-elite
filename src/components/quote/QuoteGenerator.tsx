@@ -3,6 +3,8 @@ import { useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
 import { MapPin, Clock, Users, Car, Plane } from "lucide-react";
 import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
+import { isDistanceService, transferPricing } from "@/lib/data/transferPricing";
+import { TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
 import { firstRideRate } from "@/lib/data/promotions";
 import { calculateQuote } from "@/lib/utils/quoteCalculator";
 import { QuoteResult, ServiceType } from "@/types/quote";
@@ -66,7 +68,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
           origin,
           destination,
           distanceMiles: miles,
-          durationHours: hours,
+          durationHours: isDistanceService(serviceType) ? Math.max(1, data.durationMinutes / 60) : hours,
           date: date ? new Date(date) : new Date(),
           passengerCount: passengers,
           isAirportTransfer: isAirport,
@@ -90,7 +92,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
   ];
 
   const continueBooking = () => {
-    saveBookingDraft({ firstTimePromotion, vehicleId, serviceType: serviceType === "tour" ? "hourly" : serviceType, pickup: origin, dropoff: destination, date: date.slice(0, 10), time: date.slice(11, 16), durationHours: hours, passengerCount: passengers });
+    saveBookingDraft({ firstTimePromotion, vehicleId, serviceType: serviceType === "tour" ? "hourly" : serviceType, pickup: origin, dropoff: destination, date: date.slice(0, 10), time: date.slice(11, 16), durationHours: isDistanceService(serviceType) ? 1 : hours, passengerCount: passengers });
     router.push(`/${locale}/booking`);
   };
 
@@ -98,7 +100,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
     <div className="w-full">
       <GlassCard className="p-5 sm:p-8">
         <form onSubmit={handleCalculate} className="space-y-6">
-          <p className="text-cream/80 text-sm">Pickups and drop-offs start at $50; final transfer pricing depends on distance and vehicle and is confirmed by our team. Online calculations are estimates. A $50 chauffeur booking deposit is credited toward your total fare.</p>
+          <p className="text-cream/80 text-sm">{TRANSFER_PRICE_NOTICE}</p>
           {/* Service type */}
           <div>
             <label className="block text-gold text-sm font-semibold mb-3 tracking-wide">{t("service_type")}</label>
@@ -134,7 +136,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
             >
               {vehicles.map((v) => (
                 <option key={v.id} value={v.id}>
-                  {v.name} — ${firstTimePromotion ? firstRideRate(v.id, "hourly", 3) : v.hourlyRate}/hr
+                  {v.name} — {isDistanceService(serviceType) ? `$${transferPricing(v.id).minimum} first 10 mi` : `$${firstTimePromotion ? firstRideRate(v.id, "hourly", 3) : v.hourlyRate}/hr`}
                 </option>
               ))}
             </select>
@@ -182,7 +184,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                 className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
               />
             </div>
-            <div>
+            <div className={isDistanceService(serviceType) ? "hidden" : ""}>
               <label htmlFor={`${id}-hours`} className="block text-gold text-sm font-semibold mb-2 tracking-wide">
                 <Clock size={14} className="inline mr-1.5" />{t("hours")}
               </label>
@@ -213,7 +215,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
           <p className="text-cream/70 text-xs">All pickup times are Miami / Eastern time. Prices are estimates; availability and final details are confirmed by our team.</p>
           <Link href={`/${locale}/tours`} className="inline-block text-gold underline text-sm">Looking for a half-day or full-day sightseeing package?</Link>
           {/* Airport toggle */}
-          <div className="flex items-center gap-3">
+          <div className={isDistanceService(serviceType) ? "hidden" : "flex items-center gap-3"}>
             <button
               type="button"
               role="switch"

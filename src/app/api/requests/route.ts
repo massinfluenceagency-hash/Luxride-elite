@@ -1,4 +1,4 @@
-import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE, RENTAL_DEPOSIT_NOTICE } from "@/lib/data/bookingPolicies";
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE, RENTAL_DEPOSIT_NOTICE, YACHT_DEPOSIT_NOTICE, TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -40,11 +40,11 @@ export async function POST(request: NextRequest) {
     }
     if (data.passengerCount > vehicle.passengers) return NextResponse.json({ error: "The passenger count exceeds this vehicle's capacity." }, { status: 400 });
     if (!isFutureMiamiPickup(data.date, data.time)) return NextResponse.json({ error: "Please choose a future pickup time in Miami." }, { status: 400 });
-    Object.assign(details, { "Booking deposit": CHAUFFEUR_DEPOSIT_NOTICE, "Cancellation policy": CHAUFFEUR_CANCELLATION_NOTICE, "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
+    Object.assign(details, { "Transfer pricing": data.serviceType === "transfer" || data.serviceType === "airport" ? TRANSFER_PRICE_NOTICE : "Hourly or event service, confirmed by our team.", "Booking deposit": CHAUFFEUR_DEPOSIT_NOTICE, "Cancellation policy": CHAUFFEUR_CANCELLATION_NOTICE, "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
   } else if (data.type === "yacht") {
     const yacht = yachts.find(item => item.id === data.yachtId);
     if (!yacht) return NextResponse.json({ error: "Please select a valid yacht." }, { status: 400 });
-    Object.assign(details, { Yacht: yacht.name, "Preferred date": data.date, "Charter hours": String(CHARTER_HOURS), Guests: String(data.guests), Phone: data.phone, Requests: data.requests, Terms: "Quote inquiry only. Availability, departure marina, charter price, captain and crew arrangements, fuel, marina fees, taxes, and gratuity require confirmation before reservation." });
+    Object.assign(details, { Yacht: yacht.name, "Preferred date": data.date, "Charter hours": String(CHARTER_HOURS), Guests: String(data.guests), Phone: data.phone, Requests: data.requests, "Booking deposit and cancellation": YACHT_DEPOSIT_NOTICE, Terms: "Quote inquiry only. Availability, charter price, captain and crew arrangements, fuel, marina fees, taxes, and gratuity require confirmation before reservation. Marina information is sent after booking confirmation." });
   } else if (data.type === "rental") {
     const vehicle = vehicles.find(item => item.id === data.vehicleId);
     if (!vehicle?.dailyRate) return NextResponse.json({ error: "Please select a valid rental vehicle." }, { status: 400 });

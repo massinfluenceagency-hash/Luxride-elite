@@ -5,7 +5,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 export default function ServicesGrid({ locale }: { locale: string }) {
   const services = [
     { title: "Airport Pickups", description: "Private black SUV transfers to and from Miami and Fort Lauderdale airports. Share your flight and pickup details.", Icon: Plane },
-    { title: "Pickups & Drop-offs", description: "Pickups and drop-offs starting at $50. Final price depends on distance and vehicle; send your route for a confirmed quote.", Icon: MapPin },
+    { title: "Pickups & Drop-offs", description: "Suburban: $50 for 10 miles, then $5/mile. Escalade and premium SUVs: $75 for 10 miles, then $7.50/mile. One-way base fares.", Icon: MapPin },
     { title: "Hourly Chauffeur", description: "Keep a driver and black SUV for meetings, errands, and multiple stops.", Icon: Clock },
     { title: "Events & Nights Out", description: "Arrange your arrival and return ride for celebrations, dinners, concerts, and special occasions.", Icon: CalendarDays },
   ];
