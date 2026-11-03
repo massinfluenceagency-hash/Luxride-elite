@@ -3,10 +3,12 @@ import { z } from "zod";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { escapeHtml, MailError, sendMail } from "@/lib/server/mail";
 import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE } from "@/lib/data/bookingPolicies";
+import { isDistanceService } from "@/lib/data/transferPricing";
 
 const schema = z.object({
   to: z.email().max(254),
   quote: z.object({
+    serviceType: z.enum(["transfer", "airport", "hourly", "event", "tour"]).optional(),
     quoteId: z.string().min(1).max(80), vehicleName: z.string().min(1).max(200),
     origin: z.string().min(1).max(500), destination: z.string().min(1).max(500),
     distanceMiles: z.number().nonnegative().max(100000), durationHours: z.number().positive().max(1000),
@@ -59,7 +61,7 @@ function buildEmailHtml(quote: EmailQuote): string {
           <tr><td style="padding:8px 0;color:#888">From</td><td style="padding:8px 0;color:#fff;text-align:right">${escapeHtml(quote.origin)}</td></tr>
           <tr><td style="padding:8px 0;color:#888">To</td><td style="padding:8px 0;color:#fff;text-align:right">${escapeHtml(quote.destination)}</td></tr>
           <tr><td style="padding:8px 0;color:#888">Distance</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.distanceMiles.toFixed(1)} miles</td></tr>
-          <tr><td style="padding:8px 0;color:#888">Duration</td><td style="padding:8px 0;color:#fff;text-align:right">${quote.durationHours} hours</td></tr>
+          <tr><td style="padding:8px 0;color:#888">${isDistanceService(quote.serviceType ?? "") ? "Pricing" : "Duration"}</td><td style="padding:8px 0;color:#fff;text-align:right">${isDistanceService(quote.serviceType ?? "") ? "One-way driving distance" : `${quote.durationHours} hours`}</td></tr>
         </table>
       </div>
       <p style="color:#aaa;font-size:11px">Route estimates powered by <a href="https://www.geoapify.com/">Geoapify</a> · © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.</p>

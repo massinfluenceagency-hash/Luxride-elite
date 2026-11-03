@@ -50,7 +50,7 @@ export async function generateQuotePDF(result: QuoteResult): Promise<void> {
     ["Pickup:", result.origin],
     ["Dropoff:", result.destination],
     ["Distance:", `${result.distanceMiles.toFixed(1)} miles`],
-    ["Duration:", `${result.durationHours} hours`],
+    [result.serviceType === "transfer" || result.serviceType === "airport" ? "Pricing:" : "Duration:", result.serviceType === "transfer" || result.serviceType === "airport" ? "One-way driving distance" : `${result.durationHours} hours`],
     ["Passengers:", String(result.passengerCount)],
     ["Date:", result.date.toLocaleDateString()],
   ];

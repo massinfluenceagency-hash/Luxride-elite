@@ -225,7 +225,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     {[
                       ["Vehicle", selectedVehicle?.name ?? ""],
                       ["Service", form.serviceType],
-                      ["Service hours", form.durationHours],
+                      [isDistanceService(form.serviceType) ? "Pricing basis" : "Service hours", isDistanceService(form.serviceType) ? "One-way driving distance" : form.durationHours],
                       ["Promotion", form.firstTimePromotion ? "First-time chauffeur offer (3-hour minimum; eligibility requires confirmation)" : "Regular service"],
                       ["Passengers", form.passengerCount],
                       ["Pickup", form.pickup || "TBD"],
