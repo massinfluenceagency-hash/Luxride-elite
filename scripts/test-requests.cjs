@@ -47,6 +47,13 @@ async function main() {
       for(const v of vehicles){assert.equal(v.dailyRate,expected[v.id],v.id);assert.ok(!v.image||v.image.startsWith('/images/fleet/real/'));}
       assert.throws(()=>calculateQuote({...booking,vehicleId:'ferrari-f8'},'F8'));
     });
+    await check('distance fares cover ten miles and charge only excess miles without hourly or airport surcharges',async()=>{
+      for(const [vehicleId,minimum,rate] of [['suburban-suv',50,5],['escalade-suv',75,7.5]]) for(const miles of [0,5,10,10.5,15,20,30]) for(const serviceType of ['transfer','airport']) {
+        const q=calculateQuote({...booking,vehicleId,serviceType,distanceMiles:miles,durationHours:8,date:new Date('2099-12-04T21:00:00'),isAirportTransfer:true},'SUV');
+        assert.equal(q.baseRate,minimum);assert.equal(q.distanceSurcharge,Math.max(0,miles-10)*rate);assert.equal(q.airportFee,0);assert.equal(q.peakSurcharge,0);assert.equal(q.subtotal,minimum+Math.max(0,miles-10)*rate);assert.ok(!q.breakdown[0].label.includes('/hr'));
+      }
+      assert.throws(()=>calculateQuote({...booking,distanceMiles:-1},'SUV'));
+    });
     await check('all packages exclude separately paid activities',async()=>{
       for(const tour of tours) {
         assert.ok(tour.longDescription.includes('paid separately'),tour.id);
@@ -91,7 +98,7 @@ async function main() {
       for(const yacht of yachts){assert.equal(yacht.price,undefined);assert.equal(yacht.images.length,2);for(const src of yacht.images)assert.ok(fs.existsSync(path.join(root,'public',src)));}
     });
     await check('every yacht inquiry reaches inbox with four hours and no invented price',async()=>{
-      for(const yacht of yachts){assert.equal((await post(requestRoute,{...charter,yachtId:yacht.id,durationHours:1,total:1})).status,200);assert.ok(outbound.html.includes(yacht.name));assert.ok(outbound.html.includes('Charter hours:</strong> 4'));assert.ok(outbound.html.includes('Guests:</strong> 13'));assert.ok(outbound.html.includes('&lt;b&gt;Birthday'));assert.ok(!outbound.html.includes(String.fromCharCode(36)));}
+      for(const yacht of yachts){assert.equal((await post(requestRoute,{...charter,yachtId:yacht.id,durationHours:1,total:1})).status,200);assert.ok(outbound.html.includes(yacht.name));assert.ok(outbound.html.includes('Charter hours:</strong> 4'));assert.ok(outbound.html.includes('Guests:</strong> 13'));assert.ok(outbound.html.includes('&lt;b&gt;Birthday'));assert.ok(outbound.html.includes('$500'));assert.ok(outbound.html.includes('at least 24 hours before the scheduled charter start'));assert.ok(outbound.html.includes('Marina information will be sent after booking confirmation'));assert.ok(!outbound.html.includes('$1,200'));}
     });
     await check('yacht inquiries reject invalid guests, old dates, and unknown yachts',async()=>{
       for(const guests of [0,14,1.5])assert.equal((await post(requestRoute,{...charter,guests})).status,400);

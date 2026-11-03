@@ -1,4 +1,6 @@
 "use client";
+import { isDistanceService, transferPricing } from "@/lib/data/transferPricing";
+import { TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
 import BookingPolicyNotice from "@/components/booking/BookingPolicyNotice";
 import { submitRequest } from "@/lib/utils/submitRequest";
 import { takeBookingDraft } from "@/lib/utils/bookingDraft";
@@ -141,7 +143,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                   <div>
                     <label htmlFor="field-1" className={labelClass}>Vehicle</label>
                     <select id="field-1" value={form.vehicleId} onChange={(e) => { update("vehicleId", e.target.value); const capacity = vehicles.find(v => v.id === e.target.value)?.passengers ?? 1; update("passengerCount", String(Math.min(Number(form.passengerCount), capacity))); }} className={inputClass}>
-                      {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — ${form.firstTimePromotion ? (v.id === "suburban-suv" ? 50 : 75) : v.hourlyRate}/hr</option>)}
+                      {vehicles.map((v) => <option key={v.id} value={v.id}>{v.name} — {isDistanceService(form.serviceType) ? `$${transferPricing(v.id).minimum} first 10 mi` : `$${form.firstTimePromotion ? (v.id === "suburban-suv" ? 50 : 75) : v.hourlyRate}/hr`}</option>)}
                     </select>
                   </div>
                   <div>
@@ -156,10 +158,10 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
 
                   {form.serviceType === "hourly" && <label className="flex items-start gap-3 border border-gold/40 rounded-xl p-4 text-sm text-cream/80"><input type="checkbox" checked={form.firstTimePromotion} onChange={e => setForm(f => ({ ...f, firstTimePromotion: e.target.checked, durationHours: e.target.checked ? String(Math.max(3, Number(f.durationHours))) : f.durationHours }))} className="mt-1 accent-gold" /><span><strong className="text-gold">First-time chauffeur offer</strong><br />Suburban $50/hour · Escalade $75/hour. Three-hour minimum for this promotion only. Eligibility confirmed by our team.</span></label>}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.firstTimePromotion ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
+                    <div className={isDistanceService(form.serviceType) ? "hidden" : ""}><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.firstTimePromotion ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
                     <div><label htmlFor="booking-passengers" className={labelClass}>Passengers (up to {selectedVehicle?.passengers})</label><input id="booking-passengers" type="number" min="1" max={selectedVehicle?.passengers} value={form.passengerCount} onChange={e => update("passengerCount", e.target.value)} className={inputClass} /></div>
                   </div>
-                  <p className="text-cream/70 text-sm">For a transfer, enter your estimated service time; our team will confirm the schedule. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>
+                  <p className="text-cream/70 text-sm">Transfers are priced by driving distance, not service hours. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>
                 </div>
               )}
               {step === 1 && (
@@ -223,7 +225,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     {[
                       ["Vehicle", selectedVehicle?.name ?? ""],
                       ["Service", form.serviceType],
-                      ["Service hours", form.durationHours],
+                      [isDistanceService(form.serviceType) ? "Pricing basis" : "Service hours", isDistanceService(form.serviceType) ? "One-way driving distance" : form.durationHours],
                       ["Promotion", form.firstTimePromotion ? "First-time chauffeur offer (3-hour minimum; eligibility requires confirmation)" : "Regular service"],
                       ["Passengers", form.passengerCount],
                       ["Pickup", form.pickup || "TBD"],
@@ -248,6 +250,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 </div>
               )}
 
+              {isDistanceService(form.serviceType) && <p className="mt-6 text-cream/80 text-sm">{TRANSFER_PRICE_NOTICE}</p>}
               <div className="mt-6"><BookingPolicyNotice locale={locale} /></div>
               {error && <p role="alert" className="text-red-400 text-sm mt-6">{error}</p>}
               {/* Navigation */}

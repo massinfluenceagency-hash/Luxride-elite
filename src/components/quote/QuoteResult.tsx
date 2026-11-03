@@ -6,6 +6,7 @@ import { QuoteResult } from "@/types/quote";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import GlassCard from "@/components/ui/GlassCard";
 import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE } from "@/lib/data/bookingPolicies";
+import { isDistanceService } from "@/lib/data/transferPricing";
 
 
 export default function QuoteResultCard({ result, onBook }: { result: QuoteResult; locale: string; onBook: () => void }) {
@@ -74,7 +75,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         {[
           { Icon: Car, label: "Vehicle", value: result.vehicleName },
           { Icon: MapPin, label: t("distance"), value: `${result.distanceMiles.toFixed(1)} mi` },
-          { Icon: Clock, label: "Duration", value: `${result.durationHours}h` },
+          { Icon: Clock, label: isDistanceService(result.serviceType) ? "Pricing" : "Duration", value: isDistanceService(result.serviceType) ? "One-way distance" : `${result.durationHours}h` },
           { Icon: Users, label: "Passengers", value: String(result.passengerCount) },
         ].map(({ Icon, label, value }) => (
           <div key={label} className="bg-white/5 rounded-xl p-4">
