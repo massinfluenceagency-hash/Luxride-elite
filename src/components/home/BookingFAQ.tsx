@@ -1,10 +1,14 @@
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE, TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
 import Link from "next/link";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function BookingFAQ({ locale }: { locale: string }) {
   const questions = [
+    ["What deposit is required for chauffeur service?", CHAUFFEUR_DEPOSIT_NOTICE],
+    ["What is the chauffeur cancellation policy?", CHAUFFEUR_CANCELLATION_NOTICE],
+    ["How are transfer prices confirmed?", TRANSFER_PRICE_NOTICE],
     ["Does my ride include a chauffeur?", "Yes. Our black SUV service pairs a Chevrolet Suburban or Cadillac Escalade with a professional driver. Daily self-drive car rentals are a separate service."],
-    ["Can I book just a pickup and drop-off?", "Yes. Send your pickup and destination addresses for a transfer quote. Airport and point-to-point rides are separate from hourly chauffeur service."],
+    ["Can I book just a pickup and drop-off?", "Yes. Pickups and drop-offs start at $50, with the final price based on distance and vehicle. Send your route for a confirmed transfer quote."],
     ["Does the first-time chauffeur promotion have a minimum?", "The Suburban $50/hour and Escalade $75/hour first-time offers require at least three hours. That minimum applies only to the promotion, not regular hourly service or transfers. Eligibility and final pricing are confirmed by our team."],
     ["How do airport pickups work?", "Share your airport, flight details, arrival date, passenger count, and luggage requirements. Our team will confirm the pickup arrangements. Ask about child seats or other needs before reserving."],
     ["How do I reserve my chauffeur ride?", "Send your pickup and drop-off locations, date, Miami pickup time, passenger count, and preferred SUV. Our team will confirm availability, pricing, and reservation details. Sending a request does not secure a reservation."],

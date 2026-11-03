@@ -30,7 +30,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <main className="min-h-screen pt-24">
         {/* Hero */}
         <div className="relative py-24 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1920&q=60')] bg-cover bg-center opacity-10" />
+          <div className="absolute inset-0 bg-[url('/images/fleet/real/suburban-suv.webp')] bg-cover bg-center opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/95 to-black" />
           <div className="container-luxe relative z-10 text-center">
             <SectionHeading as="h1"
@@ -62,7 +62,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
               </div>
               <div className="relative h-96 lg:h-full min-h-96 rounded-2xl overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80"
+                  src="/images/fleet/real/suburban-suv.webp"
                   alt="Luxury car illustration"
                   fill
                   className="object-cover"

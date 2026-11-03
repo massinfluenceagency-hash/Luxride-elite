@@ -1,3 +1,4 @@
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE, RENTAL_DEPOSIT_NOTICE } from "@/lib/data/bookingPolicies";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
     if (data.passengerCount > vehicle.passengers) return NextResponse.json({ error: "The passenger count exceeds this vehicle's capacity." }, { status: 400 });
     if (!isFutureMiamiPickup(data.date, data.time)) return NextResponse.json({ error: "Please choose a future pickup time in Miami." }, { status: 400 });
-    Object.assign(details, { "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
+    Object.assign(details, { "Booking deposit": CHAUFFEUR_DEPOSIT_NOTICE, "Cancellation policy": CHAUFFEUR_CANCELLATION_NOTICE, "Service hours": String(data.durationHours), Passengers: String(data.passengerCount), Vehicle: vehicle.name, Service: data.serviceType, Pickup: data.pickup, Dropoff: data.dropoff, Date: data.date, Time: `${data.time} (Miami time)`, Phone: data.phone, Requests: data.requests });
   } else if (data.type === "yacht") {
     const yacht = yachts.find(item => item.id === data.yachtId);
     if (!yacht) return NextResponse.json({ error: "Please select a valid yacht." }, { status: 400 });
@@ -50,7 +51,7 @@ export async function POST(request: NextRequest) {
     const regularBase = vehicle.dailyRate * data.days;
     const discount = data.firstRentalPromotion ? regularBase * FIRST_RENTAL_DISCOUNT : 0;
     if (data.firstRentalPromotion) Object.assign(details, { Promotion: "25% off first car rental", "Regular rental base": formatCurrency(regularBase), "First-rental discount": formatCurrency(discount), "Eligibility": "First-time rental eligibility requires confirmation. Discount applies to the vehicle rental base only." });
-    Object.assign(details, { Vehicle: vehicle.name, "Pickup date": data.date, "Rental days": String(data.days), "Daily vehicle rate": formatCurrency(vehicle.dailyRate), "Base rental estimate": formatCurrency(regularBase - discount), Phone: data.phone, Requests: data.requests, Terms: "Rental inquiry only. Availability, exact vehicle, taxes, deposit, insurance, mileage, and delivery terms require confirmation. Chauffeur not included." });
+    Object.assign(details, { Vehicle: vehicle.name, "Pickup date": data.date, "Rental days": String(data.days), "Daily vehicle rate": formatCurrency(vehicle.dailyRate), "Base rental estimate": formatCurrency(regularBase - discount), Phone: data.phone, Requests: data.requests, "Security deposit": RENTAL_DEPOSIT_NOTICE, Terms: "Rental inquiry only. Availability, exact vehicle, taxes, insurance, mileage, delivery, and rental cancellation terms require confirmation in your rental agreement. Chauffeur not included." });
   } else if (data.type === "tour") {
     const tour = tours.find((item) => item.id === data.tourId);
     if (!tour || data.persons < tour.minPersons || data.persons > tour.maxPersons) return NextResponse.json({ error: "Please check the tour and group size." }, { status: 400 });

@@ -5,6 +5,7 @@ import { Download, Mail, CheckCircle, Car, MapPin, Clock, Users } from "lucide-r
 import { QuoteResult } from "@/types/quote";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import GlassCard from "@/components/ui/GlassCard";
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE } from "@/lib/data/bookingPolicies";
 
 
 export default function QuoteResultCard({ result, onBook }: { result: QuoteResult; locale: string; onBook: () => void }) {
@@ -118,6 +119,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         ))}
       </div>
 
+      <div className="text-cream/70 text-sm space-y-3 mb-6"><p>{CHAUFFEUR_DEPOSIT_NOTICE}</p><p>{CHAUFFEUR_CANCELLATION_NOTICE}</p></div>
       {/* Actions */}
       <div className="flex flex-col sm:flex-row gap-3">
         <button

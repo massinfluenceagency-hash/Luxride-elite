@@ -3,6 +3,7 @@ import { useId, useState } from "react";
 import { Vehicle } from "@/types/vehicle";
 import { submitRequest } from "@/lib/utils/submitRequest";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
+import { RENTAL_DEPOSIT_NOTICE } from "@/lib/data/bookingPolicies";
 import { FIRST_RENTAL_DISCOUNT } from "@/lib/data/promotions";
 export default function RentalInquiry({ vehicle }: { vehicle: Vehicle }) {
   const id = useId();
@@ -26,6 +27,7 @@ export default function RentalInquiry({ vehicle }: { vehicle: Vehicle }) {
     {form.firstRentalPromotion && <p className="text-cream/60 text-sm">Regular rental base: {formatCurrency(vehicle.dailyRate!*(Number.isFinite(form.days)?form.days:0))}<br/>First-rental savings (25%): {formatCurrency(vehicle.dailyRate!*(Number.isFinite(form.days)?form.days:0)*FIRST_RENTAL_DISCOUNT)}</p>}
     <p className="text-gold font-semibold">Base rental estimate: {formatCurrency(vehicle.dailyRate!*(Number.isFinite(form.days)?form.days:0)*(form.firstRentalPromotion?1-FIRST_RENTAL_DISCOUNT:1))}</p>
     <p className="text-cream/60 text-sm">Availability and the specific vehicle must be confirmed. Taxes, deposit, insurance requirements, mileage allowance, and delivery charges, if applicable, will be confirmed before you reserve.</p>
+    <p className="text-cream/80 text-sm rounded-xl border border-gold/30 p-4"><strong className="text-gold">Security deposit: $500 minimum.</strong> {RENTAL_DEPOSIT_NOTICE}</p>
     {error&&<p role="alert" className="text-red-400">{error}</p>}
     <button disabled={sending} className="w-full bg-gold-gradient text-black font-bold py-4 rounded-xl disabled:opacity-60">{sending?"Sending…":"Request availability"}</button>
   </form>;

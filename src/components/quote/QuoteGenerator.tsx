@@ -98,6 +98,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
     <div className="w-full">
       <GlassCard className="p-5 sm:p-8">
         <form onSubmit={handleCalculate} className="space-y-6">
+          <p className="text-cream/80 text-sm">Pickups and drop-offs start at $50; final transfer pricing depends on distance and vehicle and is confirmed by our team. Online calculations are estimates. A $50 chauffeur booking deposit is credited toward your total fare.</p>
           {/* Service type */}
           <div>
             <label className="block text-gold text-sm font-semibold mb-3 tracking-wide">{t("service_type")}</label>

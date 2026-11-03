@@ -1,4 +1,5 @@
 "use client";
+import BookingPolicyNotice from "@/components/booking/BookingPolicyNotice";
 import { submitRequest } from "@/lib/utils/submitRequest";
 import { takeBookingDraft } from "@/lib/utils/bookingDraft";
 import { isFutureMiamiPickup, miamiDateTime } from "@/lib/utils/miamiTime";
@@ -247,6 +248,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 </div>
               )}
 
+              <div className="mt-6"><BookingPolicyNotice locale={locale} /></div>
               {error && <p role="alert" className="text-red-400 text-sm mt-6">{error}</p>}
               {/* Navigation */}
               <div className="flex gap-4 mt-8">
