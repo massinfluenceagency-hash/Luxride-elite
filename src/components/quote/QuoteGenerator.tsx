@@ -98,6 +98,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
     <div className="w-full">
       <GlassCard className="p-5 sm:p-8">
         <form onSubmit={handleCalculate} className="space-y-6">
+          <p className="text-cream/80 text-sm">Pickups and drop-offs start at $50; final transfer pricing depends on distance and vehicle and is confirmed by our team. Online calculations are estimates. A $50 chauffeur booking deposit is credited toward your total fare.</p>
           {/* Service type */}
           <div>
             <label className="block text-gold text-sm font-semibold mb-3 tracking-wide">{t("service_type")}</label>
@@ -149,7 +150,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                 type="text"
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                placeholder="e.g. Miami International Airport"
+                placeholder="e.g. 2100 NW 42nd Ave, Miami, FL 33142"
                 className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
               />
             </div>
@@ -161,7 +162,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                 type="text"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                placeholder="e.g. 1 Hotel South Beach"
+                placeholder="e.g. 2341 Collins Ave, Miami Beach, FL 33139"
                 className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
               />
             </div>

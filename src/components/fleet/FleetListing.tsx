@@ -57,6 +57,7 @@ export default function FleetListing({ locale, initialCategory }: { locale: stri
         <section className="section-padding">
           <div className="container-luxe">
             <div className="rounded-2xl border border-gold/40 bg-gold/5 p-6 mb-8"><p className="text-gold text-xs uppercase tracking-widest font-semibold">First Car Rental Offer</p><h2 className="font-display text-white text-2xl font-bold mt-2">Save 25% on Your First Rental</h2><p className="text-cream/70 text-sm mt-3">Choose a vehicle below and select the first-rental offer in your inquiry. Discount applies to the vehicle rental base; eligibility, availability, and any additional charges are confirmed before booking. Chauffeur and yacht services are separate.</p></div>
+            <p className="text-cream/80 text-sm mb-8">All car rentals require a security deposit starting at $500. The amount may be higher depending on the vehicle and is confirmed before booking. Deposit is separate from the rental price.</p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((vehicle) => (
                 <VehicleCard key={vehicle.id} vehicle={vehicle} locale={locale} />

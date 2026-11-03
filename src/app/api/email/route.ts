@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { formatCurrency } from "@/lib/utils/formatCurrency";
 import { escapeHtml, MailError, sendMail } from "@/lib/server/mail";
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE } from "@/lib/data/bookingPolicies";
 
 const schema = z.object({
   to: z.email().max(254),
@@ -63,6 +64,8 @@ function buildEmailHtml(quote: EmailQuote): string {
       </div>
       <p style="color:#aaa;font-size:11px">Route estimates powered by <a href="https://www.geoapify.com/">Geoapify</a> · © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.</p>
       <table style="width:100%;border-collapse:collapse;font-size:13px">${rows}</table>
+      <p style="color:#ccc;font-size:12px">${escapeHtml(CHAUFFEUR_DEPOSIT_NOTICE)}</p>
+      <p style="color:#ccc;font-size:12px">${escapeHtml(CHAUFFEUR_CANCELLATION_NOTICE)}</p>
       <div style="margin-top:32px;text-align:center">
         <a href="https://luxrideelite.com/en/booking" style="background:linear-gradient(135deg,#C9A765,#D4AF37);color:#000;font-weight:bold;padding:16px 40px;border-radius:50px;text-decoration:none;font-size:16px;display:inline-block">Book Now</a>
       </div>

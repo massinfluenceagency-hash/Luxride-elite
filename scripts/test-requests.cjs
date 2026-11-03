@@ -63,6 +63,7 @@ async function main() {
     await check('contact reaches business inbox with reply-to and escaped HTML',async()=>{assert.equal((await post(requestRoute,contact)).status,200);assert.equal(outbound.to,'business@example.com');assert.equal(outbound.replyTo,contact.email);assert.ok(outbound.html.includes('&lt;img'));assert.ok(!outbound.html.includes('<img'));});
     await check('valid booking request accepted',async()=>assert.equal((await post(requestRoute,booking)).status,200));
     await check('booking email contains service hours and passengers',async()=>{await post(requestRoute,booking);assert.ok(outbound.html.includes('Service hours'));assert.ok(outbound.html.includes('Passengers'));});
+    await check('chauffeur email carries deposit credit and exact cancellation boundary',async()=>{await post(requestRoute,booking);assert.ok(outbound.html.includes('$50'));assert.ok(outbound.html.includes('credited toward your total fare'));assert.ok(outbound.html.includes('at least 24 hours'));assert.ok(outbound.html.includes('less than 24 hours'));assert.ok(outbound.html.includes('no-shows forfeit the deposit'));assert.ok(!outbound.html.includes('50% fee'));});
     await check('oversized booking group rejected',async()=>assert.equal((await post(requestRoute,{...booking,passengerCount:99})).status,400));
     await check('regular hourly chauffeur allows shorter requests and quotes',async()=>{
       for(const durationHours of [1,2])assert.equal((await post(requestRoute,{...booking,serviceType:'hourly',durationHours})).status,200);
@@ -105,6 +106,7 @@ async function main() {
       smtpState.send=async message=>{outbound=message;return {accepted:[message.to],rejected:[]};};
       assert.equal((await post(requestRoute,{...rental,dailyRate:1,total:1})).status,200);
       assert.ok(outbound.html.includes('$3,000'));assert.ok(outbound.html.includes('Chauffeur not included'));
+      assert.ok(outbound.html.includes('at least $500'));assert.ok(outbound.html.includes('may be higher depending on the vehicle'));assert.ok(!outbound.html.includes('no-shows forfeit'));
     });
     await check('rental days and past dates validated',async()=>{for(const days of [0,1.5,31])assert.equal((await post(requestRoute,{...rental,days})).status,400);assert.equal((await post(requestRoute,{...rental,date:'2020-01-01'})).status,400);});
     await check('rental-only car cannot enter chauffeur booking',async()=>assert.equal((await post(requestRoute,{...booking,vehicleId:'ferrari-f8'})).status,400));

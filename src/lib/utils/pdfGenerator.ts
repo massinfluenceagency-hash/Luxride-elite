@@ -85,6 +85,7 @@ export async function generateQuotePDF(result: QuoteResult): Promise<void> {
   const footerY = doc.internal.pageSize.getHeight() - 20;
   doc.setFontSize(8);
   doc.setTextColor(150, 150, 150);
+  doc.textWithLink("$50 chauffeur booking deposit credited to fare. Deposit & cancellation terms: luxrideelite.com/en/terms", 20, footerY - 6, { url: "https://www.luxrideelite.com/en/terms" });
   doc.text("© LuxRide Elite | luxrideelite.com | Available 24/7", pageW / 2, footerY, { align: "center" });
   doc.text("This quote is valid for 48 hours from the date of issue.", pageW / 2, footerY + 5, { align: "center" });
   doc.textWithLink("Routing: Geoapify", 20, footerY + 10, { url: "https://www.geoapify.com/" });

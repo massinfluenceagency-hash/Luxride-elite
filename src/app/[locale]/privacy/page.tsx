@@ -6,7 +6,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 const SECTIONS = [
   {
     title: "Information We Collect",
-    content: "We collect information you provide directly to us, including your name, email address, phone number, pickup and dropoff addresses, and payment information when you book our services or request a quote.",
+    content: "We collect information you provide directly to us, including your name, email address, phone number, pickup and dropoff addresses, travel details, and information you enter in booking, rental, yacht, or contact requests. Website request forms do not collect card details or take payment.",
   },
   {
     title: "How We Use Your Information",
@@ -18,7 +18,7 @@ const SECTIONS = [
   },
   {
     title: "Data Security",
-    content: "We implement industry-standard security measures to protect your personal information. All payment transactions are processed through secure, encrypted channels. We retain your data only for as long as necessary to provide our services.",
+    content: "We implement industry-standard security measures to protect your personal information. Do not include card numbers or other sensitive payment details in website request forms. We retain your data only for as long as necessary to provide our services.",
   },
   {
     title: "Cookies",
@@ -26,7 +26,7 @@ const SECTIONS = [
   },
   {
     title: "Contact Us",
-    content: "If you have any questions about this Privacy Policy, please contact us at privacy@luxrideelite.com or call 1 (800) 240-4727.",
+    content: "If you have any questions about this Privacy Policy, please contact us at info@luxrideelite.com or call 1 (800) 240-4727.",
   },
 ];
 
@@ -43,7 +43,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
             <SectionHeading
               label="Legal"
               title="Privacy Policy"
-              subtitle="Last updated: January 1, 2025"
+              subtitle="Last updated: November 3, 2026"
             />
           </div>
         </div>

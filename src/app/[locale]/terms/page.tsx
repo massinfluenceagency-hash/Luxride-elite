@@ -1,37 +1,19 @@
+import { CHAUFFEUR_DEPOSIT_NOTICE, CHAUFFEUR_CANCELLATION_NOTICE, RENTAL_DEPOSIT_NOTICE, TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
 import { setRequestLocale } from "next-intl/server";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 const SECTIONS = [
-  {
-    title: "Reservation and Booking",
-    content: "All reservations require a valid credit card for authorization. Bookings are confirmed only upon receipt of a confirmation email from LuxRide Elite. We reserve the right to refuse service at our discretion.",
-  },
-  {
-    title: "Cancellation Policy",
-    content: "Cancellations made 24 hours or more prior to the scheduled pickup time receive a full refund. Cancellations within 24 hours are subject to a 50% fee. No-shows are charged the full reservation amount.",
-  },
-  {
-    title: "Passenger Conduct",
-    content: "Passengers are responsible for any damage caused to our vehicles during their reservation. Smoking, illegal substances, and disruptive behavior are strictly prohibited. LuxRide Elite reserves the right to terminate service and charge the full fare if these policies are violated.",
-  },
-  {
-    title: "Wait Time",
-    content: "For airport pickups, we provide a 45-minute complimentary wait time after the scheduled arrival. For all other pickups, we provide 15 minutes. Additional wait time is billed at the applicable hourly rate in 15-minute increments.",
-  },
-  {
-    title: "Liability",
-    content: "LuxRide Elite is not liable for delays caused by traffic, weather, mechanical issues, or other circumstances beyond our control. We are not responsible for items left in our vehicles, though we will make every effort to locate and return lost items.",
-  },
-  {
-    title: "Rate Changes",
-    content: "Rates are subject to change without notice. The rate confirmed at time of booking will be honored. Gratuity is not included unless specifically noted and is at the passenger's discretion.",
-  },
-  {
-    title: "Governing Law",
-    content: "These terms shall be governed by and construed in accordance with the laws of the State of Florida. Any disputes arising from these terms shall be resolved in Miami-Dade County courts.",
-  },
+  { title: "Requests and Reservations", content: "Website forms submit inquiries only and do not take payment or secure a reservation. Our team confirms availability, final pricing, payment arrangements, and reservation details directly with you." },
+  { title: "Chauffeur Booking Deposit", content: CHAUFFEUR_DEPOSIT_NOTICE },
+  { title: "Chauffeur Cancellation Policy", content: CHAUFFEUR_CANCELLATION_NOTICE },
+  { title: "Pickup and Drop-off Prices", content: TRANSFER_PRICE_NOTICE },
+  { title: "Car Rental Security Deposits", content: RENTAL_DEPOSIT_NOTICE },
+  { title: "Car Rental and Yacht Agreements", content: "The chauffeur cancellation policy above applies to chauffeur bookings only. Rental and yacht cancellation, payment, and security terms are provided with the specific agreement before payment. Yacht inquiries are requests for a quote: four-hour charters with up to 13 guests. Departure marina, crew, fuel, fees, taxes, and gratuity require confirmation." },
+  { title: "First-Time Offers", content: "First-time chauffeur rates are $50/hour for a Suburban and $75/hour for an Escalade, with a three-hour minimum for this offer only. Regular hourly service and transfers do not have that promotional minimum. The first car rental offer discounts the vehicle rental base by 25%; it does not reduce the security deposit or other charges. Eligibility, availability, and final charges require confirmation before reservation." },
+  { title: "Wait Time and Additional Charges", content: "Share flight details, stops, luggage, and any special requirements when requesting service. Our team will confirm wait-time allowances, any additional charges, and the final itinerary before you reserve." },
+  { title: "Tour Packages", content: "Tour packages cover the vehicle and chauffeur time. Half-day packages are 3–4 hours and full-day packages are 6–8 hours. Activities, admission, food, drinks, equipment, and other third-party services are arranged and paid for separately." },
 ];
 
 export default async function TermsPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -47,7 +29,7 @@ export default async function TermsPage({ params }: { params: Promise<{ locale: 
             <SectionHeading
               label="Legal"
               title="Terms of Service"
-              subtitle="Last updated: January 1, 2025"
+              subtitle="Last updated: November 3, 2026"
             />
           </div>
         </div>
