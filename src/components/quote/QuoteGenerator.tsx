@@ -150,7 +150,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                 type="text"
                 value={origin}
                 onChange={(e) => setOrigin(e.target.value)}
-                placeholder="e.g. Miami International Airport"
+                placeholder="e.g. 2100 NW 42nd Ave, Miami, FL 33142"
                 className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
               />
             </div>
@@ -162,7 +162,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                 type="text"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                placeholder="e.g. 1 Hotel South Beach"
+                placeholder="e.g. 2341 Collins Ave, Miami Beach, FL 33139"
                 className="w-full bg-black-soft border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold/50 transition-colors"
               />
             </div>
