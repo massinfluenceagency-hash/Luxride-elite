@@ -58,6 +58,7 @@ export default function Footer({ locale }: { locale: string }) {
               ))}
               <li><a className="text-cream/70 hover:text-gold text-sm" href="https://www.instagram.com/luxrideelitemia/">Instagram</a></li>
               <li><a className="text-cream/70 hover:text-gold text-sm" href="https://www.tiktok.com/@luxrideelite">TikTok</a></li>
+              <li><a className="text-cream/70 hover:text-gold text-sm" href="https://www.facebook.com/luxrideelitemia">Facebook</a></li>
             </ul>
           </div>
 
@@ -69,7 +70,7 @@ export default function Footer({ locale }: { locale: string }) {
                 <Phone size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
                   <a href="tel:+18002404727" className="text-cream/80 font-medium hover:text-gold">1 (800) 240-4727</a>
-                  <div className="text-xs">Available 24/7</div>
+                  <div className="text-xs">24/7 service & inquiry responses</div>
                 </div>
               </li>
               <li className="flex items-start gap-3 text-cream/50 text-sm">
