@@ -367,7 +367,7 @@ export const vehicles: Vehicle[] = [
     "hourlyRate": 105,
     "perMileRate": 2,
     "freeMiles": 30,
-    "passengers": 8,
+    "passengers": 7,
     "luggage": 6,
     "chauffeurAvailable": true,
     "features": [

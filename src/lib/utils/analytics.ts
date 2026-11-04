@@ -1,4 +1,5 @@
 import { captureCampaign } from "./campaignSource";
+import { measureMetaEvent } from "./metaPixel";
 const ID = "G-EEXC90XT2B";
 export const CONSENT_KEY = "luxride-analytics-consent";
 type AnalyticsWindow = Window & { dataLayer?: unknown[]; gtag?: (...args: unknown[]) => void; "ga-disable-G-EEXC90XT2B"?: boolean; };
@@ -23,6 +24,8 @@ export function startAnalytics() {
   document.head.appendChild(script);
 }
 export function measureEvent(name: "page_view" | "phone_link_click" | "generate_lead") {
+  if (name === "page_view") measureMetaEvent("PageView");
+  if (name === "generate_lead") measureMetaEvent("Lead");
   try {
     if (!hasAnalyticsConsent()) return;
     startAnalytics();

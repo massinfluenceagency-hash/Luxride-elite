@@ -22,7 +22,7 @@ const SECTIONS = [
   },
   {
     title: "Cookies",
-    content: "With your permission, we use Google Analytics cookies to measure website visits, call-button clicks, and successful inquiry submissions. Analytics remains off until you select Allow analytics. We do not send your name, email, phone number, pickup or destination addresses, or request message to Google Analytics. You can decline or change your choice using Analytics preferences on the website; booking remains available either way. We also retain campaign labels during your browser session so our team can identify the source of an inquiry.",
+    content: "Optional cookies remain off until you choose. Analytics only enables Google Analytics to measure visits, call-button clicks and successful inquiry submissions. Allow both also enables Meta Pixel advertising cookies to measure page visits and successful inquiries for ad performance. These providers may receive technical information such as your IP address, browser and cookie identifiers; Meta receives visited page URLs. We do not send form answers, names, email addresses, phone numbers, pickup or destination addresses, or request messages through these tracking events. Meta automatic advanced matching and automatic event detection are not used. Change or withdraw your choice using Cookie preferences; booking remains available either way. We also retain campaign labels during your browser session so our team can identify the source of an inquiry.",
   },
   {
     title: "Contact Us",

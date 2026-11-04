@@ -4,6 +4,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 
 export default function BookingFAQ({ locale }: { locale: string }) {
   const questions = [
+    ["How many passengers and bags can ride?", "Our SUVs accommodate up to 7 passengers, or up to 6 in premium SUVs with captain’s chairs. With all passenger seats occupied, allow approximately 4–5 checked bags. Fewer passengers can leave room for more luggage. Share your passenger count, bag count and bag sizes; our team confirms fit for the vehicle configuration before you reserve."],
     ["What deposit is required for chauffeur service?", CHAUFFEUR_DEPOSIT_NOTICE],
     ["What is the chauffeur cancellation policy?", CHAUFFEUR_CANCELLATION_NOTICE],
     ["How are transfer prices confirmed?", TRANSFER_PRICE_NOTICE],

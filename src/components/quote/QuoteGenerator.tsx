@@ -212,7 +212,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
             </div>
           </div>
 
-          <p className="text-cream/70 text-xs">All pickup times are Miami / Eastern time. Prices are estimates; availability and final details are confirmed by our team.</p>
+          <p className="text-cream/70 text-xs">Up to 7 passengers; premium SUVs with captain’s chairs seat up to 6. With all seats occupied, allow approximately 4–5 checked bags; fewer passengers can allow more luggage. Fit depends on bag size and vehicle configuration and is confirmed before booking. All pickup times are Miami / Eastern time. Prices are estimates; availability and final details are confirmed by our team.</p>
           <Link href={`/${locale}/tours`} className="inline-block text-gold underline text-sm">Looking for a half-day or full-day sightseeing package?</Link>
           {/* Airport toggle */}
           <div className={isDistanceService(serviceType) ? "hidden" : "flex items-center gap-3"}>

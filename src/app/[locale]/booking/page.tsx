@@ -164,6 +164,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     <div className={isDistanceService(form.serviceType) ? "hidden" : ""}><label htmlFor="booking-hours" className={labelClass}>Service hours</label><input id="booking-hours" type="number" min={form.firstTimePromotion ? 3 : 1} max="24" value={form.durationHours} onChange={e => update("durationHours", e.target.value)} className={inputClass} /></div>
                     <div><label htmlFor="booking-passengers" className={labelClass}>Passengers (up to {selectedVehicle?.passengers})</label><input id="booking-passengers" type="number" min="1" max={selectedVehicle?.passengers} value={form.passengerCount} onChange={e => update("passengerCount", e.target.value)} className={inputClass} /></div>
                   </div>
+                  <p className="text-cream/70 text-sm">Up to 7 passengers; premium SUVs with captain’s chairs seat up to 6. A full passenger load fits approximately 4–5 checked bags; fewer passengers can allow more luggage. Bag size and vehicle configuration affect fit—our team confirms before booking.</p>
                   <p className="text-cream/70 text-sm">Transfers are priced by driving distance, not service hours. For sightseeing time packages, <a href={`/${locale}/tours`} className="text-gold underline">view our packages</a>.</p>
                 </div>
               )}
