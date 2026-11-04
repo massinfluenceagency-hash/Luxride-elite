@@ -56,6 +56,8 @@ export default function Footer({ locale }: { locale: string }) {
                   </Link>
                 </li>
               ))}
+              <li><a className="text-cream/70 hover:text-gold text-sm" href="https://www.instagram.com/luxrideelitemia/">Instagram</a></li>
+              <li><a className="text-cream/70 hover:text-gold text-sm" href="https://www.tiktok.com/@luxrideelite">TikTok</a></li>
             </ul>
           </div>
 
@@ -81,7 +83,7 @@ export default function Footer({ locale }: { locale: string }) {
                 <MapPin size={15} className="text-gold mt-0.5 flex-shrink-0" />
                 <div>
                   <div className="text-cream/80 font-medium">Miami, FL</div>
-                  <div className="text-xs">Serving all of South Florida</div>
+                  <div className="text-xs">Miami-Dade · Broward · Palm Beach</div>
                 </div>
               </li>
             </ul>

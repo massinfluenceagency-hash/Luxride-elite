@@ -1,3 +1,5 @@
+import CampaignTracker from "@/components/layout/CampaignTracker";
+import MobileBookingBar from "@/components/layout/MobileBookingBar";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -21,7 +23,9 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <LocaleProvider locale={locale}>
+        <CampaignTracker />
         {children}
+        <MobileBookingBar locale={locale} />
       </LocaleProvider>
     </NextIntlClientProvider>
   );

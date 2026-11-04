@@ -52,10 +52,10 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
   };
 
   return (
-    <GlassCard glow className="p-8">
+    <GlassCard glow className="p-5 sm:p-8">
       {result.firstTimePromotion && <p className="text-gold text-sm mb-5">First-time chauffeur offer applied to the base rate. Three-hour promotional minimum. Eligibility and final charges require confirmation.</p>}
       {/* Header */}
-      <div className="flex items-center justify-between mb-8 pb-6 border-b border-white/10">
+      <div className="flex flex-wrap gap-4 items-center justify-between mb-8 pb-6 border-b border-white/10">
         <div>
           <h3 className="font-display font-bold text-2xl text-white mb-1">{t("your_quote")}</h3>
           <p className="text-cream/40 text-sm">
@@ -88,13 +88,14 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
         ))}
       </div>
 
+      <p className="text-cream/70 text-xs mb-3">Mileage is rounded for display; charges use the full driving distance.</p>
       <p className="text-cream/70 text-xs mb-6">Route estimates powered by <a href="https://www.geoapify.com/" className="underline">Geoapify</a> · © <a href="https://www.openstreetmap.org/copyright" className="underline">OpenStreetMap contributors</a>. Driving time excludes live traffic.</p>
       {/* Breakdown */}
       <div className="space-y-3 mb-8">
         {result.breakdown.map((item) => (
           <div
             key={item.label}
-            className={`flex justify-between items-center py-2 ${
+            className={`flex justify-between gap-4 items-center py-2 ${
               item.type === "total"
                 ? "border-t border-gold/30 pt-4 mt-2"
                 : item.type === "subtotal"
@@ -128,7 +129,7 @@ export default function QuoteResultCard({ result, onBook }: { result: QuoteResul
           onClick={onBook}
           className="flex-1 bg-gold-gradient text-black font-bold py-3.5 rounded-xl text-center hover:shadow-gold transition-all duration-300"
         >
-          {t("book_now")}
+          Request This Ride
         </button>
         <button
           onClick={handlePDF}

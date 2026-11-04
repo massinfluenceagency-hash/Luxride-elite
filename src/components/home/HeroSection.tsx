@@ -9,7 +9,7 @@ export default function HeroSection({ locale }: { locale: string }) {
   const t = useTranslations("hero");
 
   return (
-    <section className="relative min-h-[85svh] pt-28 pb-16 flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[75svh] pt-24 sm:pt-28 pb-10 sm:pb-16 flex items-center justify-center overflow-hidden">
       {/* Background video / image */}
       <div className="absolute inset-0 z-0">
         <Image src="/images/fleet/real/suburban-suv.webp" alt="Black Chevrolet Suburban for professional chauffeur service" fill priority sizes="100vw" className="object-cover" style={{ objectPosition: "center 52%" }} />
@@ -41,21 +41,21 @@ export default function HeroSection({ locale }: { locale: string }) {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           {/* Label */}
-          <div className="inline-flex items-center gap-3 mb-6">
+          <div className="inline-flex items-center gap-3 mb-4 sm:mb-6">
             <div className="h-px w-12 bg-gold-gradient" />
-            <span className="text-gold text-sm font-semibold tracking-[0.3em] uppercase">
+            <span className="text-gold text-xs sm:text-sm font-semibold tracking-[0.18em] uppercase">
               Black SUVs · Professional Chauffeurs
             </span>
             <div className="h-px w-12 bg-gold-gradient" />
           </div>
 
           {/* Headline */}
-          <h1 className="heading-hero mb-6 max-w-5xl mx-auto">
+          <h1 className="font-display font-black text-4xl sm:text-5xl lg:text-7xl leading-tight text-white mb-4 sm:mb-6 max-w-5xl mx-auto">
             {t("tagline")}
           </h1>
 
           {/* Subheadline */}
-          <p className="text-cream/70 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-cream/80 text-base md:text-xl max-w-2xl mx-auto mb-6 leading-relaxed">
             {t("subtitle")}
           </p>
 
@@ -77,7 +77,7 @@ export default function HeroSection({ locale }: { locale: string }) {
           </div>
         </motion.div>
 
-        <Link href={`/${locale}/quote?promotion=first-time&vehicle=suburban-suv`} className="inline-block mt-6 text-gold text-sm font-semibold underline underline-offset-4">First-time offer: Suburban $50/hr · Escalade $75/hr · 3-hour promotional minimum</Link>
+        <Link href={`/${locale}/quote?promotion=first-time&vehicle=suburban-suv`} className="inline-block mt-6 text-gold text-sm font-semibold underline underline-offset-4">First-time 3-hour offer: Suburban $150 base · Escalade $225 base</Link>
         <p className="mt-5 text-cream/80 text-sm">Airport pickups · Private transfers · Hourly drivers · Events</p>
         <a href="tel:+18002404727" className="inline-flex items-center gap-2 mt-4 py-2 text-gold font-semibold"><Phone size={16} /> 1 (800) 240-4727</a>
       </div>

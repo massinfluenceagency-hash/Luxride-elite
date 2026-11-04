@@ -22,7 +22,7 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
     <>
       <Navbar locale={locale} />
       <main className="min-h-screen pt-24">
-        <div className="relative py-20 overflow-hidden">
+        <div className="relative py-8 sm:py-16 overflow-hidden">
           <div className="absolute inset-0 bg-[url('/images/fleet/real/suburban-suv.webp')] bg-cover bg-center opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/90 to-black" />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -31,8 +31,8 @@ export default async function QuotePage({ params, searchParams }: { params: Prom
           <div className="container-luxe relative z-10 text-center">
             <SectionHeading as="h1"
               label="Transparent Pricing"
-              title="Get Your Instant Quote"
-              subtitle="Real-time pricing based on your route, vehicle, and schedule. No hidden fees."
+              title="Estimate Your Ride"
+              subtitle="Estimate your fare, then request your ride. Our team confirms availability, applicable extras, and the final price before you reserve."
             />
           </div>
         </div>

@@ -33,7 +33,7 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
   const breakdown: QuoteLineItem[] = [
     { label: transfer ? "One-way transfer — first 10 miles" : `${input.firstTimePromotion ? "First-time offer — " : ""}Base Rate (${input.durationHours}h × $${pricing.hourly}/hr)`, amount: baseRate, type: "base" },
     ...(distanceSurcharge > 0
-      ? [{ label: `Distance Charge (${(transfer ? transfer.excessMiles : excessMiles).toFixed(1)} extra mi × $${transfer ? transfer.perMile : pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
+      ? [{ label: `Distance Charge (${(transfer ? transfer.excessMiles : excessMiles).toFixed(3)} extra mi × $${transfer ? transfer.perMile : pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
       : []),
     ...(airportFee > 0 ? [{ label: "Airport Transfer Fee", amount: airportFee, type: "airport" as const }] : []),
     ...(peakSurcharge > 0 ? [{ label: "Peak Hours Surcharge (20%)", amount: peakSurcharge, type: "peak" as const }] : []),
