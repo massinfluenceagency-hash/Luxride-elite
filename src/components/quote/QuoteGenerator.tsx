@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
-import { MapPin, Clock, Users, Car, Plane } from "lucide-react";
+import { MapPin, Clock, Users, Car } from "lucide-react";
 import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 import { isDistanceService, transferPricing } from "@/lib/data/transferPricing";
 import { TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
@@ -109,7 +109,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                   key={value}
                   aria-pressed={serviceType === value}
                   type="button"
-                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); if (value !== "hourly") setFirstTimePromotion(false); }}
+                  onClick={() => { setServiceType(value); if (value !== "hourly") setFirstTimePromotion(false); }}
                   className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
                     serviceType === value
                       ? "bg-gold text-black border-gold"
