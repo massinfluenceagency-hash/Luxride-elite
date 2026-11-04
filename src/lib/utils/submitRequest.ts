@@ -1,4 +1,5 @@
 import { captureCampaign } from "./campaignSource";
+import { measureEvent } from "./analytics";
 
 export async function submitRequest(payload: Record<string, unknown>) {
   const response = await fetch("/api/requests", {
@@ -11,6 +12,7 @@ export async function submitRequest(payload: Record<string, unknown>) {
     throw new Error(data.error || "Your request could not be sent. Please try again or call us.");
   }
   try {
+    measureEvent("generate_lead");
     const target = window as Window & { dataLayer?: Record<string, unknown>[] };
     target.dataLayer = target.dataLayer || [];
     target.dataLayer.push({ event: "generate_lead", lead_type: payload.type });

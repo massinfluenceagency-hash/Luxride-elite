@@ -23,8 +23,8 @@ export default async function LocaleLayout({
   return (
     <NextIntlClientProvider messages={messages}>
       <LocaleProvider locale={locale}>
-        <CampaignTracker />
         {children}
+        <CampaignTracker />
         <MobileBookingBar locale={locale} />
       </LocaleProvider>
     </NextIntlClientProvider>
