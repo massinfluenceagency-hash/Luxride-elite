@@ -3,7 +3,6 @@ import { firstRideRate } from "@/lib/data/promotions";
 import { isDistanceService, transferFare } from "@/lib/data/transferPricing";
 import { QuoteInput, QuoteResult, QuoteLineItem } from "@/types/quote";
 
-const AIRPORT_FEE = 75;
 const PEAK_MULTIPLIER = 0.2;
 const TAX_RATE = 0.07;
 const MIAMI_DADE_TAX = TAX_RATE;
@@ -23,7 +22,7 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
   const baseRate = transfer ? transfer.base : pricing.hourly * input.durationHours;
   const excessMiles = Math.max(0, input.distanceMiles - pricing.freeMiles);
   const distanceSurcharge = transfer ? transfer.distance : excessMiles * pricing.perMile;
-  const airportFee = !distanceBased && input.isAirportTransfer ? AIRPORT_FEE : 0;
+  const airportFee = 0;
   const subtotalBeforePeak = baseRate + distanceSurcharge + airportFee;
   const peakSurcharge = !distanceBased && isPeakHour(input.date) ? subtotalBeforePeak * PEAK_MULTIPLIER : 0;
   const subtotal = subtotalBeforePeak + peakSurcharge;
@@ -35,7 +34,6 @@ export function calculateQuote(input: QuoteInput, vehicleName: string): QuoteRes
     ...(distanceSurcharge > 0
       ? [{ label: `Distance Charge (${(transfer ? transfer.excessMiles : excessMiles).toFixed(3)} extra mi × $${transfer ? transfer.perMile : pricing.perMile})`, amount: distanceSurcharge, type: "distance" as const }]
       : []),
-    ...(airportFee > 0 ? [{ label: "Airport Transfer Fee", amount: airportFee, type: "airport" as const }] : []),
     ...(peakSurcharge > 0 ? [{ label: "Peak Hours Surcharge (20%)", amount: peakSurcharge, type: "peak" as const }] : []),
     { label: "Subtotal", amount: subtotal, type: "subtotal" },
     { label: "Miami-Dade Tax (7%)", amount: tax, type: "tax" },

@@ -54,6 +54,14 @@ async function main() {
       }
       assert.throws(()=>calculateQuote({...booking,distanceMiles:-1},'SUV'));
     });
+    await check('hourly quotes ignore the removed airport add-on including older saved input',async()=>{
+      for(const vehicleId of ['suburban-suv','escalade-suv']) for(const firstTimePromotion of [false,true]) {
+        const input={...booking,vehicleId,serviceType:'hourly',firstTimePromotion,distanceMiles:15,durationHours:3,date:new Date('2099-12-04T21:00:00')};
+        const ordinary=calculateQuote({...input,isAirportTransfer:false},'SUV');
+        const legacy=calculateQuote({...input,isAirportTransfer:true},'SUV');
+        assert.equal(legacy.airportFee,0);assert.equal(legacy.total,ordinary.total);assert.equal(legacy.peakSurcharge,ordinary.peakSurcharge);assert.ok(!legacy.breakdown.some(item=>item.type==='airport'));
+      }
+    });
     await check('all packages exclude separately paid activities',async()=>{
       for(const tour of tours) {
         assert.ok(tour.longDescription.includes('paid separately'),tour.id);

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useId, useState } from "react";
 import { useTranslations } from "next-intl";
-import { MapPin, Clock, Users, Car, Plane } from "lucide-react";
+import { MapPin, Clock, Users, Car } from "lucide-react";
 import { chauffeurVehicles as vehicles } from "@/lib/data/fleet";
 import { isDistanceService, transferPricing } from "@/lib/data/transferPricing";
 import { TRANSFER_PRICE_NOTICE } from "@/lib/data/bookingPolicies";
@@ -27,13 +27,12 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
   const [hours, setHours] = useState(initialPromotion ? 3 : 1);
   const [firstTimePromotion, setFirstTimePromotion] = useState(initialPromotion);
   const [passengers, setPassengers] = useState(2);
-  const [isAirport, setIsAirport] = useState(false);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<QuoteResult | null>(null);
   const [error, setError] = useState("");
   const [matchedRoute, setMatchedRoute] = useState<{ origin: string; destination: string } | null>(null);
 
-  useEffect(() => { setResult(null); setMatchedRoute(null); }, [serviceType, vehicleId, origin, destination, date, hours, passengers, isAirport, firstTimePromotion]);
+  useEffect(() => { setResult(null); setMatchedRoute(null); }, [serviceType, vehicleId, origin, destination, date, hours, passengers, firstTimePromotion]);
 
   const selectedVehicle = vehicles.find((v) => v.id === vehicleId);
 
@@ -71,7 +70,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
           durationHours: isDistanceService(serviceType) ? Math.max(1, data.durationMinutes / 60) : hours,
           date: date ? new Date(date) : new Date(),
           passengerCount: passengers,
-          isAirportTransfer: isAirport,
+          isAirportTransfer: false,
         },
         selectedVehicle?.name ?? vehicleId
       );
@@ -110,7 +109,7 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
                   key={value}
                   aria-pressed={serviceType === value}
                   type="button"
-                  onClick={() => { setServiceType(value); setIsAirport(value === "airport"); if (value !== "hourly") setFirstTimePromotion(false); }}
+                  onClick={() => { setServiceType(value); if (value !== "hourly") setFirstTimePromotion(false); }}
                   className={`py-2.5 px-3 rounded-xl text-sm font-medium transition-all duration-200 border ${
                     serviceType === value
                       ? "bg-gold text-black border-gold"
@@ -214,23 +213,6 @@ export default function QuoteGenerator({ locale, initialVehicleId = "escalade-su
 
           <p className="text-cream/70 text-xs">Up to 7 passengers; premium SUVs with captain’s chairs seat up to 6. With all seats occupied, allow approximately 4–5 checked bags; fewer passengers can allow more luggage. Fit depends on bag size and vehicle configuration and is confirmed before booking. All pickup times are Miami / Eastern time. Prices are estimates; availability and final details are confirmed by our team.</p>
           <Link href={`/${locale}/tours`} className="inline-block text-gold underline text-sm">Looking for a half-day or full-day sightseeing package?</Link>
-          {/* Airport toggle */}
-          <div className={isDistanceService(serviceType) ? "hidden" : "flex items-center gap-3"}>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={isAirport}
-              aria-label="Airport transfer fee"
-              onClick={() => setIsAirport(!isAirport)}
-              className={`w-12 h-6 rounded-full transition-all duration-300 relative ${isAirport ? "bg-gold" : "bg-white/10"}`}
-            >
-              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all duration-300 ${isAirport ? "left-6" : "left-0.5"}`} />
-            </button>
-            <label className="text-cream/70 text-sm flex items-center gap-2">
-              <Plane size={14} className="text-gold" />
-              {t("airport_transfer")} (+$75)
-            </label>
-          </div>
 
           {error && <p role="alert" className="text-red-400 text-sm">{error}</p>}
 
