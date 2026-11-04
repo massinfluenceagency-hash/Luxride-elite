@@ -22,7 +22,7 @@ const SECTIONS = [
   },
   {
     title: "Cookies",
-    content: "We use cookies to enhance your browsing experience, remember your preferences, and analyze site traffic. You may disable cookies in your browser settings, though some features may not function properly.",
+    content: "With your permission, we use Google Analytics cookies to measure website visits, call-button clicks, and successful inquiry submissions. Analytics remains off until you select Allow analytics. We do not send your name, email, phone number, pickup or destination addresses, or request message to Google Analytics. You can decline or change your choice using Analytics preferences on the website; booking remains available either way. We also retain campaign labels during your browser session so our team can identify the source of an inquiry.",
   },
   {
     title: "Contact Us",
@@ -43,7 +43,7 @@ export default async function PrivacyPage({ params }: { params: Promise<{ locale
             <SectionHeading
               label="Legal"
               title="Privacy Policy"
-              subtitle="Last updated: November 3, 2026"
+              subtitle="Last updated: November 4, 2026"
             />
           </div>
         </div>
