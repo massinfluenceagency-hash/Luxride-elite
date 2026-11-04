@@ -5,7 +5,7 @@ import BookingPolicyNotice from "@/components/booking/BookingPolicyNotice";
 import { submitRequest } from "@/lib/utils/submitRequest";
 import { takeBookingDraft } from "@/lib/utils/bookingDraft";
 import { isFutureMiamiPickup, miamiDateTime } from "@/lib/utils/miamiTime";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { use } from "react";
 import { CheckCircle, Car, MapPin, User, MessageSquare } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -25,6 +25,8 @@ const STEPS = [
 export default function BookingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = use(params);
   const [step, setStep] = useState(0);
+  const stepHeading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { if (step > 0) stepHeading.current?.focus(); }, [step]);
   const [confirmed, setConfirmed] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -111,16 +113,17 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
     <>
       <Navbar locale={locale} />
       <main className="min-h-screen pt-24">
-        <div className="py-12 border-b border-gold/20">
+        <div className="py-5 sm:py-12 border-b border-gold/20">
           <div className="container-luxe">
             <SectionHeading as="h1" label="Black SUV & Chauffeur Service" title="Request Your Chauffeur Ride" subtitle="Choose a Suburban or Escalade with a professional driver. Send your route and schedule; our team will confirm availability and final pricing." />
           </div>
         </div>
 
-        <section className="section-padding">
+        <section className="py-6 sm:py-12">
           <div className="container-luxe max-w-3xl">
+            <h2 ref={stepHeading} tabIndex={-1} className="text-gold font-semibold mb-5 scroll-mt-28 focus:outline-none" aria-live="polite">Step {step + 1} of {STEPS.length}: {STEPS[step].label}</h2>
             {/* Step indicators */}
-            <div className="flex items-center justify-between mb-12 overflow-x-auto pb-2">
+            <div className="hidden sm:flex items-center justify-between mb-6">
               {STEPS.map(({ label, Icon }, i) => (
                 <div key={i} className="flex items-center flex-shrink-0">
                   <div className="flex flex-col items-center">
@@ -129,7 +132,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     }`}>
                       {i < step ? <CheckCircle size={16} className="text-black" /> : <Icon size={16} className={i === step ? "text-gold" : "text-cream/30"} />}
                     </div>
-                    <span className={`text-xs mt-1.5 font-medium ${i === step ? "text-gold" : i < step ? "text-cream/60" : "text-cream/20"}`}>{label}</span>
+                    <span className={`text-xs mt-1.5 font-medium ${i === step ? "text-gold" : i < step ? "text-cream/60" : "text-cream/60"}`}>{label}</span>
                   </div>
                   {i < STEPS.length - 1 && <div className={`h-px w-8 sm:w-16 mx-2 flex-shrink-0 ${i < step ? "bg-gold" : "bg-white/10"}`} />}
                 </div>
@@ -215,7 +218,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                     className={`${inputClass} resize-none`}
                     placeholder="Any special accommodations, decorations, routes, dietary requirements, or anything else we should know..."
                   />
-                  <p className="text-cream/30 text-sm">Tell us about luggage, flight details, child seats, or accessibility needs. Our team will confirm what is available.</p>
+                  <p className="text-cream/70 text-sm">Tell us about luggage, flight details, child seats, or accessibility needs. Our team will confirm what is available.</p>
                 </div>
               )}
               {step === 4 && (
@@ -235,7 +238,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                       ["Email", form.email],
                       ["Phone", form.phone],
                     ].map(([k, v]) => (
-                      <div key={k} className="flex justify-between py-2 border-b border-white/5 text-sm">
+                      <div key={k} className="flex flex-col sm:flex-row justify-between gap-1 sm:gap-4 py-2 border-b border-white/5 text-sm break-words">
                         <span className="text-cream/40">{k}</span>
                         <span className="text-white">{v}</span>
                       </div>
@@ -250,11 +253,12 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                 </div>
               )}
 
-              {isDistanceService(form.serviceType) && <p className="mt-6 text-cream/80 text-sm">{TRANSFER_PRICE_NOTICE}</p>}
-              <div className="mt-6"><BookingPolicyNotice locale={locale} /></div>
+              {step === 4 && isDistanceService(form.serviceType) && <p className="mt-6 text-cream/80 text-sm">{TRANSFER_PRICE_NOTICE}</p>}
+              {step === 4 && <div className="mt-6"><BookingPolicyNotice locale={locale} expanded /></div>}
+              {step < 4 && <p className="mt-5 text-cream/80 text-sm">$50 deposit credited toward your fare. Availability and final price confirmed by our team.</p>}
               {error && <p role="alert" className="text-red-400 text-sm mt-6">{error}</p>}
               {/* Navigation */}
-              <div className="flex gap-4 mt-8">
+              <div className="flex gap-4 mt-5">
                 {step > 0 && (
                   <button disabled={sending} onClick={() => { setError(""); setStep(s => s - 1); }} className="border border-white/20 text-cream px-6 py-3 rounded-xl hover:border-gold hover:text-gold transition-all">
                     Back
@@ -270,6 +274,7 @@ export default function BookingPage({ params }: { params: Promise<{ locale: stri
                   </button>
                 )}
               </div>
+              {step < 4 && <div className="mt-5"><BookingPolicyNotice locale={locale} /></div>}
             </GlassCard>
           </div>
         </section>

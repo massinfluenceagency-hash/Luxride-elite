@@ -2,6 +2,7 @@ import { pageMetadata } from "@/lib/utils/pageMetadata";
 import { setRequestLocale } from "next-intl/server";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ServiceArea from "@/components/home/ServiceArea";
 import FirstRideOffer from "@/components/home/FirstRideOffer";
 import HeroSection from "@/components/home/HeroSection";
 import BookingFAQ from "@/components/home/BookingFAQ";
@@ -29,6 +30,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <ServicesGrid locale={locale} />
         <QuoteSection locale={locale} />
         <ChauffeurFleet locale={locale} />
+        <ServiceArea locale={locale} />
         <BookingFAQ locale={locale} />
         <CTASection locale={locale} />
         <MoreExperiences locale={locale} />
